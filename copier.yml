@@ -12,6 +12,8 @@ _jinja_extensions:
   - extensions.py:GitExtension
   - extensions.py:SlugifyExtension
   - extensions.py:GitHubIDsforGiscusExtension
+_tasks:
+  - uv python pin 3.14
 
 # PROMPT --------------------------------
 project_name:
