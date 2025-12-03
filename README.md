@@ -27,7 +27,7 @@ uvx --with=copier-template-extensions copier copy --trust "gh:mgaitan/copier-uv"
 To upgrade an existing project created from this template to the latest version, run:
 
 ```bash
-copier update .
+uvx copier update .
 ```
 
 This will fetch the latest template version and guide you through updating your project, preserving your customizations whenever possible.
