@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "Martín Gaitán", email = "gaitan@gmail.com" }]
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "copier>=9.9.0",
     "copier-templates-extensions>=0.3.2",
