@@ -6,13 +6,13 @@
 {%- if python_package_command_line_name %}
 
 import argparse
-from importlib.metadata import PackageNotFoundError, version
+from importlib import metadata
 
 
 def get_version() -> str:
     try:
-        return version("{{ python_package_distribution_name }}")
-    except PackageNotFoundError:
+        return metadata.version("{{ python_package_distribution_name }}")
+    except metadata.PackageNotFoundError:
         return "unknown"
 
 
