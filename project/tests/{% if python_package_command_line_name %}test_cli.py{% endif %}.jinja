@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import runpy
 import sys
+from importlib import metadata
+
 import pytest
 
-from {{ python_package_import_name }} import main, get_version
+from {{ python_package_import_name }} import get_version, main
 
 
 def test_main() -> None:
@@ -41,23 +44,17 @@ def test_show_version(mocker, capsys: pytest.CaptureFixture) -> None:
 
 def test_main_module(mocker):
     """Test running the CLI via __main__ (python -m ...)."""
-    import importlib
-
     module_name = "{{ python_package_import_name }}.__main__"
-    # Simulate: python -m {{ python_package_import_name }} --version
-    mocker.patch.object(sys, "argv", ["-m", "-V"])
-    mocker.patch("builtins.print", lambda *a, **kw: None)
-    class ExitCalled(Exception):
-        pass
-    mocker.patch.object(sys, "exit", side_effect=ExitCalled)
-    try:
-        importlib.import_module(module_name)
-    except ExitCalled:
-        pass
+    # Simulate: python -m {{ python_package_command_line_name }} --version
+    mocker.patch.object(sys, "argv", ["{{ python_package_command_line_name }}", "-V"])
+    with pytest.raises(SystemExit):
+        runpy.run_module(module_name, run_name="__main__", alter_sys=False)
 
 
 def test_get_version_package_not_found(mocker):
     """Test get_version returns 'unknown' if package is not found."""
-    mocker.patch("importlib.metadata.version", side_effect=Exception("not found"))
-    mocker.patch("importlib.metadata.PackageNotFoundError", Exception)
+    mocker.patch(
+        "importlib.metadata.version",
+        side_effect=metadata.PackageNotFoundError("not found"),
+    )
     assert get_version() == "unknown"
