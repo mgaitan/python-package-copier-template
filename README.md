@@ -1,10 +1,7 @@
-# Simple uv powered Python package template
-
-> Inspired by [pawamoy/copier-uv](https://github.com/pawamoy/copier-uv), but with fewer options and a simpler configuration.
+# Modern Python package template
 
 A [Copier](https://github.com/copier-org/copier) template
-for Python projects managed by [uv](https://github.com/astral-sh/uv).
-
+for modern Python projects. 
 
 ## Features
 
@@ -14,7 +11,7 @@ for Python projects managed by [uv](https://github.com/astral-sh/uv).
 - Tests run with [pytest](https://github.com/pytest-dev/pytest) and plugins, with [coverage](https://github.com/nedbat/coveragepy) support
 - Documentation built with [sphinx](https://github.com/sphinx-doc/sphinx) and [myst-parser](https://github.com/executablebooks/myst-parser)
 - Support for GitHub workflows.
-- Choice the license(BSD-3-Clause, MIT, Apache-2.0).
+- Choice the license (BSD-3-Clause, MIT, Apache-2.0).
 
 ## Quick setup and usage
 
@@ -48,3 +45,8 @@ Then
 $ make bump    # optional
 $ make release
 ```
+
+
+### Acknowledgement
+
+This project template started as a fork of [pawamoy/copier-uv](https://github.com/pawamoy/copier-uv). Then I simplified and changed it to fit my needs.
