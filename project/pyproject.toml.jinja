@@ -80,7 +80,6 @@ Funding = "https://github.com/sponsors/{{ author_username }}"
 
 
 [dependency-groups]
-tools = ["ipdb>=0.13.13", "ipython>=8.12.3"]
 test = [
     "pytest>=8.3.5",
     "pytest-freezer>=0.4.9",
@@ -88,5 +87,14 @@ test = [
     "pytest-cov>=4.0.0",
 ]
 lint = ["ruff"]
+qa = [
+    { include-group = "lint" },
+    "ty>=0.0.1a30",
+]
 docs = ["myst-parser>=3.0.0", "sphinx>=7.4.7", "sphinxcontrib-mermaid>=1.0.0"]
-dev = [{ include-group = "tools" }, { include-group = "test" }, { include-group = "lint" }]
+dev = [
+    { include-group = "test" },
+    { include-group = "qa" },
+    "ipdb",
+    "ipython",
+]

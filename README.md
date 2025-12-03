@@ -9,7 +9,7 @@ for Python projects managed by [uv](https://github.com/astral-sh/uv).
 ## Features
 
 - [uv](https://github.com/astral-sh/uv) setup, with pre-defined `pyproject.toml`.
-- Pre-configured tools for code formatting, quality analysis and testing.
+- Pre-configured tools for code formatting, quality analysis and testing (including [ty](https://github.com/astral-sh/ty) via `uv run ty check`).
 - GitHub Actions for publishing to PyPI using [pypa/gh-action-pypi-publish](https://github.com/pypa/gh-action-pypi-publish).
 - Tests run with [pytest](https://github.com/pytest-dev/pytest) and plugins, with [coverage](https://github.com/nedbat/coveragepy) support
 - Documentation built with [sphinx](https://github.com/sphinx-doc/sphinx) and [myst-parser](https://github.com/executablebooks/myst-parser)

@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  lint:
+  qa:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,8 +20,12 @@ jobs:
       - name: Ruff format
         run: uv run --only-group lint ruff format --check
 
+      - name: Ty check
+        run: uv run --group qa ty check --output-format=github
+
+
   test:
-    needs: lint
+    needs: qa
     runs-on: ubuntu-latest
     strategy:
       matrix:

@@ -11,13 +11,23 @@
 
 ## Quick Start
 
-Run directly without installing via `uvx`
+Run directly without installing via `uvx`:
 
 ```bash
 uvx {{ python_package_distribution_name }}
+```
 
 To install the tool permanently:
 
 ```bash
 uv tool install {{ python_package_distribution_name }}
+```
+
+## Development
+
+- Install dependencies with `uv sync`.
+- Run the QA bundle with [`ty`](https://github.com/astral-sh/ty):
+
+```bash
+uv run ty check
 ```
