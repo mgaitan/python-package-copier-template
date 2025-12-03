@@ -1,0 +1,28 @@
+Project: {{ project_name }}
+
+Repository: https://github.com/{{ repository_namespace }}/{{ repository_name }}
+
+Description: {{ project_description }}
+
+### Stack
+
+- **Python:** Prefer Python 3.14. pathlib, inline comments, and docstrings. Modern typing: PEP585, PEP604, PEP649.
+- **Tests:** pytest, factory-boy, pytest-mock. `make test` to run tests. or `uv run pytest`
+- **Productivity:** Dependencies managed with `uv` via `pyproject.toml`; automation via `Makefile`; lint/format with Ruff.
+- **Git:**  Include yourself in the commits as coauthor if helped enough. Use `gh cli` to open PRs / manage issues. Start a new branch for each feature or bugfix.
+- **Github:** Prefer gh CLI for all interactions with Github if possible.
+
+## Development environment
+
+We use uv for development environment setup and management.
+Check `make help` for some useful shortcuts.
+
+## Lang preferences
+
+- All text in the code in simple English (comments, docstrings, commit messages, PR descriptions). But respect the language I use for chatting.
+- Please avoid any sexist language. Specially in languages like Spanish, where the gender of nouns is important. Use gender-neutral terms when possible.
+
+## QA & Docs
+
+- Docs sources in `docs/` using Markdown with Sphinx + myst-parser. `make docs` to build it.
+- **Lint/format:** `make format` (Ruff configured in `pyproject.toml`).
