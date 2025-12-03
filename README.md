@@ -21,7 +21,7 @@ for Python projects managed by [uv](https://github.com/astral-sh/uv).
 Start a new project with this template:
 
 ```bash
-uvx --with=copier-template-extensions copier copy --trust "gh:mgaitan/copier-uv" /path/to/your/new/project
+uvx --with=copier-template-extensions copier copy --trust "gh:mgaitan/python-package-copier-template" /path/to/your/new/project
 ```
 
 To upgrade an existing project created from this template to the latest version, run:
