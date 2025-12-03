@@ -38,4 +38,5 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v3
       - name: Summarize documentation URL
-        run: echo "Documentation published at: {% raw %}${{ steps.deployment.outputs.page_url }}{% endraw %}" >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo "Documentation published at: {% raw %}${{ steps.deployment.outputs.page_url }}{% endraw %}" >> $GITHUB_STEP_SUMMARY
