@@ -11,7 +11,6 @@ _jinja_extensions:
   - extensions.py:CurrentYearExtension
   - extensions.py:GitExtension
   - extensions.py:SlugifyExtension
-  - extensions.py:GitHubIDsforGiscusExtension
 _tasks:
   - command: uv python pin 3.14
   - command: git init -b main
