@@ -22,6 +22,7 @@ _tasks:
 project_name:
   type: str
   help: Your project name
+  default: "{{ _copier_conf.dst_path.name | replace('-', ' ') | title }}"
 
 project_description:
   type: str
