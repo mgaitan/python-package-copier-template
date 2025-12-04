@@ -13,6 +13,7 @@ _jinja_extensions:
   - extensions.py:SlugifyExtension
 _tasks:
   - command: uv python pin 3.14
+  - command: uv sync
   - command: git init -b main
   - command: git add .
   - command: 'git commit -m "chore: initial commit"'
