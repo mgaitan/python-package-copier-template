@@ -37,7 +37,7 @@ uv run copier copy --trust  --vcs-ref=HEAD . /path/to/your/test/project
 ```
 
 
-To publish a release of your project to PyPI, you need to [configure trusted published](https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/)
+To publish a release of your project to PyPI, you need to [register the project with trusted published](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/).  Read more about how this workflow works [here](https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/)
 
 Then
 
