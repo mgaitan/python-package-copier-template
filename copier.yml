@@ -16,7 +16,7 @@ _tasks:
   - command: uv python pin 3.14
   - command: git init -b main
   - command: git add .
-  - command: git commit -m "chore: initial commit"
+  - command: 'git commit -m "chore: initial commit"'
 
 # PROMPT --------------------------------
 project_name:
