@@ -11,6 +11,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Configure Git
+        run: |
+          git config --global user.name "Copier Bot"
+          git config --global user.email "bot@example.com"
+
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
 
