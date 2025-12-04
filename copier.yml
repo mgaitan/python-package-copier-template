@@ -48,6 +48,7 @@ repository_namespace:
   type: str
   help: Github username or organization name
   default: "{{ author_username }}"
+  when: false
 
 repository_name:
   type: str
