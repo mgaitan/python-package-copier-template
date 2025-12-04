@@ -1,5 +1,8 @@
 # Modern Python package template
 
+[![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
+
+
 A [Copier](https://github.com/copier-org/copier) template
 for modern Python projects. 
 
