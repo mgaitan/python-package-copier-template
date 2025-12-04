@@ -1,6 +1,7 @@
 # Modern Python package template
 
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
+[![CI](https://github.com/mgaitan/python-package-copier-template/actions/workflows/ci.yml/badge.svg)](https://github.com/mgaitan/python-package-copier-template/actions/workflows/ci.yml)
 
 
 A [Copier](https://github.com/copier-org/copier) template
