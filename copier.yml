@@ -13,10 +13,10 @@ _jinja_extensions:
   - extensions.py:SlugifyExtension
   - extensions.py:GitHubIDsforGiscusExtension
 _tasks:
-  - uv python pin 3.14
-  - git init -b main
-  - git add .
-  - git commit -m "chore: initial commit"
+  - command: uv python pin 3.14
+  - command: git init -b main
+  - command: git add .
+  - command: git commit -m "chore: initial commit"
 
 # PROMPT --------------------------------
 project_name:
