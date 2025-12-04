@@ -5,34 +5,33 @@ Every little bit helps, and credit will always be given.
 
 ## Environment setup
 
-You only need two tools, [uv](https://github.com/astral-sh/uv)
-and [Copier](https://github.com/copier-org/copier).
+Install [uv](https://github.com/astral-sh/uv) following the
+[official instructions](https://docs.astral.sh/uv/getting-started/installation/).
+Copier does not need to be installed globally; we'll run it through uv.
+
+Then clone the repository and install the local environment:
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-uv tool install copier --with copier-templates-extensions
-```
-
-Then you can clone the repository, enter it and set it up with:
-
-```bash
-git clone https://github.com/pawamoy/copier-uv
-cd copier-uv
-make setup
+git clone https://github.com/mgaitan/python-package-copier-template
+cd python-package-copier-template
+uv sync
 ```
 
 ## Running tests
 
-To run the tests, use:
+To run the tests, first generate a sample project locally and then run its test suite:
 
 ```bash
-make test
+uv run copier copy --trust --vcs-ref=HEAD . /tmp/template-test --defaults
+cd /tmp/template-test
+uv run --group lint ruff check
+uv run --group test pytest
+uv run --group qa ty check
+uv build
+make docs
 ```
 
 ## Serving docs
 
-To serve the docs locally, use:
-
-```bash
-make docs
-```
+Documentation for this template is served by building the sample project's docs
+with `make docs` as shown above.
