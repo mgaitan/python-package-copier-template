@@ -14,14 +14,19 @@
 Run directly without installing via `uvx`
 
 ```bash
-uvx {{ python_package_distribution_name }}
+uvx {{ python_package_distribution_name }} --help
+```
+
+```{richterm} env PYTHONPATH=../src uv run -m {{ python_package_import_name }} --help
+:hide-command: true
+```
+
 
 To install the tool permanently:
 
 ```bash
 uv tool install {{ python_package_distribution_name }}
 ```
-
 
 
 ```{toctree}

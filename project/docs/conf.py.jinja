@@ -19,7 +19,11 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 extensions = [
     "myst_parser",
     "sphinxcontrib.mermaid",
+    "richterm.sphinxext",
 ]
+
+richterm_prompt = "[bold]$"
+richterm_hide_command = False
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
