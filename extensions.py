@@ -18,6 +18,25 @@ def git_user_email(default: str) -> str:
     return subprocess.getoutput("git config user.email").strip() or default
 
 
+def gh_user_login(default: str) -> str:
+    """Return the authenticated GitHub username via the GH CLI when available."""
+
+    try:
+        completed = subprocess.run(
+            ["gh", "api", "user", "-q", ".login"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        login = completed.stdout.strip()
+        if login:
+            return login
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return default
+
+    return default
+
+
 def slugify(value, separator="-"):
     value = unicodedata.normalize("NFKD", str(value)).encode("ascii", "ignore").decode("ascii")
     value = re.sub(r"[^\w\s-]", "", value.lower())
@@ -63,6 +82,7 @@ class GitExtension(Extension):
         super().__init__(environment)
         environment.filters["git_user_name"] = git_user_name
         environment.filters["git_user_email"] = git_user_email
+        environment.filters["gh_user_login"] = gh_user_login
 
 
 class SlugifyExtension(Extension):

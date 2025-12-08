@@ -42,7 +42,7 @@ author_email:
 author_username:
   type: str
   help: GitHub username
-  default: mgaitan
+  default: "{{ 'mgaitan' | gh_user_login }}"
 
 python_package_distribution_name:
   type: str
