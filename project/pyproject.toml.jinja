@@ -106,7 +106,13 @@ qa = [
     { include-group = "lint" },
     "ty>=0.0.1a31",
 ]
-docs = ["myst-parser>=3.0.0", "sphinx>=7.4.7", "sphinxcontrib-mermaid>=1.0.0", "richterm[sphinx]"]
+docs = [
+    "myst-parser>=3.0.0",
+    "sphinx>=8.2",
+    "sphinx-book-theme>=1.1.0",
+    "sphinxcontrib-mermaid>=1.0.0",
+    "richterm[sphinx]",
+]
 dev = [
     { include-group = "test" },
     { include-group = "qa" },
