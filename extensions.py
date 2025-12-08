@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import shutil
 import subprocess
 import urllib.error
 import urllib.request
@@ -35,6 +36,12 @@ def gh_user_login(default: str) -> str:
         return default
 
     return default
+
+
+def command_available(command: str) -> bool:
+    """Return True if the command exists on PATH."""
+
+    return shutil.which(command) is not None
 
 
 def slugify(value, separator="-"):
@@ -83,6 +90,7 @@ class GitExtension(Extension):
         environment.filters["git_user_name"] = git_user_name
         environment.filters["git_user_email"] = git_user_email
         environment.filters["gh_user_login"] = gh_user_login
+        environment.filters["command_available"] = command_available
 
 
 class SlugifyExtension(Extension):

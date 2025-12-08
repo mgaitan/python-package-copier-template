@@ -17,6 +17,21 @@ _tasks:
   - command: git init -b main
   - command: git add .
   - command: 'git commit -m "chore: initial commit"'
+  - command: |
+      if command -v gh >/dev/null 2>&1 && [ "{{ gh_repo_create | default('skip') }}" != "skip" ]; then
+        visibility="--private"
+        if [ "{{ gh_repo_create | default('skip') }}" = "public" ]; then
+          visibility="--public"
+        fi
+        repo="{{ repository_namespace }}/{{ repository_name }}"
+        url="git@github.com:${repo}.git"
+        if gh repo view "$repo" >/dev/null 2>&1; then
+          git remote add origin "$url" 2>/dev/null || git remote set-url origin "$url"
+        else
+          gh repo create "$repo" $visibility --description "{{ project_description }}" --source=. --remote=origin
+        fi
+        git push -u origin main
+      fi
 
 # PROMPT --------------------------------
 project_name:
@@ -43,6 +58,16 @@ author_username:
   type: str
   help: GitHub username
   default: "{{ 'mgaitan' | gh_user_login }}"
+
+gh_repo_create:
+  type: str
+  help: Create GitHub repository (requires gh)
+  default: private
+  when: "{{ 'gh' | command_available }}"
+  choices:
+    Private (gh create & push): private
+    Public (gh create & push): public
+    Skip: skip
 
 python_package_distribution_name:
   type: str
