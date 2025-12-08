@@ -31,6 +31,7 @@ _tasks:
           gh repo create "$repo" $visibility --description "{{ project_description }}" --homepage "https://{{ repository_namespace }}.github.io/{{ repository_name }}/" --source=. --remote=origin
         fi
         git push -u origin main
+        gh workflow run cd.yml --ref main || true
       fi
 
 # PROMPT --------------------------------
