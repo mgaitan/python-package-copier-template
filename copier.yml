@@ -28,7 +28,7 @@ _tasks:
         if gh repo view "$repo" >/dev/null 2>&1; then
           git remote add origin "$url" 2>/dev/null || git remote set-url origin "$url"
         else
-          gh repo create "$repo" $visibility --description "{{ project_description }}" --source=. --remote=origin
+          gh repo create "$repo" $visibility --description "{{ project_description }}" --homepage "https://{{ repository_namespace }}.github.io/{{ repository_name }}/" --source=. --remote=origin
         fi
         git push -u origin main
       fi
