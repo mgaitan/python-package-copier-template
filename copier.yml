@@ -44,6 +44,12 @@ author_username:
   help: GitHub username
   default: mgaitan
 
+python_package_distribution_name:
+  type: str
+  help: Your Python package distribution name (for `uv add NAME`)
+  default: "{{ project_name | pypi_suggest_name }}"
+  validator: "{{ '' if not (python_package_distribution_name | pypi_exists) else 'Name already exists on PyPI. Choose another distribution name.' }}"
+
 repository_namespace:
   type: str
   help: Github username or organization name
@@ -63,11 +69,6 @@ copyright_license:
     BSD 3-Clause "New" or "Revised" License: BSD-3-Clause
     MIT License: MIT
     Apache License 2.0: Apache-2.0
-
-python_package_distribution_name:
-  type: str
-  help: Your Python package distribution name (for `uv add NAME`)
-  default: "{{ project_name | slugify }}"
 
 python_package_import_name:
   type: str
