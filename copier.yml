@@ -31,6 +31,12 @@ _tasks:
           gh repo create "$repo" $visibility --description "{{ project_description }}" --homepage "https://{{ repository_namespace }}.github.io/{{ repository_name }}/" --source=. --remote=origin
         fi
         git push -u origin main
+        # Enable GitHub Pages for docs deployed via Actions.
+        if gh api -X PUT "repos/${repo}/pages" -f build_type=workflow >/dev/null 2>&1; then
+          echo "GitHub Pages enabled for ${repo}"
+        else
+          echo "Warning: could not enable GitHub Pages. If the repository is private or Pages is restricted for your account, docs deployment will fail until Pages is allowed." >&2
+        fi
         gh workflow run cd.yml --ref main || true
       fi
 

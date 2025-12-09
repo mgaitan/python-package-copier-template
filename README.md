@@ -40,6 +40,8 @@ uv sync
 uv run copier copy --trust  --vcs-ref=HEAD . /path/to/your/test/project
 ```
 
+If you create the GitHub repository via the `gh` CLI prompt, the template will attempt to enable GitHub Pages (using the Actions build type) so documentation deployments succeed. If Pages is unavailable (for example, with some private repositories or account policies), the docs workflow will keep failing until Pages is allowed.
+
 
 To publish a release of your project to PyPI, you need to [register the project with trusted published](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/).  Read more about how this workflow works [here](https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/)
 
