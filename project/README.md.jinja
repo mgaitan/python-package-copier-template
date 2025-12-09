@@ -11,12 +11,14 @@
 
 ## Quick Start
 
+{% if python_package_command_line_name -%}
 Run directly without installing via `uvx`:
 
 ```bash
-uvx {{ python_package_distribution_name }}
+uvx{% if python_package_command_line_name != python_package_distribution_name %} --with={{ python_package_distribution_name }}{% endif %} {{ python_package_command_line_name }}
 ```
 
+{% endif -%}
 To install the tool permanently:
 
 ```bash
