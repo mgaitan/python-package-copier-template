@@ -72,8 +72,8 @@ gh_repo_create:
   default: private
   when: "{{ 'gh' | command_available }}"
   choices:
-    Private (gh create & push): private
-    Public (gh create & push): public
+    Public repo: public
+    Private repo: private
     Skip: skip
 
 python_package_distribution_name:
