@@ -32,6 +32,7 @@ jobs:
       url: {% raw %}${{ steps.deployment.outputs.page_url }}{% endraw %}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
       - uses: astral-sh/setup-uv@v6
       - run: make docs
       - uses: actions/upload-pages-artifact@v4
