@@ -7,6 +7,8 @@
 A [Copier](https://github.com/copier-org/copier) template
 for modern Python projects. 
 
+Demo repo generated from this template: [mgaitan/yet-another-demo](https://github.com/mgaitan/yet-another-demo)
+
 ## Features
 
 - 🐍 Modern Python package (3.12+)
