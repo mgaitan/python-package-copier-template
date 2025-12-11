@@ -9,13 +9,23 @@ for modern Python projects.
 
 ## Features
 
-- [uv](https://github.com/astral-sh/uv) setup, with pre-defined `pyproject.toml`.
-- Pre-configured tools for code formatting, quality analysis and testing (including [ty](https://github.com/astral-sh/ty) via `uv run ty check`).
-- GitHub Actions for publishing to PyPI using [pypa/gh-action-pypi-publish](https://github.com/pypa/gh-action-pypi-publish) with a Trusted Publisher workflow (OIDC tokens, no PyPI password).
-- Tests run with [pytest](https://github.com/pytest-dev/pytest) and plugins, with [coverage](https://github.com/nedbat/coveragepy) support
-- Documentation built with [sphinx](https://github.com/sphinx-doc/sphinx) and [myst-parser](https://github.com/executablebooks/myst-parser)
-- Support for GitHub workflows.
-- Choice the license (BSD-3-Clause, MIT, Apache-2.0).
+- 🐍 Modern Python package (3.12+)
+- 📦 Build and dependency management with [uv](https://docs.astral.sh/uv/), split by groups (dev/qa/docs)
+- 🧹 Linting and formatting via [Ruff](https://docs.astral.sh/ruff/) with a broad set of rules enabled
+- ✅ Type checking via [ty](https://github.com/astral-sh/ty)
+- 🧪 Tests with [pytest](https://docs.pytest.org/en/stable/), [coverage.py](https://coverage.readthedocs.io/en/latest/) and extensions
+- 📚 Docs with [Sphinx](https://www.sphinx-doc.org/en/master/), [MyST](https://myst-parser.readthedocs.io/en/stable/) and a few extensions, deployed to [GitHub Pages](https://pages.github.com/)
+- 🏗️ Use of [GitHub CLI](https://cli.github.com/) for autotic project creation 
+- ⚙️ CI workflow on [GitHub Actions](https://github.com/features/actions)
+- 🚀 Automated releases to PyPI via [Trusted Publishing](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
+- 🧠 Sensible defaults via introspection to minimize answers during the initial setup
+- 🛠️ Makefile with shortcuts for common tasks
+- 📄 Generation of generic docs such as `LICENSE`, `CODE_OF_CONDUCT`, etc.
+- 🤖 Heavily curated [AGENTS.md](https://agents.md/)
+- 🌀 Initial setup of the development environment and git repo
+- ♻️ Projects updatable with [`copier update`](https://copier.readthedocs.io/en/stable/updating/)
+
+Please read [my blog post](https://mgaitan.github.io/en/posts/opinionated-python-project-scaffolding/) to learn about the details of the decisions I made and the alternatives I considered.
 
 ## Quick setup and usage
 
