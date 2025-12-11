@@ -32,6 +32,18 @@ jobs:
       url: {% raw %}${{ steps.deployment.outputs.page_url }}{% endraw %}
     steps:
       - uses: actions/checkout@v4
+      - name: Ensure GitHub Pages is enabled for workflow builds
+        env:
+          GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+        run: |
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
+          data='{"build_type":"workflow"}'
+          curl -sfL -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "$api" \
+            -d "$data"
       - uses: actions/configure-pages@v5
       - uses: astral-sh/setup-uv@v6
       - run: make docs
