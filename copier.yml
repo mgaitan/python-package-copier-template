@@ -32,6 +32,23 @@ _tasks:
         fi
         git push -u origin main
         gh repo edit "$repo" --enable-wiki=false --enable-projects=false >/dev/null 2>&1 || true
+        # Enable Pages for workflow builds (required by deploy-pages).
+        if gh api \
+          --method POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "repos/${repo}/pages" \
+          -f 'build_type=workflow' >/dev/null 2>&1; then
+          echo "GitHub Pages enabled for ${repo}"
+        else
+          gh api \
+            --method PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/${repo}/pages" \
+            -f 'build_type=workflow' >/dev/null 2>&1 || \
+            echo "Warning: could not enable GitHub Pages. If the repository is private or Pages is restricted for your account, docs deployment will fail until Pages is allowed." >&2
+        fi
         gh workflow run cd.yml --ref main || true
       fi
 
