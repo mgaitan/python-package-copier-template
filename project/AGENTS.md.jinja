@@ -6,7 +6,7 @@ Description: {{ project_description }}
 
 ## Stack
 
-- **Python:** Prefer Python 3.14.
+- **Python:** Python 3.14. Check main dependencies in `pyproject.toml`.
 - **Tests:** pytest, factory-boy, pytest-mock. `make test` to run tests. or `uv run pytest`
 - **Productivity:** Dependencies managed with `uv` via `pyproject.toml`;
 - **lint/format:** Ruff.
@@ -20,8 +20,8 @@ Description: {{ project_description }}
    - Stdlib or pydantic dataclasses
    - Advanced itertools
    - Pattern matching
-   - walrus operator
-   - enums subclasses (StrEnum, IntEnum, IntFlag)
+   - Walrus operator
+   - Enums subclasses
 - Dependency changes use `uv add` or `uv remove`
 - Docstrings in Markdown ("myst") format, expressing intentions rather than implementation details.
   Make references to other code if appropriate. Eg: "See also `{py:func}`other_module.helper_function`.".
