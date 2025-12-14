@@ -25,22 +25,5 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 
 ## Editing Notes
 - Prefer `apply_patch` for edits; avoid touching user changes you didn't make.
-- Never auto-commit/auto-push unless requested.
+- Do not auto-commit/auto-push unless requested.
 - Network calls are limited to what the template already does (e.g., PyPI HEAD check).
-
-## Python preferences
-
-- Modern and idiomatic practices that emphasize clarity and predictable behavior. Examples of modern features:
-   - Pathlib for file operations
-   - Data model methods (like __len__, __add__, etc.)
-   - Stdlib or pydantic dataclasses
-   - Advanced itertools
-   - Pattern matching
-   - walrus operator
-   - enums subclasses (StrEnum, IntEnum, IntFlag)
-- Dependency changes use `uv add` or `uv remove`
-- Docstrings in Markdown ("myst") format, expressing intentions rather than implementation details.
-  Make references to other code if appropriate. Eg: "See also `{py:func}`other_module.helper_function`.".
-- Explicit and robust type annotations using built-in generics (`list`, `dict`, etc.), union types with `|`, etc.
-- Prefer flat code: use early returns, guard clauses, fixtures over context managers on tests, etc.
-- Never hallucinate APIs or behaviours. If uncertain, inspect the code and/or check online documentation (ensure it's the correct version declared by uv.lock) or ask the developer

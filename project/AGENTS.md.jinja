@@ -14,27 +14,21 @@ Description: {{ project_description }}
 
 ## Python preferences
 
-- Modern and idiomatic practices that emphasize clarity and predictable behavior. Examples of modern features:
-   - Pathlib for file operations
-   - Data model methods (like __len__, __add__, etc.)
-   - Stdlib or pydantic dataclasses
-   - Advanced itertools
-   - Pattern matching
-   - walrus operator
-   - enums subclasses (StrEnum, IntEnum, IntFlag)
+- Modern and idiomatic practices that emphasize clarity, strong typing, and predictable behavior:
+e.g: pathlib for file operations, Pattern matching, walrus operator, enums subclasses (StrEnum, IntEnum, IntFlag)
 - Dependency changes use `uv add` or `uv remove`
 - Docstrings in Markdown ("myst") format, expressing intentions rather than implementation details.
   Make references to other code if appropriate. Eg: "See also `{py:func}`other_module.helper_function`.".
-- Explicit and robust type annotations using built-in generics (`list`, `dict`, etc.), union types with `|`, etc.
+- Explicit and robust type annotations using built-in generics (`list`, `dict`, etc.) , union types with `|`, etc.
 - Prefer flat code: use early returns, guard clauses, fixtures over context managers on tests, etc.
 - Never hallucinate APIs or behaviours. If uncertain, inspect the code and/or check online documentation (ensure it's the correct version declared by uv.lock) or ask the developer
 
 ## Git/Github preferences
 
 - Ensure you are in a proper branch for each new feature or bugfix.
-- Never commit or push automatically unless instructed otherwise.
+- Do not commit or push automatically unless instructed otherwise.
 - Prefer `gh` CLI for all interactions with Github if possible. Eg. Use it to open PRs / manage issues.
-- Consider mentioning yourself in the commits as co-author if you helped enough. Use the standard Git co-author trailer:
+- When acting as an agent, Consider mentioning yourself in the commits as co-author if you helped enough. Use the standard Git co-author trailer:
   "Co-authored-by: Name <email>".
 
 ## Documentation
@@ -53,4 +47,4 @@ Description: {{ project_description }}
 
 - All committable text must be in simple English (including documentation, code comments, docstrings, commit messages, PR descriptions, etc.).
 - However, when interacting with the developer in chat, respond in the language they use.
-- Avoid sexist or exclusionary language. Always prefer gender-neutral phrasing.
+- Avoid sexist or exclusionary language. In Spanish, prefer gender-neutral phrasing when possible.
