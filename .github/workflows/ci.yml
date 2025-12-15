@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Lint GitHub workflows
+        uses: rhysd/actionlint@v1
+
       - name: Configure Git
         run: |
           git config --global user.name "Copier Bot"

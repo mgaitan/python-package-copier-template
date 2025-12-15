@@ -25,6 +25,7 @@ Demo repo generated from this template: [mgaitan/yet-another-demo](https://githu
 - 📄 Generation of generic docs such as `LICENSE`, `CODE_OF_CONDUCT`, etc.
 - 🤖 Heavily curated [AGENTS.md](https://agents.md/)
 - 🌀 Initial setup of the development environment and git repo
+- 🔁 Scheduled template refresh workflow that opens a PR every 20 days when updates are available
 - ♻️ Projects updatable with [`copier update`](https://copier.readthedocs.io/en/stable/updating/)
 
 Please read [my blog post](https://mgaitan.github.io/en/posts/opinionated-python-project-scaffolding/) to learn about the details of the decisions I made and the alternatives I considered.
@@ -44,6 +45,8 @@ uvx copier update .
 ```
 
 This will fetch the latest template version and guide you through updating your project, preserving your customizations whenever possible.
+
+The generated project also ships a `Template Update` GitHub Actions workflow that runs every 20 days (or on manual dispatch) to execute `uvx copier update --trust --defaults .` and open a pull request with the changes and template version bump.
 
 To test a development version of the template, clone the repository and run:
 
