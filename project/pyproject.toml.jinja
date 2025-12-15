@@ -104,14 +104,14 @@ test = [
 lint = ["ruff"]
 qa = [
     { include-group = "lint" },
-    "ty>=0.0.1a31",
+    "ty>=0.0.1a34",
 ]
 docs = [
     "myst-parser>=3.0.0",
     "sphinx>=8.2",
     "sphinx-book-theme>=1.1.0",
     "sphinxcontrib-mermaid>=1.0.0",
-    "richterm[sphinx]",
+    "richterm[sphinx]>=0.1.0",
 ]
 dev = [
     { include-group = "test" },
