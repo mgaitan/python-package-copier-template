@@ -359,7 +359,7 @@ wheels = [
 
 [[package]]
 name = "python-package-copier-template"
-version = "0.3"
+version = "0.3.1"
 source = { editable = "." }
 dependencies = [
     { name = "copier" },

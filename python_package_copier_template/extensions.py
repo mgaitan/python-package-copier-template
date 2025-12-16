@@ -55,6 +55,12 @@ def path_exists(path: str) -> bool:
     return Path(path).expanduser().exists()
 
 
+def is_update(defaults: bool | None = None) -> bool:
+    """Return True when running under `copier update`."""
+
+    return bool(defaults)
+
+
 def pypi_distribution_exists(name: str) -> bool:
     """Return True if a distribution with ``name`` is present on PyPI.
 
@@ -97,6 +103,7 @@ class GitExtension(Extension):
         environment.filters["gh_user_login"] = gh_user_login
         environment.filters["command_available"] = command_available
         environment.filters["path_exists"] = path_exists
+        environment.filters["is_update"] = is_update
 
 
 class SlugifyExtension(Extension):
