@@ -23,7 +23,7 @@ jobs:
           echo "before=$before" >> "$GITHUB_OUTPUT"
 
       - name: Refresh from template
-        run: uvx copier update --trust --defaults .
+        run: uvx --with=copier-template-extensions copier update --trust --defaults .
 
       - name: Capture template version (after)
         id: template-version-after
