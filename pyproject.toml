@@ -11,5 +11,16 @@ dependencies = [
     "ruff>=0.14.9",
 ]
 
+[project.scripts]
+python-package-copier-template = "python_package_copier_template.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.9.18,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "python_package_copier_template"
+module-root = ""
+
 [tool.ruff]
 line-length = 120

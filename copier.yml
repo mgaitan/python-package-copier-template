@@ -8,9 +8,9 @@ _templates_suffix: .jinja
 _preserve_symlinks: true
 _jinja_extensions:
   - copier_template_extensions.TemplateExtensionLoader
-  - extensions.py:CurrentYearExtension
-  - extensions.py:GitExtension
-  - extensions.py:SlugifyExtension
+  - python_package_copier_template.extensions:CurrentYearExtension
+  - python_package_copier_template.extensions:GitExtension
+  - python_package_copier_template.extensions:SlugifyExtension
 _tasks:
   - when: "{{ not '.git' | path_exists }}"
     command: uv python pin 3.14
