@@ -43,8 +43,8 @@ def main(argv: list[str] | None = None) -> int:
     dst = Path(args.destination).expanduser() if args.destination else Path.cwd()
 
     if has_answers(dst):
-        run_update(dst_path=str(dst), defaults=True, unsafe=True)
+        run_update(dst_path=str(dst), defaults=True, unsafe=True, overwrite=True)
     else:
-        run_copy(src=TEMPLATE_SRC, dst_path=str(dst), defaults=True, unsafe=True)
+        run_copy(src_path=TEMPLATE_SRC, dst_path=str(dst), defaults=True, unsafe=True)
 
     return 0
