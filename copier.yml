@@ -12,12 +12,18 @@ _jinja_extensions:
   - extensions.py:GitExtension
   - extensions.py:SlugifyExtension
 _tasks:
-  - command: uv python pin 3.14
-  - command: uv sync
-  - command: git init -b main
-  - command: git add .
-  - command: 'git commit -m "chore: initial commit"'
-  - command: |
+  - when: "{{ not '.git' | path_exists }}"
+    command: uv python pin 3.14
+  - when: "{{ not '.git' | path_exists }}"
+    command: uv sync
+  - when: "{{ not '.git' | path_exists }}"
+    command: git init -b main
+  - when: "{{ not '.git' | path_exists }}"
+    command: git add .
+  - when: "{{ not '.git' | path_exists }}"
+    command: 'git commit -m "chore: initial commit"'
+  - when: "{{ not '.git' | path_exists }}"
+    command: |
       if command -v gh >/dev/null 2>&1 && [ "{{ gh_repo_create | default('skip') }}" != "skip" ]; then
         visibility="--private"
         if [ "{{ gh_repo_create | default('skip') }}" = "public" ]; then
