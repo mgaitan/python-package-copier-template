@@ -7,6 +7,7 @@ import urllib.error
 import urllib.request
 import unicodedata
 from datetime import date
+from pathlib import Path
 
 from jinja2.ext import Extension
 
@@ -50,6 +51,12 @@ def slugify(value, separator="-"):
     return re.sub(r"[-_\s]+", separator, value).strip("-_")
 
 
+def path_exists(path: str) -> bool:
+    """Return True when ``path`` exists relative to the destination."""
+
+    return Path(path).expanduser().exists()
+
+
 def pypi_distribution_exists(name: str) -> bool:
     """Return True if a distribution with ``name`` is present on PyPI.
 
@@ -91,6 +98,7 @@ class GitExtension(Extension):
         environment.filters["git_user_email"] = git_user_email
         environment.filters["gh_user_login"] = gh_user_login
         environment.filters["command_available"] = command_available
+        environment.filters["path_exists"] = path_exists
 
 
 class SlugifyExtension(Extension):
