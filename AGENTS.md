@@ -11,7 +11,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 
 ## Quick Facts for Agents
 - Template entrypoint: `copier.yml` (prompts, defaults, tasks).
-- Jinja helpers: see `extensions.py` (slugify, PyPI check/suggestion, gh username/availability).
+- Jinja helpers: see `python_package_copier_template/extensions.py` (slugify, PyPI check/suggestion, gh username/availability).
 - Project skeleton lives under `project/`.
 - CI: `project/.github/workflows/ci.yml.jinja` (lint/tests).
 - CD: `project/.github/workflows/cd.yml.jinja` (PyPI publish on release; docs publish on release or manual dispatch).
