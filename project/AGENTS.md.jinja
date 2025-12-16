@@ -23,6 +23,7 @@ Description: {{ project_description }}
    - Walrus operator
    - Enums subclasses
 - Dependency changes use `uv add` or `uv remove`
+- Use `uv run python - <<'PY' ...` instead `python - <<'PY'` for inline scripts
 - Docstrings in Markdown ("myst") format, expressing intentions rather than implementation details.
   Make references to other code if appropriate. Eg: "See also `{py:func}`other_module.helper_function`.".
 - Explicit and robust type annotations using built-in generics (`list`, `dict`, etc.), union types with `|`, etc.
