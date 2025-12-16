@@ -35,10 +35,10 @@ Please read [my blog post](https://mgaitan.github.io/en/posts/opinionated-python
 Quick shortcut (auto-detects copy vs update):
 
 ```bash
-uvx git+https://github.com/mgaitan/python-package-copier-template
+uvx git+https://github.com/mgaitan/python-package-copier-template [DESTINATION]
 ```
 
-This runs `copier copy --trust --defaults` when no `.copier-answers.yml` is present, or `copier update --trust --defaults` when it is.
+This runs `copier copy --trust --defaults` to `DESTINATION` (or `.` if omitted) when no `.copier-answers.yml` is present, or `copier update --trust --defaults` when it is.
 Check the installed version with `uvx git+https://github.com/mgaitan/python-package-copier-template -- --version`.
 
 Start a new project explicitly with Copier:
