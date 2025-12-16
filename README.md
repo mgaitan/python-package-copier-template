@@ -32,7 +32,15 @@ Please read [my blog post](https://mgaitan.github.io/en/posts/opinionated-python
 
 ## Quick setup and usage
 
-Start a new project with this template:
+Quick shortcut (auto-detects copy vs update):
+
+```bash
+uvx git+https://github.com/mgaitan/python-package-copier-template
+```
+
+This runs `copier copy --trust --defaults` when no `.copier-answers.yml` is present, or `copier update --trust --defaults` when it is.
+
+Start a new project explicitly with Copier:
 
 ```bash
 uvx --with=copier-template-extensions copier copy --trust "gh:mgaitan/python-package-copier-template" /path/to/your/new/project
@@ -41,7 +49,7 @@ uvx --with=copier-template-extensions copier copy --trust "gh:mgaitan/python-pac
 To upgrade an existing project created from this template to the latest version, run:
 
 ```bash
-uvx copier update .
+uvx --with=copier-template-extensions copier update . --trust 
 ```
 
 This will fetch the latest template version and guide you through updating your project, preserving your customizations whenever possible.
