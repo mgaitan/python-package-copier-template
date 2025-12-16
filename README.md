@@ -39,6 +39,7 @@ uvx git+https://github.com/mgaitan/python-package-copier-template
 ```
 
 This runs `copier copy --trust --defaults` when no `.copier-answers.yml` is present, or `copier update --trust --defaults` when it is.
+Check the installed version with `uvx git+https://github.com/mgaitan/python-package-copier-template -- --version`.
 
 Start a new project explicitly with Copier:
 
