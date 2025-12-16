@@ -22,7 +22,15 @@ def has_answers(dst: Path) -> bool:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python-package-copier-template",
-        description="Apply the template via Copier (copy if no answers file, update otherwise).",
+        description=(
+            "Apply the template via Copier. If the destination has a .copier-answers file, run update; "
+            "otherwise run copy."
+        ),
+    )
+    parser.add_argument(
+        "destination",
+        nargs="?",
+        help="Destination directory (defaults to current working directory).",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {get_version()}")
     return parser
@@ -30,9 +38,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
-    parser.parse_args(argv)
+    args = parser.parse_args(argv)
 
-    dst = Path.cwd()
+    dst = Path(args.destination).expanduser() if args.destination else Path.cwd()
 
     if has_answers(dst):
         run_update(dst_path=str(dst), defaults=True, trust=True)
