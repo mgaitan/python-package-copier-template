@@ -23,7 +23,7 @@ bump:
 .PHONY: release
 release: ## Create a GitHub release for the current version
 	@version=$$(uv version --short); \
-	git commit -m "Bump $$version"; \
+	git commit -am "Bump $$version"; \
 	git push origin main; \
 	gh release create "$$version" --generate-notes
 
