@@ -2,7 +2,7 @@
 
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
 [![CI](https://github.com/mgaitan/python-package-copier-template/actions/workflows/ci.yml/badge.svg)](https://github.com/mgaitan/python-package-copier-template/actions/workflows/ci.yml)
-
+[![Changelog](https://img.shields.io/github/v/release/mgaitan/python-package-copier-template }})](https://github.com/mgaitan/python-package-copier-template/releases)
 
 A [Copier](https://github.com/copier-org/copier) template
 for modern Python projects. 

@@ -9,6 +9,7 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
     # Use the template in the repository (current working tree).
     template_src = Path(__file__).resolve().parent.parent
     monkeypatch.setattr(cli, "TEMPLATE_SRC", str(template_src))
+    monkeypatch.setenv("COPIER_TEMPLATE_DEFAULTS", "1")
 
     dest = tmp_path / "proj"
 

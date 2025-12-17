@@ -1,4 +1,5 @@
 import argparse
+import os
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
@@ -40,11 +41,19 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
+    copy_defaults = os.environ.get("COPIER_TEMPLATE_DEFAULTS") == "1"
     dst = Path(args.destination).expanduser() if args.destination else Path.cwd()
 
     if has_answers(dst):
         run_update(dst_path=str(dst), defaults=True, unsafe=True, overwrite=True)
     else:
-        run_copy(src_path=TEMPLATE_SRC, dst_path=str(dst), defaults=True, unsafe=True)
+        if args.destination is None:
+            parser.error("Destination path is required for creating a project (or use copier copy directly).")
+        run_copy(
+            src_path=TEMPLATE_SRC,
+            dst_path=str(dst),
+            defaults=copy_defaults,
+            unsafe=True,
+        )
 
     return 0

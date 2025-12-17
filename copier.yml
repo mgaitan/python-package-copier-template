@@ -12,17 +12,17 @@ _jinja_extensions:
   - python_package_copier_template.extensions:GitExtension
   - python_package_copier_template.extensions:SlugifyExtension
 _tasks:
-  - when: "{{ (not defaults | is_update) and (not '.git' | path_exists) }}"
+  - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: uv python pin 3.14
-  - when: "{{ (not defaults | is_update) and (not '.git' | path_exists) }}"
+  - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: uv sync
-  - when: "{{ (not defaults | is_update) and (not '.git' | path_exists) }}"
+  - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: git init -b main
-  - when: "{{ (not defaults | is_update) and (not '.git' | path_exists) }}"
+  - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: git add .
-  - when: "{{ (not defaults | is_update) and (not '.git' | path_exists) }}"
+  - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: 'git commit -m "chore: initial commit"'
-  - when: "{{ (not defaults | is_update) and (not '.git' | path_exists) }}"
+  - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: |
       if command -v gh >/dev/null 2>&1 && [ "{{ gh_repo_create | default('skip') }}" != "skip" ]; then
         visibility="--private"
