@@ -23,7 +23,7 @@ jobs:
           echo "before=$before" >> "$GITHUB_OUTPUT"
 
       - name: Refresh from template
-        run: uvx --with=copier-template-extensions copier update --trust --defaults .
+        run: uvx git+https://github.com/mgaitan/python-package-copier-template -- .
 
       - name: Capture template version (after)
         id: template-version-after
