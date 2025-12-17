@@ -13,7 +13,7 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
 
     dest = tmp_path / "proj"
 
-    # First run: copy should create the project.
+    # First run: copy should create the project (defaults provided via env).
     cli.main([str(dest)])
     answers_file = dest / ".copier-answers.yml"
     assert answers_file.exists()

@@ -3,7 +3,7 @@ import os
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
-from copier import run_copy, run_update
+from copier import run_copy, run_update, main as copier_main
 
 TEMPLATE_SRC = "gh:mgaitan/python-package-copier-template"
 ANSWER_FILES: tuple[str, ...] = (".copier-answers.yml", ".copier-answers.yaml")
@@ -42,18 +42,18 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     copy_defaults = os.environ.get("COPIER_TEMPLATE_DEFAULTS") == "1"
-    dst = Path(args.destination).expanduser() if args.destination else Path.cwd()
-
-    if has_answers(dst):
-        run_update(dst_path=str(dst), defaults=True, unsafe=True, overwrite=True)
+    if args.destination:
+        dst = Path(args.destination).expanduser()
+        if has_answers(dst):
+            run_update(dst_path=str(dst), defaults=True, unsafe=True, overwrite=True)
+        else:
+            run_copy(src_path=TEMPLATE_SRC, dst_path=str(dst), defaults=copy_defaults, unsafe=True)
     else:
-        if args.destination is None:
-            parser.error("Destination path is required for creating a project (or use copier copy directly).")
-        run_copy(
-            src_path=TEMPLATE_SRC,
-            dst_path=str(dst),
-            defaults=copy_defaults,
-            unsafe=True,
-        )
+        # Mirror Copier CLI behavior: if no destination is provided, delegate to copier CLI
+        copier_args = ["copy", "--trust"]
+        if copy_defaults:
+            copier_args.append("--defaults")
+        copier_args.append(TEMPLATE_SRC)
+        copier_main(copier_args)
 
     return 0
