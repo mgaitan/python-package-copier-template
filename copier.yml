@@ -98,7 +98,7 @@ python_package_distribution_name:
   type: str
   help: Your Python package distribution name (for `uv add NAME`)
   default: "{{ project_name | pypi_suggest_name }}"
-  validator: "{{ '' if not (python_package_distribution_name | pypi_exists) else 'Name already exists on PyPI. Choose another distribution name.' }}"
+  validator: "{{ '' if (_copier_operation == 'update') or not (python_package_distribution_name | pypi_exists) else 'Name already exists on PyPI. Choose another distribution name.' }}"
 
 python_package_import_name:
   type: str

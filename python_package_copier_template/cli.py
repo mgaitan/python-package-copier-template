@@ -5,6 +5,8 @@ from pathlib import Path
 
 from copier import run_copy, run_update
 
+from python_package_copier_template import extensions
+
 TEMPLATE_SRC = "gh:mgaitan/python-package-copier-template"
 ANSWER_FILES: tuple[str, ...] = (".copier-answers.yml", ".copier-answers.yaml")
 
@@ -47,7 +49,14 @@ def main(argv: list[str] | None = None) -> int:
 
     dst = Path(args.destination).expanduser()
     if has_answers(dst):
-        run_update(dst_path=str(dst), defaults=True, unsafe=True, overwrite=True)
+        with extensions.update_mode():
+            run_update(
+                dst_path=str(dst),
+                defaults=True,
+                unsafe=True,
+                overwrite=True,
+                skip_answered=True,
+            )
     else:
         run_copy(src_path=TEMPLATE_SRC, dst_path=str(dst), defaults=copy_defaults, unsafe=True)
 

@@ -1,13 +1,28 @@
 import re
 import shutil
 import subprocess
+import unicodedata
 import urllib.error
 import urllib.request
-import unicodedata
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import date
 from pathlib import Path
 
 from jinja2.ext import Extension
+
+_UPDATE_MODE: ContextVar[bool] = ContextVar("copier_template_update_mode", default=False)
+
+
+@contextmanager
+def update_mode():
+    """Mark the current execution context as an update operation."""
+
+    token = _UPDATE_MODE.set(True)
+    try:
+        yield
+    finally:
+        _UPDATE_MODE.reset(token)
 
 
 def git_user_name(default: str) -> str:
@@ -67,6 +82,11 @@ def pypi_distribution_exists(name: str) -> bool:
     Uses the lightweight JSON endpoint and handles network failures gracefully
     by treating them as "not found" so template execution is not blocked.
     """
+
+    # During updates we keep the previously selected distribution name and
+    # should not block on global PyPI availability checks.
+    if _UPDATE_MODE.get():
+        return False
 
     if not name:
         return False
