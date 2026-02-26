@@ -31,6 +31,9 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "{{ python_package_import_name }}"
 
+[tool.uv]
+exclude-newer = "1 week"
+
 [tool.ruff]
 line-length = 120
 
