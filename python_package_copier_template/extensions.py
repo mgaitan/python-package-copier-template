@@ -1,9 +1,10 @@
+import os
 import re
 import shutil
 import subprocess
+import unicodedata
 import urllib.error
 import urllib.request
-import unicodedata
 from datetime import date
 from pathlib import Path
 
@@ -67,6 +68,11 @@ def pypi_distribution_exists(name: str) -> bool:
     Uses the lightweight JSON endpoint and handles network failures gracefully
     by treating them as "not found" so template execution is not blocked.
     """
+
+    # During template updates we keep the previously selected distribution name
+    # and must not block on global PyPI availability checks.
+    if os.environ.get("COPIER_TEMPLATE_IS_UPDATE") == "1":
+        return False
 
     if not name:
         return False

@@ -47,7 +47,21 @@ def main(argv: list[str] | None = None) -> int:
 
     dst = Path(args.destination).expanduser()
     if has_answers(dst):
-        run_update(dst_path=str(dst), defaults=True, unsafe=True, overwrite=True)
+        previous_update_env = os.environ.get("COPIER_TEMPLATE_IS_UPDATE")
+        os.environ["COPIER_TEMPLATE_IS_UPDATE"] = "1"
+        try:
+            run_update(
+                dst_path=str(dst),
+                defaults=True,
+                unsafe=True,
+                overwrite=True,
+                skip_answered=True,
+            )
+        finally:
+            if previous_update_env is None:
+                os.environ.pop("COPIER_TEMPLATE_IS_UPDATE", None)
+            else:
+                os.environ["COPIER_TEMPLATE_IS_UPDATE"] = previous_update_env
     else:
         run_copy(src_path=TEMPLATE_SRC, dst_path=str(dst), defaults=copy_defaults, unsafe=True)
 
