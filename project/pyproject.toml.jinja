@@ -33,6 +33,7 @@ module-name = "{{ python_package_import_name }}"
 
 [tool.uv]
 exclude-newer = "1 week"
+exclude-newer-package = { ty = "0 days" }
 
 [tool.ruff]
 line-length = 120
