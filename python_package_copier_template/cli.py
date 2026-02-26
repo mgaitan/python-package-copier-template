@@ -5,6 +5,8 @@ from pathlib import Path
 
 from copier import run_copy, run_update
 
+from python_package_copier_template import extensions
+
 TEMPLATE_SRC = "gh:mgaitan/python-package-copier-template"
 ANSWER_FILES: tuple[str, ...] = (".copier-answers.yml", ".copier-answers.yaml")
 
@@ -47,9 +49,7 @@ def main(argv: list[str] | None = None) -> int:
 
     dst = Path(args.destination).expanduser()
     if has_answers(dst):
-        previous_update_env = os.environ.get("COPIER_TEMPLATE_IS_UPDATE")
-        os.environ["COPIER_TEMPLATE_IS_UPDATE"] = "1"
-        try:
+        with extensions.update_mode():
             run_update(
                 dst_path=str(dst),
                 defaults=True,
@@ -57,11 +57,6 @@ def main(argv: list[str] | None = None) -> int:
                 overwrite=True,
                 skip_answered=True,
             )
-        finally:
-            if previous_update_env is None:
-                os.environ.pop("COPIER_TEMPLATE_IS_UPDATE", None)
-            else:
-                os.environ["COPIER_TEMPLATE_IS_UPDATE"] = previous_update_env
     else:
         run_copy(src_path=TEMPLATE_SRC, dst_path=str(dst), defaults=copy_defaults, unsafe=True)
 
