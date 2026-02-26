@@ -13,6 +13,7 @@ Demo repo generated from this template: [mgaitan/yet-another-demo](https://githu
 
 - 🐍 Modern Python package (3.12+)
 - 📦 Build and dependency management with [uv](https://docs.astral.sh/uv/), split by groups (dev/qa/docs)
+- 🧊 Dependency cooldowns enabled by default in `uv` (`[tool.uv].exclude-newer = "1 week"`), with targeted overrides when needed (for example `ty`) to reduce supply-chain risk without blocking QA tools
 - 🧹 Linting and formatting via [Ruff](https://docs.astral.sh/ruff/) with a broad set of rules enabled
 - ✅ Type checking via [ty](https://github.com/astral-sh/ty)
 - 🧪 Tests with [pytest](https://docs.pytest.org/en/stable/), [coverage.py](https://coverage.readthedocs.io/en/latest/) and extensions
