@@ -1,6 +1,7 @@
 import os
 import subprocess
 import urllib.error
+from email.message import Message
 from pathlib import Path
 
 from python_package_copier_template import cli, extensions
@@ -26,7 +27,7 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
     def _fake_urlopen(_request, timeout):  # noqa: ANN001
         if project_exists_on_pypi:
             return _DummyResponse()
-        raise urllib.error.HTTPError("", 404, "not found", {}, None)
+        raise urllib.error.HTTPError("", 404, "not found", Message(), None)
 
     monkeypatch.setattr(extensions.urllib.request, "urlopen", _fake_urlopen)
     cli.main([str(dest)])
