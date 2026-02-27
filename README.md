@@ -16,6 +16,7 @@ Demo repo generated from this template: [mgaitan/yet-another-demo](https://githu
 - 🧊 Dependency cooldowns enabled by default in `uv` (`[tool.uv].exclude-newer = "1 week"`), with targeted overrides when needed (for example `ty`) to reduce supply-chain risk without blocking QA tools
 - 🧹 Linting and formatting via [Ruff](https://docs.astral.sh/ruff/) with a broad set of rules enabled
 - ✅ Type checking via [ty](https://github.com/astral-sh/ty)
+- 🪝 Pre-commit style QA orchestration via [prek](https://github.com/j178/prek) (`check-ast`, `check-yaml`, `check-toml`, Ruff, Ty)
 - 🧪 Tests with [pytest](https://docs.pytest.org/en/stable/), [coverage.py](https://coverage.readthedocs.io/en/latest/) and extensions
 - 📚 Docs with [Sphinx](https://www.sphinx-doc.org/en/master/), [MyST](https://myst-parser.readthedocs.io/en/stable/) and a few extensions, deployed to [GitHub Pages](https://pages.github.com/)
 - 🏗️ Use of [GitHub CLI](https://cli.github.com/) for autotic project creation 

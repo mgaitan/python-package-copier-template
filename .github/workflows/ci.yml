@@ -29,12 +29,26 @@ jobs:
       - name: Generate project from template
         run: uv run copier copy --trust --vcs-ref=HEAD . test-project --defaults
 
-      - name: Run template sanity checks
+      - name: Template Ruff check
         working-directory: test-project
-        run: |
-          set -xeuo pipefail
-          uv run --group lint ruff check --output-format=github
-          uv run --group test pytest
-          uv run --group qa ty check --output-format=github
-          uv build
-          make docs
+        run: uv run --only-group lint ruff check --output-format=github
+
+      - name: Template Ruff format
+        working-directory: test-project
+        run: uv run --only-group lint ruff format --check
+
+      - name: Template Ty check
+        working-directory: test-project
+        run: uv run --group qa ty check --output-format=github
+
+      - name: Template tests
+        working-directory: test-project
+        run: uv run --group test pytest
+
+      - name: Template build
+        working-directory: test-project
+        run: uv build
+
+      - name: Template docs
+        working-directory: test-project
+        run: make docs

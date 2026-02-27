@@ -33,7 +33,7 @@ module-name = "{{ python_package_import_name }}"
 
 [tool.uv]
 exclude-newer = "1 week"
-exclude-newer-package = { ty = "0 days" }
+exclude-newer-package = { ty = "0 days", prek = "0 days" }
 
 [tool.ruff]
 line-length = 120
@@ -109,6 +109,7 @@ lint = ["ruff"]
 qa = [
     { include-group = "lint" },
     "ty>=0.0.19",
+    "prek>=0.4.0",
 ]
 docs = [
     "myst-parser>=3.0.0",
