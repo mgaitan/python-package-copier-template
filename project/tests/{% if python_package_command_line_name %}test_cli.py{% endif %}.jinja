@@ -11,12 +11,12 @@ import pytest
 from {{ python_package_import_name }} import get_version, main
 
 
-def test_main() -> None:
+def test_main():
     """Basic CLI test."""
     assert main([]) == 0
 
 
-def test_show_help(capsys: pytest.CaptureFixture) -> None:
+def test_show_help(capsys: pytest.CaptureFixture):
     """Show help.
 
     Parameters:
@@ -28,7 +28,7 @@ def test_show_help(capsys: pytest.CaptureFixture) -> None:
     assert "{{ python_package_command_line_name }}" in captured.out
 
 
-def test_show_version(mocker, capsys: pytest.CaptureFixture) -> None:
+def test_show_version(mocker, capsys: pytest.CaptureFixture):
     """Show version.
 
     Parameters:
