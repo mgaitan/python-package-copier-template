@@ -26,6 +26,11 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
 
+      - name: Install prek tool
+        run: |
+          uv tool install prek
+          echo "$(uv tool dir --bin)" >> "$GITHUB_PATH"
+
       - name: Generate project from template
         run: uv run copier copy --trust --vcs-ref=HEAD . test-project --defaults
 
@@ -37,7 +42,7 @@ jobs:
 
       - name: Template prek check
         working-directory: test-project
-        run: uvx prek run --all-files
+        run: prek run --all-files
 
       - name: Template Ruff check
         working-directory: test-project
