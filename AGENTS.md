@@ -27,6 +27,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Prefer `apply_patch` for edits; avoid touching user changes you didn't make.
 - Never auto-commit/auto-push unless requested.
 - Network calls are limited to what the template already does (e.g., PyPI HEAD check).
+- For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
 
 ## Python preferences
 
