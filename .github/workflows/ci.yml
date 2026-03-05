@@ -26,6 +26,9 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
 
+      - name: Template package docs
+        run: uv run --group docs sphinx-build docs docs/_build/html -b html -W
+
       - name: Install prek tool
         run: |
           uv tool install prek

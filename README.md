@@ -20,6 +20,7 @@ Demo repo generated from this template: [mgaitan/yet-another-demo](https://githu
 - 🧪 Tests with [pytest](https://docs.pytest.org/en/stable/), [coverage.py](https://coverage.readthedocs.io/en/latest/) and extensions
 - 📚 Docs with [Sphinx](https://www.sphinx-doc.org/en/master/), [MyST](https://myst-parser.readthedocs.io/en/stable/) and a few extensions, deployed to [GitHub Pages](https://pages.github.com/)
 - 👀 Automatic docs preview deployment for PRs that modify documentation (`/_preview/pr-<PR_NUMBER>/` on GitHub Pages)
+- 🧭 Generated docs follow [Diataxis](https://diataxis.fr/) and document rationale in [`about_the_docs`](project/docs/about_the_docs.md.jinja)
 - 🏗️ Use of [GitHub CLI](https://cli.github.com/) for autotic project creation 
 - ⚙️ CI workflow on [GitHub Actions](https://github.com/features/actions)
 - 🚀 Automated releases to PyPI via [Trusted Publishing](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
@@ -32,6 +33,16 @@ Demo repo generated from this template: [mgaitan/yet-another-demo](https://githu
 - ♻️ Projects updatable with [`copier update`](https://copier.readthedocs.io/en/stable/updating/)
 
 Please read [my blog post](https://mgaitan.github.io/en/posts/opinionated-python-project-scaffolding/) to learn about the details of the decisions I made and the alternatives I considered.
+
+## Package Documentation
+
+The package now includes a Diataxis-based docs set under `docs/` that expands this README:
+
+- [Tutorial: Getting started](docs/getting_started.md)
+- [How-to: Maintain the template](docs/maintain_template.md)
+- [Reference: Configuration](docs/configuration.md)
+- [Explanation: About these docs](docs/about_the_docs.md)
+- [Explanation: Design decisions](docs/design_decisions.md)
 
 ## Quick setup and usage
 
