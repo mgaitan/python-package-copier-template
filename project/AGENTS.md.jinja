@@ -45,6 +45,8 @@ Description: {{ project_description }}
 ## Documentation
 
 - Documentation sources are in `docs/` using Sphinx and Markdown with myst-parser.  Run `make docs` to build them.
+- Documentation previews for PRs with docs changes are published under `https://{{ repository_namespace }}.github.io/{{ repository_name }}/_preview/pr-<PR_NUMBER>/`.
+- Release/manual docs publish uses the canonical site URL: `https://{{ repository_namespace }}.github.io/{{ repository_name }}/`.
 - Provide documentation for:
   - **Users:** intention, behaviour, minimal examples.
   - **Contributors (humans + agents):** technical details, internal references, short code explanations.
