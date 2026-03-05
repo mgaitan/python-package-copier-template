@@ -50,3 +50,14 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
     # name now exists on PyPI.
     project_exists_on_pypi = True
     cli.main([str(dest)])
+
+
+def test_prek_task_runs_on_update_even_with_defaults() -> None:
+    copier_yml = Path(__file__).resolve().parent.parent / "copier.yml"
+    content = copier_yml.read_text(encoding="utf-8")
+
+    expected_when = (
+        "{{ ((((not (defaults | default(false))) and (not '.git' | path_exists)) "
+        "or (_copier_operation == 'update')) and ('prek' | command_available)) }}"
+    )
+    assert expected_when in content

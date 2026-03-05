@@ -22,7 +22,7 @@ _tasks:
     command: git init -b main
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: git add .
-  - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) and ('prek' | command_available) }}"
+  - when: "{{ ((((not (defaults | default(false))) and (not '.git' | path_exists)) or (_copier_operation == 'update')) and ('prek' | command_available)) }}"
     command: prek install
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: 'git commit -m "chore: initial commit"'
