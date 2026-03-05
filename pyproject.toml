@@ -29,3 +29,8 @@ line-length = 120
 dev = [
     "pytest>=9.0.2",
 ]
+docs = [
+    "myst-parser>=4.0.1",
+    "sphinx>=8.2.3",
+    "sphinx-book-theme>=1.1.4",
+]

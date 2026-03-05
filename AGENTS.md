@@ -13,6 +13,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Template entrypoint: `copier.yml` (prompts, defaults, tasks).
 - Jinja helpers: see `python_package_copier_template/extensions.py` (slugify, PyPI check/suggestion, gh username/availability).
 - Project skeleton lives under `project/`.
+- Package docs for this repository live under `docs/` and follow Diataxis.
 - CI: `project/.github/workflows/ci.yml.jinja` (lint/tests).
 - CD: `project/.github/workflows/cd.yml.jinja` (PyPI publish on release; docs publish on release or manual dispatch).
 - Makefile: `project/Makefile.jinja` (install, test, qa, docs, etc.).
@@ -28,6 +29,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Never auto-commit/auto-push unless requested.
 - Network calls are limited to what the template already does (e.g., PyPI HEAD check).
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
+- For documentation edits, keep Diataxis separation clear and maintain the env var glossary in `docs/configuration.md` (refer via `{term}` in docs chapters).
 
 ## Python preferences
 
