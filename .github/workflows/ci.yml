@@ -29,7 +29,7 @@ jobs:
       - name: Install prek tool
         run: |
           uv tool install prek
-          echo "$(uv tool dir --bin)" >> "$GITHUB_PATH"
+          uv tool dir --bin >> "$GITHUB_PATH"
 
       - name: Generate project from template
         run: uv run copier copy --trust --vcs-ref=HEAD . test-project --defaults
