@@ -1,26 +1,21 @@
-# About These Docs (Explanation)
+# About These Docs
 
-This repository now applies the same documentation principles it promotes in generated projects.
+The README is the short, practical entrypoint.
+This documentation exists to expand that content for people who want to start and maintain projects with this template.
 
-## Principles
+We use [Diataxis](https://diataxis.fr/) to keep intent clear:
 
-- Documentation is versioned with code and reviewed in the same PRs.
-- Structure follows [Diataxis](https://diataxis.fr/).
-- Reference chapters stay factual and stable (see [Configuration](configuration.md)).
-- Workflow/automation topics remain operational and reproducible.
+- tutorial for first steps,
+- how-to guides for repeatable tasks,
+- reference for factual lookup,
+- explanation for rationale.
 
-## Relation with README
+That separation matters here because two audiences coexist:
 
-`README.md` remains the concise overview.
-This docs set expands README topics in depth:
+1. users consuming the template (`uvx git+...`, project lifecycle, update flow),
+2. contributors evolving this repository itself.
 
-- setup and local execution flow,
-- maintenance and update procedures,
-- configuration terms and environment behavior,
-- architectural rationale.
+In earlier versions of these docs, that boundary was blurry.
+The current structure keeps \"how to use the template\" front and center, and moves local-template development details to dedicated sections.
 
-## Style conventions
-
-- Use glossary terms for env vars with `{term}` references.
-- Keep examples copy-pasteable.
-- Prefer explicit links to repo files (for example `gh:copier.yml`).
+Environment variables should be defined once in [Configuration](configuration.md) and referenced as glossary terms (for example {term}`GH_TOKEN` and {term}`GITHUB_TOKEN`) in other chapters.

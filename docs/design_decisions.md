@@ -1,21 +1,30 @@
-# Design Decisions (Explanation)
+# Design Decisions
 
-This chapter captures the template's opinionated defaults and why they exist.
+This template is intentionally opinionated. The goal is not to provide a neutral skeleton, but a practical baseline that already encodes decisions usually made at project start.
 
-## Tooling baseline
+## Boilerplate vs scaffolding
 
-- `uv` is the package/dependency workflow to reduce setup variance.
-- QA defaults are strict enough for early signal: Ruff, Ty, pytest, and docs warnings-as-errors.
-- Docs and release automation are first-class repository concerns.
+A `pyproject.toml` plus a package folder is enough to start coding, but real projects quickly need much more: QA conventions, CI/CD, docs, release flow, and repository automation.
+The template treats those as part of project architecture, not optional extras.
 
-## Scaffolding strategy
+That is why this repository uses Copier instead of a one-shot boilerplate approach.
+With Copier, generated projects can evolve through `copier update`, so conventions can improve over time without hand-editing every repository.
 
-- Generate a complete but minimal project skeleton.
-- Keep opinionated defaults explicit and editable in template files.
-- Support updateability via Copier while preserving local project customization.
+## Why this toolchain
 
-## Governance decisions
+The defaults reflect the rationale described in the project blog post:
+<https://mgaitan.github.io/en/posts/opinionated-python-project-scaffolding/>.
 
-- Prefer automation over manual checklist steps for CI/CD.
-- Keep generated docs immediately useful for users and contributors.
-- Treat documentation architecture as part of project architecture.
+In short:
+
+- `uv` for dependency and environment management with dependency groups.
+- Ruff + Ty + pytest as the baseline QA stack.
+- Sphinx + MyST for documentation as part of the same code lifecycle.
+- GitHub Actions for CI, release automation, docs deploy, and template refresh.
+
+This is a coherence decision more than a \"best tool\" claim: the stack should feel integrated and keep friction low for day-to-day work.
+
+## Why generated projects are \"complete\" from day one
+
+The template generates project metadata, docs skeleton, CI/CD workflows, and operational shortcuts (`Makefile`) because those are the pieces teams often postpone and later have to retrofit under pressure.
+Starting with them in place reduces setup variance and improves long-term maintainability.
