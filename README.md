@@ -19,6 +19,7 @@ Demo repo generated from this template: [mgaitan/yet-another-demo](https://githu
 - 🪝 Optional pre-commit style QA orchestration via [prek](https://github.com/j178/prek) as an external tool (`uv tool install prek`; hooks include `check-ast`, `check-yaml`, `check-toml`, Ruff, Ty)
 - 🧪 Tests with [pytest](https://docs.pytest.org/en/stable/), [coverage.py](https://coverage.readthedocs.io/en/latest/) and extensions
 - 📚 Docs with [Sphinx](https://www.sphinx-doc.org/en/master/), [MyST](https://myst-parser.readthedocs.io/en/stable/) and a few extensions, deployed to [GitHub Pages](https://pages.github.com/)
+- 👀 Automatic docs preview deployment for PRs that modify documentation (`/_preview/pr-<PR_NUMBER>/` on GitHub Pages)
 - 🏗️ Use of [GitHub CLI](https://cli.github.com/) for autotic project creation 
 - ⚙️ CI workflow on [GitHub Actions](https://github.com/features/actions)
 - 🚀 Automated releases to PyPI via [Trusted Publishing](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
