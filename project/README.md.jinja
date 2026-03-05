@@ -29,8 +29,20 @@ uv tool install {{ python_package_distribution_name }}
 
 - Install dependencies with `uv sync`.
 - New dependency releases are delayed by one week via `uv` cooldown (`[tool.uv].exclude-newer = "1 week"`), with per-package overrides when required (for example, `ty`).
-- Run the QA bundle with [`ty`](https://github.com/astral-sh/ty):
+- Install [`prek`](https://github.com/j178/prek) as an external tool:
 
 ```bash
-uv run ty check
+uv tool install prek
+```
+
+- Install git hooks with `prek`:
+
+```bash
+prek install
+```
+
+- Run the local QA bundle with `prek`:
+
+```bash
+prek run --all-files
 ```

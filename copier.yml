@@ -6,6 +6,8 @@ _envops:
 _subdirectory: project
 _templates_suffix: .jinja
 _preserve_symlinks: true
+_exclude:
+  - "{% if not ('prek' | command_available) %}prek.toml{% endif %}"
 _jinja_extensions:
   - copier_template_extensions.TemplateExtensionLoader
   - python_package_copier_template.extensions:CurrentYearExtension
@@ -20,6 +22,8 @@ _tasks:
     command: git init -b main
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: git add .
+  - when: "{{ ((((not (defaults | default(false))) and (not '.git' | path_exists)) or (_copier_operation == 'update')) and ('prek' | command_available)) }}"
+    command: prek install
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: 'git commit -m "chore: initial commit"'
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
