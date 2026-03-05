@@ -25,6 +25,13 @@ When editing `python-package-copier-template` itself, use local checks:
 make qa
 ```
 
+For docs-only work:
+
+```bash
+make docs
+make docs-open
+```
+
 For a full smoke flow against a generated project:
 
 ```bash

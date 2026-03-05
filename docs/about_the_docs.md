@@ -37,7 +37,14 @@ This package-level docs set intentionally stays lighter and only enables what is
 
 ## Build and publish flow
 
-Local build:
+Local build shortcuts:
+
+```bash
+make docs
+make docs-open
+```
+
+Equivalent direct command:
 
 ```bash
 uv run --group docs sphinx-build docs docs/_build/html -b html -W

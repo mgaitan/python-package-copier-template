@@ -28,3 +28,4 @@ make docs
 ```
 
 That gives you a fully working baseline with dependencies, QA, tests, and documentation.
+Use `make docs-open` if you want to open the generated HTML in your browser.
