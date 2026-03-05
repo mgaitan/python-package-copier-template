@@ -1,4 +1,4 @@
-# Configuration (Reference)
+# Configuration
 
 ```{glossary}
 COPIER_TEMPLATE_DEFAULTS
