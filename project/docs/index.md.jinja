@@ -12,29 +12,67 @@
 ## Quick Start
 
 {% if python_package_command_line_name -%}
-Run directly without installing via `uvx`
+Run directly without installing via `uvx`:
 
 ```bash
 uvx{% if python_package_command_line_name != python_package_distribution_name %} --with={{ python_package_distribution_name }}{% endif %} {{ python_package_command_line_name }} --help
 ```
+
+When running from source, we use {term}`PYTHONPATH` in docs examples so the local package is importable without an install step.
 
 ```{richterm} env PYTHONPATH=../src uv run -m {{ python_package_import_name }} --help
 :hide-command: true
 ```
 
 {% endif -%}
-To install the tool permanently:
+To install the tool permanently, use:
 
 ```bash
 uv tool install {{ python_package_distribution_name }}
 ```
 
+## Documentation Map (Diataxis)
+
+This project follows the [Diataxis](https://diataxis.fr/) framework:
+
+- Tutorials: learning-oriented, step-by-step.
+- How-to guides: goal-oriented operational procedures.
+- Reference: factual, lookup-first technical details.
+- Explanation: context, rationale, and design choices.
+
 
 ```{toctree}
 :maxdepth: 2
-:caption: Documentation
+:caption: Tutorials
+
+getting_started.md
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: How-to Guides
+
+development_workflow.md
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: Reference
+
+configuration.md
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: Explanation
+
+about_the_docs.md
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: Project Policies
 
 ../CONTRIBUTING.md
 ../CODE_OF_CONDUCT.md
-about_the_docs.md
 ```
