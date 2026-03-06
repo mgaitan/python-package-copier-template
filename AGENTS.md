@@ -30,6 +30,29 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Network calls are limited to what the template already does (e.g., PyPI HEAD check).
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
 - For documentation edits, keep Diataxis separation clear and maintain the env var glossary in `docs/configuration.md` (refer via `{term}` in docs chapters).
+- Always work via pull requests from `main` unless explicitly told otherwise.
+- Never propose or attempt direct commits to `main`.
+- For each new task, create an isolated branch + git worktree and perform all edits there.
+- Prefer `make task-start TASK=<task-name>` to create the worktree from `origin/main`.
+- Use `make task-list` to locate active task worktrees if a session is interrupted.
+
+## Starting a New Task
+
+Agents MUST create an isolated git worktree.
+
+1. Preferred: run `make task-start TASK=<task-name>` from the main repository directory.
+2. Manual fallback:
+   - `git fetch origin`
+   - `git worktree add .worktrees/<task-name> -b <branch-name> origin/main`
+   - `cd .worktrees/<task-name>`
+3. Do all work inside that worktree directory.
+4. Keep `.agent-task-context.md` in the task worktree so interrupted sessions can recover the right branch/path.
+
+Agents must never:
+
+- Run `git checkout` in the main working directory to switch active task branches.
+- Modify files outside their task worktree unless explicitly asked.
+- Reuse a worktree that belongs to another task.
 
 ## Python preferences
 
