@@ -33,18 +33,23 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Always work via pull requests from `main` unless explicitly told otherwise.
 - Never propose or attempt direct commits to `main`.
 - For each new task, create an isolated branch + git worktree and perform all edits there.
-- Prefer `make task-start TASK=<task-name> [ISSUE=<issue-number>]` to create the worktree from `origin/main`.
-- Use `make task-find ISSUE=<issue-number>` or `make task-list` to recover interrupted work.
-- After PR merge/close, run `make task-clean TASK=<task-name>` to remove stale worktrees and local branches.
+- Use this naming pattern: worktree path mirrors branch name under `.wt/`.
 
 ## Task Lifecycle
 
 Agents MUST use isolated worktrees.
 
-1. Start: `make task-start TASK=<task-name> [ISSUE=<issue-number>]`.
-2. Discover/resume: `make task-find ISSUE=<issue-number>` or `make task-list`.
-3. Cleanup after PR is merged/closed: `make task-clean TASK=<task-name>`.
-4. Keep `.agent-task-context.md` in each task worktree for branch/path traceability.
+1. Create a branch from `origin/main` and matching worktree path:
+   - `git fetch origin`
+   - `git worktree add -b <branch-name> .wt/<branch-name> origin/main`
+2. If the branch already exists, attach a worktree with the same pattern:
+   - `git worktree add .wt/<branch-name> <branch-name>`
+3. Discover/resume interrupted work:
+   - `git worktree list`
+4. Cleanup after PR is merged or closed:
+   - `git worktree remove .wt/<branch-name>`
+   - `git branch -d <branch-name>`
+   - Optional, only when explicitly requested: `git push origin --delete <branch-name>`
 
 Agents must never:
 
