@@ -39,8 +39,9 @@ Description: {{ project_description }}
 - Always work through pull requests from `main` unless the developer explicitly asks for a different base branch.
 - Never propose or attempt direct commits to `main`.
 - For each new task, create an isolated branch + worktree and do all edits there.
-- Prefer `make task-start TASK=<task-name>` to create the worktree from `origin/main`.
-- Use `make task-list` to find active task worktrees, especially after an interrupted session.
+- Prefer `make task-start TASK=<task-name> [ISSUE=<issue-number>]` to create the worktree from `origin/main`.
+- Use `make task-find ISSUE=<issue-number>` or `make task-list` to recover interrupted work.
+- After PR merge/close, run `make task-clean TASK=<task-name>` to remove stale worktrees and local branches.
 - Never commit or push automatically unless instructed otherwise.
 - Prefer `gh` CLI for all interactions with Github if possible. Eg. Use it to open PRs / manage issues.
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
@@ -50,17 +51,14 @@ Description: {{ project_description }}
 - Consider mentioning yourself in the commits as co-author if you helped enough. Use the standard Git co-author trailer:
   "Co-authored-by: Name <email>".
 
-### Starting a new task
+### Task lifecycle
 
-Agents MUST create an isolated git worktree.
+Agents MUST use isolated worktrees.
 
-1. Preferred: run `make task-start TASK=<task-name>` from the main repository directory.
-2. Manual fallback:
-   - `git fetch origin`
-   - `git worktree add .worktrees/<task-name> -b <branch-name> origin/main`
-   - `cd .worktrees/<task-name>`
-3. Do all work inside that worktree directory.
-4. Keep `.agent-task-context.md` in the task worktree so interrupted sessions can recover the right branch/path.
+1. Start: `make task-start TASK=<task-name> [ISSUE=<issue-number>]`.
+2. Discover/resume: `make task-find ISSUE=<issue-number>` or `make task-list`.
+3. Cleanup after PR is merged/closed: `make task-clean TASK=<task-name>`.
+4. Keep `.agent-task-context.md` in each task worktree for branch/path traceability.
 
 Agents must never:
 
