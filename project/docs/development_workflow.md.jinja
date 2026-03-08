@@ -35,15 +35,11 @@ make release
 
 Release workflows publish package artifacts and canonical docs.
 
-## Preview documentation in pull requests
+## Documentation deployment
 
-When docs files change in a PR, CI deploys a preview to:
+When docs files change in a PR, CI validates documentation builds.
 
-```text
-https://{{ repository_namespace }}.github.io/{{ repository_name }}/_preview/pr-<PR_NUMBER>/
-```
-
-If needed, dispatch docs publishing manually:
+Canonical docs are published by release workflows, and can also be published manually if needed:
 
 ```bash
 gh workflow run cd.yml --ref main

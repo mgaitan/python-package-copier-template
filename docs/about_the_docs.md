@@ -50,7 +50,4 @@ Equivalent direct command:
 uv run --group docs sphinx-build docs docs/_build/html -b html -W
 ```
 
-CI validates docs on every PR, and `Docs Deploy` publishes:
-
-- canonical docs from `main`,
-- PR previews under `/_preview/pr-<N>/`.
+CI validates docs on every PR, and `Docs Deploy` publishes canonical docs from `main` (push/manual runs).
