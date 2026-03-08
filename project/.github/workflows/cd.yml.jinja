@@ -12,6 +12,19 @@ on:
       - "CONTRIBUTING.md"
       - ".github/workflows/cd.yml"
   workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: "Deployment target"
+        required: true
+        default: stable
+        type: choice
+        options:
+          - stable
+          - preview
+      pr_number:
+        description: "PR number (required when deploy_target=preview)"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -32,36 +45,78 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
         if: github.event_name == 'release'
 
+  docs-build:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v7
+      - run: make docs
+
   docs-publish:
     name: Publish documentation to GitHub Pages
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
     environment:
-      name: {% raw %}${{ github.event_name == 'pull_request' && 'github-pages-preview' || 'github-pages' }}{% endraw %}
+      name: {% raw %}${{ github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'preview' && 'github-pages-preview' || 'github-pages' }}{% endraw %}
       url: {% raw %}${{ steps.preview_url.outputs.url }}{% endraw %}
     steps:
       - uses: actions/checkout@v4
-      - name: Detect documentation preview target
-        id: preview
-        run: |
-          if [ "{% raw %}${{ github.event_name }}{% endraw %}" = "pull_request" ]; then
-            echo "docs_subdir=_preview/pr-{% raw %}${{ github.event.pull_request.number }}{% endraw %}" >> "$GITHUB_OUTPUT"
-          fi
+        with:
+          fetch-depth: 0
       - uses: actions/configure-pages@v5
       - uses: astral-sh/setup-uv@v7
-      - run: make docs
       - name: Stage documentation artifact
         run: |
+          set -euo pipefail
           out_dir="site"
-          subdir="{% raw %}${{ steps.preview.outputs.docs_subdir }}{% endraw %}"
           rm -rf "$out_dir"
-          if [ -n "$subdir" ]; then
-            mkdir -p "$out_dir/$subdir"
-            cp -a docs/_build/html/. "$out_dir/$subdir/"
+          mkdir -p "$out_dir"
+
+          if [ "{% raw %}${{ github.event_name }}{% endraw %}" = "workflow_dispatch" ] && [ "{% raw %}${{ github.event.inputs.deploy_target }}{% endraw %}" = "preview" ]; then
+            pr_number="{% raw %}${{ github.event.inputs.pr_number }}{% endraw %}"
+            if [ -z "$pr_number" ]; then
+              echo "pr_number is required when deploy_target=preview" >&2
+              exit 1
+            fi
+
+            latest_tag="$(git tag --sort=-version:refname | head -n1 || true)"
+            if [ -z "$latest_tag" ]; then
+              latest_tag="$(git tag --sort=-creatordate | head -n1 || true)"
+            fi
+            if [ -n "$latest_tag" ]; then
+              stable_dir="$(mktemp -d)"
+              git worktree add "$stable_dir" "$latest_tag"
+              (
+                cd "$stable_dir"
+                make docs
+              )
+              cp -a "$stable_dir/docs/_build/html/." "$out_dir/"
+              git worktree remove "$stable_dir" --force
+            else
+              make docs
+              cp -a docs/_build/html/. "$out_dir/"
+            fi
+
+            preview_ref="refs/remotes/origin/pr-preview-$pr_number"
+            git fetch origin "pull/$pr_number/head:pr-preview-$pr_number"
+            preview_dir="$(mktemp -d)"
+            git worktree add "$preview_dir" "$preview_ref"
+            (
+              cd "$preview_dir"
+              make docs
+            )
+            mkdir -p "$out_dir/_preview"
+            cp -a "$preview_dir/docs/_build/html/." "$out_dir/_preview/"
+            git worktree remove "$preview_dir" --force
           else
-            mkdir -p "$out_dir"
+            make docs
             cp -a docs/_build/html/. "$out_dir/"
           fi
+
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site
@@ -71,9 +126,8 @@ jobs:
         id: preview_url
         run: |
           url="{% raw %}${{ steps.deployment.outputs.page_url }}{% endraw %}"
-          subdir="{% raw %}${{ steps.preview.outputs.docs_subdir }}{% endraw %}"
-          if [ -n "$subdir" ]; then
-            url="${url%/}/${subdir}"
+          if [ "{% raw %}${{ github.event_name }}{% endraw %}" = "workflow_dispatch" ] && [ "{% raw %}${{ github.event.inputs.deploy_target }}{% endraw %}" = "preview" ]; then
+            url="${url%/}/_preview/"
           fi
           echo "url=${url}" >> "$GITHUB_OUTPUT"
       - name: Summarize documentation URL
