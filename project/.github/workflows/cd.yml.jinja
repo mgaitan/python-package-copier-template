@@ -32,36 +32,34 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
         if: github.event_name == 'release'
 
+  docs-build:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+      - run: make docs
+
   docs-publish:
     name: Publish documentation to GitHub Pages
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    needs: docs-build
+    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
     environment:
-      name: {% raw %}${{ github.event_name == 'pull_request' && 'github-pages-preview' || 'github-pages' }}{% endraw %}
+      name: github-pages
       url: {% raw %}${{ steps.preview_url.outputs.url }}{% endraw %}
     steps:
       - uses: actions/checkout@v4
-      - name: Detect documentation preview target
-        id: preview
-        run: |
-          if [ "{% raw %}${{ github.event_name }}{% endraw %}" = "pull_request" ]; then
-            echo "docs_subdir=_preview/pr-{% raw %}${{ github.event.pull_request.number }}{% endraw %}" >> "$GITHUB_OUTPUT"
-          fi
       - uses: actions/configure-pages@v5
       - uses: astral-sh/setup-uv@v7
       - run: make docs
       - name: Stage documentation artifact
         run: |
           out_dir="site"
-          subdir="{% raw %}${{ steps.preview.outputs.docs_subdir }}{% endraw %}"
           rm -rf "$out_dir"
-          if [ -n "$subdir" ]; then
-            mkdir -p "$out_dir/$subdir"
-            cp -a docs/_build/html/. "$out_dir/$subdir/"
-          else
-            mkdir -p "$out_dir"
-            cp -a docs/_build/html/. "$out_dir/"
-          fi
+          mkdir -p "$out_dir"
+          cp -a docs/_build/html/. "$out_dir/"
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site
@@ -71,10 +69,6 @@ jobs:
         id: preview_url
         run: |
           url="{% raw %}${{ steps.deployment.outputs.page_url }}{% endraw %}"
-          subdir="{% raw %}${{ steps.preview.outputs.docs_subdir }}{% endraw %}"
-          if [ -n "$subdir" ]; then
-            url="${url%/}/${subdir}"
-          fi
           echo "url=${url}" >> "$GITHUB_OUTPUT"
       - name: Summarize documentation URL
         run: |

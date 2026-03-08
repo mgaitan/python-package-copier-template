@@ -52,7 +52,7 @@ Description: {{ project_description }}
 - Use `docs/about_the_docs.md` as the canonical chapter for documentation principles and design rationale.
 - Keep env var definitions in `docs/configuration.md` using the Sphinx `glossary` directive.
 - When mentioning an env var in docs, reference it as a glossary term (`{term}`).
-- Documentation previews for PRs with docs changes are published under `https://{{ repository_namespace }}.github.io/{{ repository_name }}/_preview/pr-<PR_NUMBER>/`.
+- Documentation changes in PRs are validated in CI, without publishing to the canonical site.
 - Release/manual docs publish uses the canonical site URL: `https://{{ repository_namespace }}.github.io/{{ repository_name }}/`.
 - Provide documentation for:
   - **Users:** intention, behaviour, minimal examples.

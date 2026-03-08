@@ -48,11 +48,7 @@ prek install
 prek run --all-files
 ```
 
-- PRs with documentation changes publish a docs preview at:
-
-```text
-https://{{ repository_namespace }}.github.io/{{ repository_name }}/_preview/pr-<PR_NUMBER>/
-```
+- PRs with documentation changes are validated in CI (`make docs` in the deploy workflow).
 
 ## Documentation
 
