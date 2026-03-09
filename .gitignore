@@ -6,5 +6,6 @@ __pycache__/
 .venv/
 .vscode/
 tmp/
+.wt/
 
 docs/_build/
