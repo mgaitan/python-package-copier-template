@@ -8,3 +8,6 @@ __pycache__/
 tmp/
 
 docs/_build/
+# local worktrees
+.worktrees/
+.external-worktrees/
