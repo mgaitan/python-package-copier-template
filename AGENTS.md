@@ -29,6 +29,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Never auto-commit/auto-push unless requested.
 - Network calls are limited to what the template already does (e.g., PyPI HEAD check).
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
+- When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc release commands.
 - If you need to credit an AI collaborator explicitly, use a standard co-author trailer such as:
   - "Co-authored-by: codex <codex@openai.com>".
   - "Co-authored-by: Claude <noreply@anthropic.com>".
