@@ -39,7 +39,7 @@ Description: {{ project_description }}
 - Never commit or push automatically unless instructed otherwise.
 - Prefer `gh` CLI for all interactions with Github if possible. Eg. Use it to open PRs / manage issues.
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
-- When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc release commands. Use the repository's release-check target to run validation before publishing, use its release target to publish, and use its bump target when preparing a version-bump PR.
+- When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc release commands. Use the repository's release target to run checks and publish a release. When preparing a version-bump PR, use its bump target.
 - For issue categorization, use GitHub labels instead of title prefixes like `Bug:`, `Feat:`, or `Docs:`.
 - Before assigning labels, inspect labels already used in the target repository and follow that taxonomy first.
 - If labels are missing or incomplete, use this baseline set: `bug`, `enhancement`, `documentation`, `maintenance`, `refactor`, `test`, `ci`, `dependencies`, `security`, `performance`, `ux`, `question`.
