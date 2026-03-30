@@ -33,7 +33,7 @@ jobs:
       name: ${{ github.event_name == 'pull_request' && 'github-pages-preview' || 'github-pages' }}
       url: ${{ steps.preview_url.outputs.url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Detect documentation preview target
         id: preview
