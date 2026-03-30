@@ -22,6 +22,9 @@ build-backend = "uv_build"
 module-name = "python_package_copier_template"
 module-root = ""
 
+[tool.ty.src]
+exclude = [".worktrees/", ".external-worktrees/"]
+
 [tool.ruff]
 line-length = 120
 
