@@ -37,3 +37,6 @@ docs = [
     "sphinx>=8.2.3",
     "sphinx-book-theme>=1.1.4",
 ]
+qa = [
+    "ty>=0.0.27",
+]
