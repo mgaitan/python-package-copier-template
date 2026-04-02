@@ -12,6 +12,7 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
     template_src = Path(__file__).resolve().parent.parent
     monkeypatch.setattr(cli, "TEMPLATE_SRC", str(template_src))
     monkeypatch.setenv("COPIER_TEMPLATE_DEFAULTS", "1")
+    monkeypatch.setattr(extensions, "command_available", lambda command: command != "prek")
 
     dest = tmp_path / "proj"
     project_exists_on_pypi = False
