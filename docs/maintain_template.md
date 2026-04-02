@@ -13,7 +13,7 @@ Inside an existing generated project, update from the latest template:
 uvx --with=copier-template-extensions copier update . --trust
 ```
 
-If you prefer the package wrapper behavior (copy vs update autodetected), run the `uvx git+...` command from [Getting Started](getting_started.md) in the project directory.
+If you prefer the package wrapper behavior (copy vs update autodetected), run `uvx python-package-copier-template .` from the project directory as shown in [Getting Started](getting_started.md).
 
 The generated project also includes an optional scheduled workflow (`template-update.yml`) that opens PRs with template refreshes.
 
@@ -39,6 +39,11 @@ make smoke
 ```
 
 That runs Copier from current `HEAD`, then executes QA in the generated project.
+
+## Maintain the demo release flow
+
+Releases of this repository publish to PyPI and then refresh `mgaitan/yet-another-demo` from the newly released template.
+That automation depends on the GitHub Actions secret {term}`DEMO_REPO_TOKEN`.
 
 ## Notes on GitHub authentication
 

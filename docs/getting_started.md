@@ -6,13 +6,25 @@ The default entrypoint is the package CLI wrapper, not a local clone.
 Run:
 
 ```bash
-uvx git+https://github.com/mgaitan/python-package-copier-template [DESTINATION]
+uvx python-package-copier-template [DESTINATION]
 ```
 
 If `DESTINATION` does not contain a Copier answers file, it creates a new project.
 If `DESTINATION` already has `.copier-answers.yml` (or `.yaml`), the same command performs an update.
 
 To check which wrapper version you are using:
+
+```bash
+uvx python-package-copier-template --version
+```
+
+If you want to use the latest development version from GitHub instead of the latest published release, run:
+
+```bash
+uvx git+https://github.com/mgaitan/python-package-copier-template [DESTINATION]
+```
+
+And to inspect that version:
 
 ```bash
 uvx git+https://github.com/mgaitan/python-package-copier-template -- --version

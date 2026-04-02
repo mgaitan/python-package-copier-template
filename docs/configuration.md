@@ -12,4 +12,8 @@ GH_TOKEN
 GITHUB_TOKEN
   Ephemeral token automatically provided by GitHub Actions.
   Its effective permissions are controlled by workflow/job `permissions` blocks.
+
+DEMO_REPO_TOKEN
+  Repository secret used by this template repository's release workflow to push updates to the demo repository `mgaitan/yet-another-demo`.
+  Use a fine-grained token with `Contents: Read and write` on that repository.
 ```

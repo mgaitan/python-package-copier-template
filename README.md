@@ -49,13 +49,21 @@ The package now includes a Diataxis-based docs set under `docs/` that expands th
 Quick shortcut (auto-detects copy vs update):
 
 ```bash
-uvx git+https://github.com/mgaitan/python-package-copier-template [DESTINATION]
+uvx python-package-copier-template [DESTINATION]
 ```
 
 This runs `copier copy --defaults --unsafe` to `DESTINATION` (or `.` if omitted) when no `.copier-answers.yml` is present, or `copier update --defaults --unsafe` when it is.
-Check the installed version with `uvx git+https://github.com/mgaitan/python-package-copier-template -- --version`.
+Check the installed version with `uvx python-package-copier-template --version`.
 
-Start a new project explicitly with Copier:
+If you want the latest development version straight from this repository instead of the latest published release, use:
+
+```bash
+uvx git+https://github.com/mgaitan/python-package-copier-template [DESTINATION]
+```
+
+You can check that wrapper version with `uvx git+https://github.com/mgaitan/python-package-copier-template -- --version`.
+
+Start a new project explicitly with Copier if you want to bypass the wrapper:
 
 ```bash
 uvx --with=copier-template-extensions copier copy --trust "gh:mgaitan/python-package-copier-template" /path/to/your/new/project
@@ -71,7 +79,7 @@ This will fetch the latest template version and guide you through updating your 
 
 The generated project also ships a `Template Update` GitHub Actions workflow that runs every 20 days (or on manual dispatch) to execute `uvx copier update --trust --defaults .` and open a pull request with the changes and template version bump.
 
-To test a development version of the template, clone the repository and run:
+To test a local development version of the template, clone the repository and run:
 
 ```bash
 uv sync
@@ -81,7 +89,9 @@ uv run copier copy --trust  --vcs-ref=HEAD . /path/to/your/test/project
 If you create the GitHub repository via the `gh` CLI prompt, the template will attempt to enable GitHub Pages (using the Actions build type) so documentation deployments succeed. If Pages is unavailable (for example, with some private repositories or account policies), the docs workflow will keep failing until Pages is allowed.
 
 
-To publish a release of your project to PyPI, you need to [register the project with trusted published](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/).  Read more about how this workflow works [here](https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/)
+To publish a release of your project to PyPI, you need to [register the project with trusted publishing](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/). Read more about how this workflow works [here](https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/).
+
+This repository's own release workflow also refreshes the demo repository after a successful publish. That step requires the `DEMO_REPO_TOKEN` GitHub Actions secret, documented in [Configuration](docs/configuration.md).
 
 Then
 
