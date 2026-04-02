@@ -1,4 +1,4 @@
-.PHONY: install lint format test qa docs docs-open smoke help
+.PHONY: install lint format test qa bump release docs docs-open smoke help
 
 DOCS_SOURCE := docs
 DOCS_BUILD := $(DOCS_SOURCE)/_build
@@ -22,6 +22,15 @@ docs-open: docs ## Build docs and open them in the browser
 	@uv run -m webbrowser $(DOCS_BUILD)/html/index.html
 
 qa: lint test docs ## Run local quality checks
+
+bump: ## Bump the project minor version
+	@uv version --bump minor
+
+release: ## Create a GitHub release for the current version
+	@version=$$(uv version --short); \
+	git commit -am "Bump $$version"; \
+	git push origin main; \
+	gh release create "$$version" --generate-notes
 
 smoke: ## Generate a project from template defaults and run generated QA
 	@tmp_dir=$$(mktemp -d); \
