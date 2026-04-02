@@ -1,14 +1,8 @@
-name: Docs Deploy
+name: Publish to PyPI
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "docs/**"
-      - "README.md"
-      - "pyproject.toml"
-      - ".github/workflows/cd.yml"
+  release:
+    types: [created]
   pull_request:
     branches:
       - main
@@ -25,6 +19,19 @@ permissions:
   id-token: write
 
 jobs:
+  pypi-publish:
+    name: upload release to PyPI
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - run: uv build
+      - run: uv publish
+
   docs-publish:
     name: Publish documentation to GitHub Pages
     runs-on: ubuntu-latest
