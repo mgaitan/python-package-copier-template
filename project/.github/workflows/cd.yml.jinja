@@ -25,12 +25,12 @@ jobs:
     if: github.event_name == 'release'
     permissions:
       id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v7
       - run: uv build
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        if: github.event_name == 'release'
+      - run: uv publish
 
   docs-publish:
     name: Publish documentation to GitHub Pages
