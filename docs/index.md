@@ -10,6 +10,7 @@ It is implemented as a [Copier](https://copier.readthedocs.io/) template and als
 
 The docs build runs that example non-interactively with defaults in a temporary directory, but the command shown is the normal one you would type.
 The wrapper decides whether to run `copier copy` or `copier update` by inspecting the destination directory for a Copier answers file.
+If you want the details of how the wrapper resolves template versions and source locations, see [CLI Reference](cli.md).
 If you prefer the raw Copier commands, or want the latest development version from GitHub, the details are in [Getting Started](getting_started.md).
 
 A public example generated from the template lives at [mgaitan/yet-another-demo](https://github.com/mgaitan/yet-another-demo).
@@ -36,6 +37,7 @@ The broader rationale for these choices is described in the original blog post:
 :maxdepth: 2
 
 getting_started.md
+cli.md
 maintain_template.md
 configuration.md
 design_decisions.md

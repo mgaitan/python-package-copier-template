@@ -7,6 +7,7 @@ author = "Martín Gaitán"
 extensions = [
     "myst_parser",
     "richterm.sphinxext",
+    "sphinxcontrib.mermaid",
 ]
 
 templates_path = ["_templates"]
