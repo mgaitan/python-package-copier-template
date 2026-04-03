@@ -3,6 +3,14 @@ name: Publish to PyPI
 on:
   release:
     types: [published]
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "pyproject.toml"
+      - ".github/workflows/cd.yml"
   pull_request:
     branches:
       - main
