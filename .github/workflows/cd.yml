@@ -85,20 +85,31 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: astral-sh/setup-uv@v7
 
-      - name: Build docs
-        run: uv run --group docs sphinx-build docs docs/_build/html -b html -W
+      - name: Build docs for current ref
+        run: |
+          uv run --group docs sphinx-build docs docs/_build/html -b html -W
+          mv docs/_build/html docs/_build/html-current
+
+      - name: Build stable docs from main
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin main --depth=1
+          git worktree add ../template-main origin/main
+          cd ../template-main
+          uv run --group docs sphinx-build docs docs/_build/html -b html -W
 
       - name: Stage documentation artifact
         run: |
           out_dir="site"
           subdir="${{ steps.preview.outputs.docs_subdir }}"
           rm -rf "$out_dir"
+          mkdir -p "$out_dir"
           if [ -n "$subdir" ]; then
+            cp -a ../template-main/docs/_build/html/. "$out_dir/"
             mkdir -p "$out_dir/$subdir"
-            cp -a docs/_build/html/. "$out_dir/$subdir/"
+            cp -a docs/_build/html-current/. "$out_dir/$subdir/"
           else
-            mkdir -p "$out_dir"
-            cp -a docs/_build/html/. "$out_dir/"
+            cp -a docs/_build/html-current/. "$out_dir/"
           fi
 
       - uses: actions/upload-pages-artifact@v4
