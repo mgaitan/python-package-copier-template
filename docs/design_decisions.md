@@ -46,6 +46,61 @@ That decision is mostly about coherence:
 Generated projects split dependencies by purpose, typically across runtime, docs, tests, and QA.
 This follows the direction of [PEP 735 dependency groups](https://peps.python.org/pep-0735/) and keeps installs task-focused.
 
+The dependency groups also use `include-group` to compose higher-level groups from narrower ones instead of repeating the same tools across sections.
+That gives generated projects a small inheritance-style structure:
+
+```{mermaid}
+flowchart TD
+    lint["lint"] --> qa["qa"]
+    test["test"] --> dev["dev"]
+    qa --> dev
+    docs["docs"] -. optional local install .-> run_docs["uv run --group docs ..."]
+    test -. focused install .-> run_test["uv run --group test pytest"]
+    dev -. default dev environment .-> run_dev["uv run ..."]
+```
+
+In the generated `pyproject.toml`, that looks like this:
+
+```toml
+[dependency-groups]
+test = [
+    "pytest>=9.0.1",
+    "pytest-freezer>=0.4.9",
+    "pytest-mock>=3.15.0",
+    "pytest-cov>=7.0.0",
+]
+lint = ["ruff"]
+qa = [
+    { include-group = "lint" },
+    "ty>=0.0.27",
+]
+docs = [
+    "myst-parser>=3.0.0",
+    "sphinx>=8.2",
+    "sphinx-book-theme>=1.1.0",
+    "sphinxcontrib-mermaid>=1.0.0",
+    "richterm[sphinx]>=0.1.0",
+]
+dev = [
+    { include-group = "test" },
+    { include-group = "qa" },
+    "ipdb",
+    "ipython",
+]
+```
+
+This keeps each group focused:
+
+- `test` contains only what is needed to run tests,
+- `qa` layers type-checking on top of linting,
+- `dev` gives contributors the broadest working set without duplicating `test` and `qa`.
+
+Simon Willison called out this exact pattern in [Dependency groups and uv run](https://til.simonwillison.net/uv/dependency-groups#bonus-tip-defining-dev-in-terms-of-other-dependency-groups), noting that he learned it from `python-package-copier-template`.
+
+:::{note}
+We learn from Simon's writing all the time, so it felt especially meaningful to give something back for once. Seeing this project teach him one small trick was a real point of pride and gratitude. 🙏
+:::
+
 ## Dependency cooldowns
 
 The template enables `uv` dependency cooldowns by default with `[tool.uv].exclude-newer`.
@@ -86,6 +141,7 @@ The docs stack is:
 
 - [Sphinx](https://www.sphinx-doc.org/),
 - [MyST](https://myst-parser.readthedocs.io/) for Markdown authoring,
+- [sphinx-book-theme](https://sphinx-book-theme.readthedocs.io/) for the generated site theme,
 - GitHub Pages for hosting,
 - plus a couple of extensions in generated projects for diagrams and terminal captures.
 
