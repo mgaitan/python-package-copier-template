@@ -36,6 +36,10 @@ Description: {{ project_description }}
 ## Git/Github preferences
 
 - Ensure you are in a proper branch for each new feature or bugfix.
+- Always work through pull requests from `main` unless the developer explicitly asks for a different base branch.
+- Never propose or attempt direct commits to `main`.
+- For each new task, create an isolated branch + worktree and do all edits there.
+- Use this naming pattern: worktree path mirrors branch name under `.wt/`.
 - Never commit or push automatically unless instructed otherwise.
 - Prefer `gh` CLI for all interactions with Github if possible. Eg. Use it to open PRs / manage issues.
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
@@ -48,6 +52,28 @@ Description: {{ project_description }}
   For common AI collaborators, use:
   - "Co-authored-by: codex <codex@openai.com>".
   - "Co-authored-by: Claude <noreply@anthropic.com>".
+
+### Task lifecycle
+
+Agents MUST use isolated worktrees.
+
+1. Create a branch from `origin/main` and matching worktree path:
+   - `git fetch origin`
+   - `git worktree add -b <branch-name> .wt/<branch-name> origin/main`
+2. If the branch already exists, attach a worktree with the same pattern:
+   - `git worktree add .wt/<branch-name> <branch-name>`
+3. Discover/resume interrupted work:
+   - `git worktree list`
+4. Cleanup after PR is merged or closed:
+   - `git worktree remove .wt/<branch-name>`
+   - `git branch -d <branch-name>`
+   - Optional, only when explicitly requested: `git push origin --delete <branch-name>`
+
+Agents must never:
+
+- Run `git checkout` in the main working directory to switch active task branches.
+- Modify files outside their task worktree unless explicitly asked.
+- Reuse a worktree that belongs to another task.
 
 ## Documentation
 

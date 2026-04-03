@@ -34,6 +34,32 @@ Copier docs: https://copier.readthedocs.io/en/stable/
   - "Co-authored-by: codex <codex@openai.com>".
   - "Co-authored-by: Claude <noreply@anthropic.com>".
 - For documentation edits, keep Diataxis separation clear and maintain the env var glossary in `docs/configuration.md` (refer via `{term}` in docs chapters).
+- Always work via pull requests from `main` unless explicitly told otherwise.
+- Never propose or attempt direct commits to `main`.
+- For each new task, create an isolated branch + git worktree and perform all edits there.
+- Use this naming pattern: worktree path mirrors branch name under `.wt/`.
+
+## Task Lifecycle
+
+Agents MUST use isolated worktrees.
+
+1. Create a branch from `origin/main` and matching worktree path:
+   - `git fetch origin`
+   - `git worktree add -b <branch-name> .wt/<branch-name> origin/main`
+2. If the branch already exists, attach a worktree with the same pattern:
+   - `git worktree add .wt/<branch-name> <branch-name>`
+3. Discover/resume interrupted work:
+   - `git worktree list`
+4. Cleanup after PR is merged or closed:
+   - `git worktree remove .wt/<branch-name>`
+   - `git branch -d <branch-name>`
+   - Optional, only when explicitly requested: `git push origin --delete <branch-name>`
+
+Agents must never:
+
+- Run `git checkout` in the main working directory to switch active task branches.
+- Modify files outside their task worktree unless explicitly asked.
+- Reuse a worktree that belongs to another task.
 
 ## Python preferences
 
