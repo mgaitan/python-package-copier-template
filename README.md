@@ -49,17 +49,17 @@ The package now includes a Diataxis-based docs set under `docs/` that expands th
 Quick shortcut (auto-detects copy vs update):
 
 ```bash
-uvx python-package-copier-template [DESTINATION]
+uvx python-package-copier-template [PATH_TO_PROJECT]
 ```
 
-This runs `copier copy --defaults --unsafe` to `DESTINATION` (or `.` if omitted) when no `.copier-answers.yml` is present, or `copier update --defaults --unsafe` when it is.
+This runs `copier copy --defaults --unsafe` to `PATH_TO_PROJECT` (or `.` if omitted) when no `.copier-answers.yml` is present, or `copier update --defaults --unsafe` when it is.
 Check the installed version with `uvx python-package-copier-template --version`.
 When installed from PyPI, the wrapper copies from the matching template release instead of always using `main`.
 
 If you want the latest development version straight from this repository instead of the latest published release, use:
 
 ```bash
-uvx git+https://github.com/mgaitan/python-package-copier-template [DESTINATION]
+uvx git+https://github.com/mgaitan/python-package-copier-template [PATH_TO_PROJECT]
 ```
 
 You can check that wrapper version with `uvx git+https://github.com/mgaitan/python-package-copier-template -- --version`.

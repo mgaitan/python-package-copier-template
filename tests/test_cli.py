@@ -11,7 +11,13 @@ from python_package_copier_template import cli, extensions
 def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
     # Use the template in the repository (current working tree).
     template_src = Path(__file__).resolve().parent.parent
-    monkeypatch.setattr(cli, "resolve_template_target", lambda: cli.TemplateTarget(src_path=str(template_src)))
+    clean_template = tmp_path / "template-src"
+    subprocess.run(["git", "clone", str(template_src), str(clean_template)], check=True)
+    monkeypatch.setattr(
+        cli,
+        "resolve_template_target",
+        lambda: cli.TemplateTarget(src_path=str(clean_template)),
+    )
     monkeypatch.setenv("COPIER_TEMPLATE_DEFAULTS", "1")
     monkeypatch.setattr(extensions, "command_available", lambda command: command != "prek")
 
@@ -110,6 +116,27 @@ def test_resolve_template_target_uses_local_checkout_for_file_installs(monkeypat
             return '{"url":"file:///tmp/python-package-copier-template","dir_info":{"editable":true}}'
 
     monkeypatch.setattr(cli, "distribution", lambda _: _DummyDistribution())
+    monkeypatch.setattr(cli, "get_local_git_head", lambda path: "def456")
+
+    target = cli.resolve_template_target()
+
+    assert target == cli.TemplateTarget(
+        src_path="/tmp/python-package-copier-template",
+        vcs_ref="def456",
+    )
+
+
+def test_resolve_template_target_falls_back_to_plain_path_for_non_git_file_installs(monkeypatch) -> None:
+    class _DummyDistribution:
+        version = "0.4.2"
+
+        @staticmethod
+        def read_text(name: str) -> str | None:
+            assert name == "direct_url.json"
+            return '{"url":"file:///tmp/python-package-copier-template","dir_info":{"editable":true}}'
+
+    monkeypatch.setattr(cli, "distribution", lambda _: _DummyDistribution())
+    monkeypatch.setattr(cli, "get_local_git_head", lambda path: None)
 
     target = cli.resolve_template_target()
 

@@ -5,10 +5,11 @@
 It is implemented as a [Copier](https://copier.readthedocs.io/) template and also published as a small Python CLI wrapper, so the most common entrypoint is:
 
 ```{richterm} sh -lc 'tmp="$(mktemp -d)"; COPIER_TEMPLATE_DEFAULTS=1 uv run python-package-copier-template "$tmp/demo-project"'
-:shown-command: uvx python-package-copier-template demo-project
+:shown-command: uvx python-package-copier-template [PATH_TO_PROJECT]
 ```
 
-The docs build runs that example non-interactively with defaults in a temporary directory, but the command shown is the normal one you would type.
+The docs build runs that example non-interactively with defaults in a temporary directory.
+The command shown is the general entrypoint, and the capture is one concrete example of it.
 The wrapper decides whether to run `copier copy` or `copier update` by inspecting the destination directory for a Copier answers file.
 If you want the details of how the wrapper resolves template versions and source locations, see [CLI Reference](cli.md).
 If you prefer the raw Copier commands, or want the latest development version from GitHub, the details are in [Getting Started](getting_started.md).

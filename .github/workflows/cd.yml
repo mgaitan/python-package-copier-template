@@ -36,6 +36,8 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: astral-sh/setup-uv@v7
       - run: uv build
       - run: uv publish
@@ -67,6 +69,8 @@ jobs:
       url: ${{ steps.preview_url.outputs.url }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Detect documentation preview target
         id: preview

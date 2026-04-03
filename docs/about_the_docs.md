@@ -1,11 +1,11 @@
 # About the Documentation
 
-Generated projects ship documentation as a first-class artifact.
-This page describes the doc structure and tooling so you can keep it up to date as your project evolves.
+This repository documents both the template itself and the documentation scaffold generated for new projects.
+The goal of this page is to explain that baseline so it stays coherent as the template evolves.
 
-## Structure (Diataxis)
+## Structure
 
-The docs follow [Diataxis](https://diataxis.fr/), organized into four quadrants:
+Generated projects ship documentation as a first-class artifact and follow [Diataxis](https://diataxis.fr/):
 
 | Chapter | Type | Purpose |
 |---|---|---|
@@ -13,6 +13,9 @@ The docs follow [Diataxis](https://diataxis.fr/), organized into four quadrants:
 | `development_workflow.md` | How-to | Common operational tasks |
 | `configuration.md` | Reference | Factual lookup, env vars glossary |
 | `about_the_docs.md` | Explanation | Rationale and doc conventions |
+
+This template repository adds extra pages around that core set, such as template maintenance, CLI behavior, and adoption notes.
+Those pages document the template itself rather than the generated project skeleton.
 
 ## Tooling
 
@@ -33,7 +36,7 @@ The build runs in warning-as-error mode, so broken links or directives are caugh
 
 - **Environment variables** should be defined once in `configuration.md` using the Sphinx `glossary` directive and referenced everywhere else with `` {term}`VAR_NAME` ``.
 - **Any behavior or feature change** should update the relevant doc page in the same PR.
-- **New sections are preferred** over editing existing ones when customizing, to keep `copier update` diffs clean.
+- **Generated projects should prefer adding new sections** over rewriting seeded ones, to keep `copier update` diffs clean.
 
 ## Publishing
 
