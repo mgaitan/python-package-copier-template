@@ -13,6 +13,9 @@ It checks the destination directory:
 - If there is no `.copier-answers.yml` or `.copier-answers.yaml`, it creates a project.
 - If there is a Copier answers file, it updates the project in place.
 
+When the wrapper is installed from PyPI, copy mode uses the matching template release.
+That keeps `uvx python-package-copier-template` aligned with the published package version instead of implicitly pulling the latest state of `main`.
+
 You can inspect the published wrapper version with:
 
 ```bash

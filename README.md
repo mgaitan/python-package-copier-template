@@ -54,6 +54,7 @@ uvx python-package-copier-template [DESTINATION]
 
 This runs `copier copy --defaults --unsafe` to `DESTINATION` (or `.` if omitted) when no `.copier-answers.yml` is present, or `copier update --defaults --unsafe` when it is.
 Check the installed version with `uvx python-package-copier-template --version`.
+When installed from PyPI, the wrapper copies from the matching template release instead of always using `main`.
 
 If you want the latest development version straight from this repository instead of the latest published release, use:
 
