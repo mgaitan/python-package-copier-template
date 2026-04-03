@@ -1,39 +1,47 @@
 # python-package-copier-template
 
-Template package documentation for maintainers and contributors.
+`python-package-copier-template` is a template for creating and maintaining modern Python packages with a batteries-included baseline: current packaging practices, updated tooling, CI/CD automation, documentation scaffolding, and conventions that work well for both humans and code agents.
 
-## Why these docs exist
+It is implemented as a [Copier](https://copier.readthedocs.io/) template and also published as a small Python CLI wrapper, so the most common entrypoint is:
 
-The README is a high-signal entry point.
-These docs expand that content with operational detail, rationale, and stable references.
+```{richterm} sh -lc 'tmp="$(mktemp -d)"; COPIER_TEMPLATE_DEFAULTS=1 uv run python-package-copier-template "$tmp/demo-project"'
+:shown-command: uvx python-package-copier-template demo-project
+```
 
-## Documentation map (Diataxis)
+The docs build runs that example non-interactively with defaults in a temporary directory, but the command shown is the normal one you would type.
+The wrapper decides whether to run `copier copy` or `copier update` by inspecting the destination directory for a Copier answers file.
+If you want the details of how the wrapper resolves template versions and source locations, see [CLI Reference](cli.md).
+If you prefer the raw Copier commands, or want the latest development version from GitHub, the details are in [Getting Started](getting_started.md).
+
+A public example generated from the template lives at [mgaitan/yet-another-demo](https://github.com/mgaitan/yet-another-demo).
+It is useful both as a smoke target and as a concrete reference for what the scaffold looks like in practice.
+
+## What this template includes
+
+- A modern Python package baseline targeting Python 3.12+.
+- Dependency and environment management with [uv](https://docs.astral.sh/uv/).
+- Linting and formatting with [Ruff](https://docs.astral.sh/ruff/).
+- Type checking with [ty](https://github.com/astral-sh/ty).
+- Testing with [pytest](https://docs.pytest.org/), coverage, and related extensions.
+- Optional QA orchestration and git hook setup with [prek](https://github.com/j178/prek).
+- Sphinx documentation written in Markdown with [MyST](https://myst-parser.readthedocs.io/).
+- GitHub Actions workflows for CI, docs publishing, template refreshes, and PyPI releases.
+- An `AGENTS.md` starter so code agents have project-specific guidance from day one.
+- Optional GitHub repository bootstrapping with [GitHub CLI](https://cli.github.com/).
+- Generated projects that remain updatable with [`copier update`](https://copier.readthedocs.io/en/stable/updating/).
+
+The broader rationale for these choices is described in the original blog post:
+[My opinionated scaffolding for modern Python projects](https://mgaitan.github.io/en/posts/opinionated-python-project-scaffolding/).
 
 ```{toctree}
 :maxdepth: 2
-:caption: Tutorials
 
 getting_started.md
-```
-
-```{toctree}
-:maxdepth: 2
-:caption: How-to Guides
-
+cli.md
+adopt_existing_project.md
 maintain_template.md
-```
-
-```{toctree}
-:maxdepth: 2
-:caption: Reference
-
 configuration.md
-```
-
-```{toctree}
-:maxdepth: 2
-:caption: Explanation
-
-about_the_docs.md
 design_decisions.md
+agents.md
+about_the_docs.md
 ```

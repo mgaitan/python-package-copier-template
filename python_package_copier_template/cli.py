@@ -1,7 +1,10 @@
 import argparse
+import json
 import os
-from importlib.metadata import PackageNotFoundError, version
+from dataclasses import dataclass
+from importlib.metadata import PackageNotFoundError, distribution, version
 from pathlib import Path
+from urllib.parse import unquote, urlparse
 
 from copier import run_copy, run_update
 
@@ -9,6 +12,12 @@ from python_package_copier_template import extensions
 
 TEMPLATE_SRC = "gh:mgaitan/python-package-copier-template"
 ANSWER_FILES: tuple[str, ...] = (".copier-answers.yml", ".copier-answers.yaml")
+
+
+@dataclass(frozen=True)
+class TemplateTarget:
+    src_path: str
+    vcs_ref: str | None = None
 
 
 def get_version() -> str:
@@ -20,6 +29,30 @@ def get_version() -> str:
 
 def has_answers(dst: Path) -> bool:
     return any((dst / filename).exists() for filename in ANSWER_FILES)
+
+
+def resolve_template_target() -> TemplateTarget:
+    try:
+        dist = distribution("python-package-copier-template")
+    except PackageNotFoundError:
+        return TemplateTarget(src_path=TEMPLATE_SRC)
+
+    direct_url_text = dist.read_text("direct_url.json")
+    if direct_url_text:
+        direct_url = json.loads(direct_url_text)
+        url = direct_url.get("url", "")
+        parsed_url = urlparse(url)
+
+        if parsed_url.scheme == "file":
+            return TemplateTarget(src_path=unquote(parsed_url.path))
+
+        if vcs_info := direct_url.get("vcs_info"):
+            return TemplateTarget(
+                src_path=TEMPLATE_SRC,
+                vcs_ref=vcs_info.get("commit_id") or vcs_info.get("requested_revision"),
+            )
+
+    return TemplateTarget(src_path=TEMPLATE_SRC, vcs_ref=dist.version)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -58,6 +91,13 @@ def main(argv: list[str] | None = None) -> int:
                 skip_answered=True,
             )
     else:
-        run_copy(src_path=TEMPLATE_SRC, dst_path=str(dst), defaults=copy_defaults, unsafe=True)
+        template_target = resolve_template_target()
+        run_copy(
+            src_path=template_target.src_path,
+            dst_path=str(dst),
+            defaults=copy_defaults,
+            unsafe=True,
+            vcs_ref=template_target.vcs_ref,
+        )
 
     return 0

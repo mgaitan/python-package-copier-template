@@ -2,7 +2,15 @@ name: Publish to PyPI
 
 on:
   release:
-    types: [created]
+    types: [published]
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - ".github/workflows/cd.yml"
   pull_request:
     branches:
       - main
@@ -31,6 +39,24 @@ jobs:
       - uses: astral-sh/setup-uv@v7
       - run: uv build
       - run: uv publish
+
+      - name: Refresh demo repository
+        if: github.event_name == 'release'
+        env:
+          DEMO_REPO_TOKEN: {% raw %}${{ secrets.DEMO_REPO_TOKEN }}{% endraw %}
+        run: |
+          git clone "https://x-access-token:${DEMO_REPO_TOKEN}@github.com/mgaitan/yet-another-demo.git" /tmp/yet-another-demo
+          uvx --with copier-template-extensions --with . copier update --trust --defaults /tmp/yet-another-demo
+          cd /tmp/yet-another-demo
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "Demo repository already up to date"
+            exit 0
+          fi
+          git add .
+          git commit -m "chore: update project template to {% raw %}${{ github.event.release.tag_name }}{% endraw %}"
+          git push origin HEAD:main
 
   docs-publish:
     name: Publish documentation to GitHub Pages
