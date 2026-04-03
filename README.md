@@ -37,16 +37,6 @@ Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 
 Please read [my blog post](https://mgaitan.github.io/en/posts/opinionated-python-project-scaffolding/) to learn about the details of the decisions I made and the alternatives I considered.
 
-## Package Documentation
-
-The package now includes a Diataxis-based docs set under `docs/` that expands this README:
-
-- [Tutorial: Getting started](docs/getting_started.md)
-- [How-to: Maintain the template](docs/maintain_template.md)
-- [Reference: Configuration](docs/configuration.md)
-- [Explanation: About these docs](docs/about_the_docs.md)
-- [Explanation: Design decisions](docs/design_decisions.md)
-
 ## Quick setup and usage
 
 Quick shortcut (auto-detects copy vs update):
