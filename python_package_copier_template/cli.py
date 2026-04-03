@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import subprocess
 from dataclasses import dataclass
 from importlib.metadata import PackageNotFoundError, distribution, version
 from pathlib import Path
@@ -31,6 +32,20 @@ def has_answers(dst: Path) -> bool:
     return any((dst / filename).exists() for filename in ANSWER_FILES)
 
 
+def get_local_git_head(path: str) -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "-C", path, "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return None
+
+    return result.stdout.strip() or None
+
+
 def resolve_template_target() -> TemplateTarget:
     try:
         dist = distribution("python-package-copier-template")
@@ -44,7 +59,8 @@ def resolve_template_target() -> TemplateTarget:
         parsed_url = urlparse(url)
 
         if parsed_url.scheme == "file":
-            return TemplateTarget(src_path=unquote(parsed_url.path))
+            path = unquote(parsed_url.path)
+            return TemplateTarget(src_path=path, vcs_ref=get_local_git_head(path))
 
         if vcs_info := direct_url.get("vcs_info"):
             return TemplateTarget(

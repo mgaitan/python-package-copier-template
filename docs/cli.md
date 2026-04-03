@@ -6,10 +6,10 @@ Its job is not to replace Copier, but to make the common path shorter and less e
 ## Main command
 
 ```bash
-uvx python-package-copier-template [DESTINATION]
+uvx python-package-copier-template [PATH_TO_PROJECT]
 ```
 
-The wrapper inspects `DESTINATION`:
+The wrapper inspects `PATH_TO_PROJECT`:
 
 - if there is no `.copier-answers.yml` or `.copier-answers.yaml`, it runs copy mode;
 - if there is a Copier answers file, it runs update mode.
@@ -39,7 +39,7 @@ In practice this means:
 
 - `uvx python-package-copier-template ...` follows the matching published template release from PyPI.
 - `uvx git+https://github.com/mgaitan/python-package-copier-template ...` follows the Git revision you installed from.
-- `uv run python-package-copier-template ...` inside this repository uses the local checkout.
+- `uv run python-package-copier-template ...` inside this repository uses the local checkout pinned to the current `HEAD` commit.
 
 That behavior keeps the wrapper aligned with the version users actually invoked, instead of silently pulling the latest state of `main`.
 
