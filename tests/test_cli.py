@@ -8,8 +8,7 @@ from pathlib import Path
 from python_package_copier_template import cli, extensions
 
 
-def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
-    # Use the template in the repository (current working tree).
+def render_from_clean_template(tmp_path: Path, monkeypatch) -> Path:
     template_src = Path(__file__).resolve().parent.parent
     clean_template = tmp_path / "template-src"
     subprocess.run(["git", "clone", str(template_src), str(clean_template)], check=True)
@@ -22,6 +21,12 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(extensions, "command_available", lambda command: command != "prek")
 
     dest = tmp_path / "proj"
+    cli.main([str(dest)])
+    return dest
+
+
+def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
+    dest = render_from_clean_template(tmp_path, monkeypatch)
     project_exists_on_pypi = False
 
     # First run: copy should create the project (defaults provided via env).
@@ -38,7 +43,6 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
         raise urllib.error.HTTPError("", 404, "not found", Message(), None)
 
     monkeypatch.setattr(extensions.urllib.request, "urlopen", _fake_urlopen)
-    cli.main([str(dest)])
     answers_file = dest / ".copier-answers.yml"
     assert answers_file.exists()
 
@@ -58,6 +62,16 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
     # name now exists on PyPI.
     project_exists_on_pypi = True
     cli.main([str(dest)])
+
+
+def test_generated_project_files_do_not_keep_jinja_markers(tmp_path: Path, monkeypatch) -> None:
+    dest = render_from_clean_template(tmp_path, monkeypatch)
+
+    for relative_path in ("README.md", "pyproject.toml", "docs/index.md"):
+        text = (dest / relative_path).read_text(encoding="utf-8")
+        assert "{{" not in text
+        assert "{%" not in text
+        assert "%}" not in text
 
 
 def test_prek_task_runs_on_update_even_with_defaults() -> None:

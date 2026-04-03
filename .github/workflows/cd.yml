@@ -53,10 +53,6 @@ jobs:
             --vcs-ref="${{ github.event.release.tag_name }}" \
             /tmp/yet-another-demo
           cd /tmp/yet-another-demo
-          if rg -n '\{\{|\{%|%\}' README.md pyproject.toml docs; then
-            echo "Rendered demo repository still contains Jinja markers" >&2
-            exit 1
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git diff --quiet; then
