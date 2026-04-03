@@ -20,6 +20,7 @@ Those pages document the template itself rather than the generated project skele
 ## Tooling
 
 - **[Sphinx](https://www.sphinx-doc.org/) + [MyST](https://myst-parser.readthedocs.io/)** — docs written in Markdown, built with Sphinx.
+- **[sphinx-book-theme](https://sphinx-book-theme.readthedocs.io/)** — the visual theme used by the generated documentation.
 - **[richterm](https://github.com/mgaitan/richterm)** — CLI captures generated at build time, not copied by hand.
 - **[sphinxcontrib-mermaid](https://github.com/mgaitan/sphinxcontrib-mermaid)** — diagrams defined as code.
 
