@@ -48,8 +48,15 @@ jobs:
           DEMO_REPO_TOKEN: ${{ secrets.DEMO_REPO_TOKEN }}
         run: |
           git clone "https://x-access-token:${DEMO_REPO_TOKEN}@github.com/mgaitan/yet-another-demo.git" /tmp/yet-another-demo
-          uvx --with copier-template-extensions --with . copier update --trust --defaults /tmp/yet-another-demo
+          uvx --with copier-template-extensions --with . \
+            copier update --trust --defaults \
+            --vcs-ref="${{ github.event.release.tag_name }}" \
+            /tmp/yet-another-demo
           cd /tmp/yet-another-demo
+          if rg -n '\{\{|\{%|%\}' README.md pyproject.toml docs; then
+            echo "Rendered demo repository still contains Jinja markers" >&2
+            exit 1
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git diff --quiet; then
