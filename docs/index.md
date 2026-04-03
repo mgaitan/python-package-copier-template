@@ -38,6 +38,7 @@ The broader rationale for these choices is described in the original blog post:
 
 getting_started.md
 cli.md
+adopt_existing_project.md
 maintain_template.md
 configuration.md
 design_decisions.md
