@@ -12,13 +12,20 @@ The docs build runs that example non-interactively with defaults in a temporary 
 The wrapper decides whether to run `copier copy` or `copier update` by inspecting the destination directory for a Copier answers file.
 If you prefer the raw Copier commands, or want the latest development version from GitHub, the details are in [Getting Started](getting_started.md).
 
+A public example generated from the template lives at [mgaitan/yet-another-demo](https://github.com/mgaitan/yet-another-demo).
+It is useful both as a smoke target and as a concrete reference for what the scaffold looks like in practice.
+
 ## What this template includes
 
 - A modern Python package baseline targeting Python 3.12+.
 - Dependency and environment management with [uv](https://docs.astral.sh/uv/).
-- QA defaults built around [Ruff](https://docs.astral.sh/ruff/), [ty](https://github.com/astral-sh/ty), and [pytest](https://docs.pytest.org/).
+- Linting and formatting with [Ruff](https://docs.astral.sh/ruff/).
+- Type checking with [ty](https://github.com/astral-sh/ty).
+- Testing with [pytest](https://docs.pytest.org/), coverage, and related extensions.
+- Optional QA orchestration and git hook setup with [prek](https://github.com/j178/prek).
 - Sphinx documentation written in Markdown with [MyST](https://myst-parser.readthedocs.io/).
 - GitHub Actions workflows for CI, docs publishing, template refreshes, and PyPI releases.
+- An `AGENTS.md` starter so code agents have project-specific guidance from day one.
 - Optional GitHub repository bootstrapping with [GitHub CLI](https://cli.github.com/).
 - Generated projects that remain updatable with [`copier update`](https://copier.readthedocs.io/en/stable/updating/).
 
@@ -32,5 +39,6 @@ getting_started.md
 maintain_template.md
 configuration.md
 design_decisions.md
+agents.md
 about_the_docs.md
 ```

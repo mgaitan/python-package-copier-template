@@ -54,18 +54,26 @@ The goal is not perfect supply-chain security; it is a practical delay buffer so
 Some QA tools can still opt into fresher versions when needed.
 That tradeoff keeps projects conservative by default while preserving room to adopt toolchain fixes intentionally.
 
-## QA stack: Ruff, ty, pytest
+## Ruff for linting and formatting
 
-The baseline QA toolchain is:
+[Ruff](https://docs.astral.sh/ruff/) is the linting and formatting baseline.
+The main value here is consolidation: a single fast tool can cover what used to require multiple linters and formatters, which makes local feedback and CI simpler.
 
-- [Ruff](https://docs.astral.sh/ruff/) for linting and formatting,
-- [ty](https://github.com/astral-sh/ty) for type checking,
-- [pytest](https://docs.pytest.org/), [pytest-cov](https://pytest-cov.readthedocs.io/), and [coverage.py](https://coverage.readthedocs.io/) for tests and coverage.
+## ty for type checking
 
-The reason is simple: this stack is fast, batteries-included, and easy to automate.
-Ruff collapses what used to require several tools.
-`ty` is still young, but it fits well for new codebases where adopting newer tooling is acceptable.
-Pytest remains the least surprising default for most Python teams.
+[ty](https://github.com/astral-sh/ty) is the default type checker.
+That is an intentionally modern choice rather than the most conservative one.
+For a fresh template, the tradeoff is acceptable: the tool is fast, improving quickly, and a good fit for projects that want explicit types without a lot of ceremony.
+
+## pytest for tests
+
+[pytest](https://docs.pytest.org/) remains the default testing framework, together with [pytest-cov](https://pytest-cov.readthedocs.io/) and [coverage.py](https://coverage.readthedocs.io/).
+It is still the least surprising default for most Python teams, and it keeps the generated test suite straightforward to extend.
+
+## prek for orchestration and hooks
+
+[prek](https://github.com/j178/prek) is included as an optional layer for QA orchestration and git hook management.
+The template does not hard-require it to exist everywhere, but when it is available it gives generated projects a convenient way to install hooks and run the whole QA suite consistently.
 
 The generated `Makefile` exposes stable shortcuts such as `make qa` and `make test` so contributors do not need to remember long commands.
 
@@ -100,6 +108,15 @@ The template automates several repository tasks through [GitHub Actions](https:/
 
 The point is to reduce the amount of “project setup work” that usually gets postponed and then repeated by hand across repositories.
 
+## Demo repository
+
+The template is exercised continuously against [mgaitan/yet-another-demo](https://github.com/mgaitan/yet-another-demo), a public repository generated from this scaffold.
+That demo is useful for three different reasons:
+
+- it shows what the scaffold looks like after rendering,
+- it gives a realistic target for smoke-testing updates,
+- it helps keep the template honest by forcing changes to work in a generated project, not only in the template repository itself.
+
 ## Trusted Publishing for releases
 
 Generated projects are configured to publish to PyPI through OIDC-based Trusted Publishing rather than long-lived tokens.
@@ -126,6 +143,13 @@ The template also generates the boring but useful project files early:
 
 This is less about ceremony and more about reducing setup variance.
 When those pieces already exist, projects are easier to maintain consistently.
+
+## Agent-facing guidance
+
+The generated `AGENTS.md` is part of the scaffold on purpose.
+As code agents become a normal part of day-to-day maintenance, repositories benefit from having explicit local instructions for editing style, release habits, documentation expectations, and operational constraints.
+
+This turns agent guidance into project infrastructure instead of ad-hoc chat context.
 
 ## Updating generated projects
 
