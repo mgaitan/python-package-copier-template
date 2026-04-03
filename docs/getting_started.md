@@ -41,6 +41,13 @@ uvx python-package-copier-template /path/to/your/new/project
 
 That will run Copier in copy mode with sensible defaults and prompt you for the remaining project metadata.
 
+The capture below shows a real wrapper-driven project creation during the docs build.
+Under the hood it runs non-interactively with defaults in a temporary directory, while displaying the normal command a user would type:
+
+```{richterm} sh -lc 'tmp="$(mktemp -d)"; COPIER_TEMPLATE_DEFAULTS=1 uv run python-package-copier-template "$tmp/demo-project"'
+:shown-command: uvx python-package-copier-template /path/to/your/new/project
+```
+
 After generation:
 
 ```bash

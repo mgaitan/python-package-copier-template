@@ -1,13 +1,15 @@
 # python-package-copier-template
 
-This documentation covers how to use, maintain, and evolve `python-package-copier-template`.
-The project is a [Copier](https://copier.readthedocs.io/) template packaged as a small Python CLI wrapper, so the most common entrypoint is:
+`python-package-copier-template` is a template for creating and maintaining modern Python packages with a batteries-included baseline: current packaging practices, updated tooling, CI/CD automation, documentation scaffolding, and conventions that work well for both humans and code agents.
 
-```bash
-uvx python-package-copier-template [DESTINATION]
+It is implemented as a [Copier](https://copier.readthedocs.io/) template and also published as a small Python CLI wrapper, so the most common entrypoint is:
+
+```{richterm} sh -lc 'tmp="$(mktemp -d)"; COPIER_TEMPLATE_DEFAULTS=1 uv run python-package-copier-template "$tmp/demo-project"'
+:shown-command: uvx python-package-copier-template demo-project
 ```
 
-That wrapper decides whether to run `copier copy` or `copier update` by inspecting the destination directory for a Copier answers file.
+The docs build runs that example non-interactively with defaults in a temporary directory, but the command shown is the normal one you would type.
+The wrapper decides whether to run `copier copy` or `copier update` by inspecting the destination directory for a Copier answers file.
 If you prefer the raw Copier commands, or want the latest development version from GitHub, the details are in [Getting Started](getting_started.md).
 
 ## What this template includes

@@ -34,6 +34,7 @@ dev = [
 ]
 docs = [
     "myst-parser>=4.0.1",
+    "richterm[sphinx]>=0.2.0",
     "sphinx>=8.2.3",
     "sphinx-book-theme>=1.1.4",
 ]
