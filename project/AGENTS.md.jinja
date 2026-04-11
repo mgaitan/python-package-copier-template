@@ -23,12 +23,10 @@ Description: {{ project_description }}
    - Walrus operator
    - Enums subclasses
 - Dependency changes use `uv add` or `uv remove`
-- Use `uv run python - <<'PY' ...` instead `python - <<'PY'` for inline scripts
+- Use `uv run - <<'PY' ...` instead `python - <<'PY'` for inline scripts
 - Docstrings in Markdown ("myst") format, expressing intentions rather than implementation details.
   Make references to other code if appropriate. Eg: "See also `{py:func}`other_module.helper_function`.".
 - Explicit and robust type annotations using built-in generics (`list`, `dict`, etc.), union types with `|`, etc.
-- In tests (`tests/**/*.py`), avoid adding a return annotation (`-> None`) to `test_*` functions.
-  Ruff `ANN` rules are intentionally ignored there.
 - Validate type safety with `uv run ty check` after relevant code changes.
 - Prefer flat code: use early returns, guard clauses, fixtures over context managers on tests, etc.
 - Never hallucinate APIs or behaviours. If uncertain, inspect the code and/or check online documentation (ensure it's the correct version declared by uv.lock) or ask the developer
