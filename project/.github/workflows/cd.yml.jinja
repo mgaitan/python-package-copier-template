@@ -35,8 +35,8 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8.2.0
       - run: uv build
       - run: uv publish
 
@@ -66,7 +66,7 @@ jobs:
       name: {% raw %}${{ github.event_name == 'pull_request' && 'github-pages-preview' || 'github-pages' }}{% endraw %}
       url: {% raw %}${{ steps.preview_url.outputs.url }}{% endraw %}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Detect documentation preview target
         id: preview
         run: |
@@ -74,7 +74,7 @@ jobs:
             echo "docs_subdir=_preview/pr-{% raw %}${{ github.event.pull_request.number }}{% endraw %}" >> "$GITHUB_OUTPUT"
           fi
       - uses: actions/configure-pages@v5
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@v8.2.0
       - run: make docs
       - name: Stage documentation artifact
         run: |
