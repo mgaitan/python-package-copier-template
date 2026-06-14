@@ -12,6 +12,9 @@ Demo repo generated from this template: [mgaitan/yet-another-demo](https://githu
 
 Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 
+Related template for Django internal management systems:
+[mgaitan/django-unfold-copier-template](https://github.com/mgaitan/django-unfold-copier-template).
+
 ## Features
 
 - 🐍 Modern Python package (3.12+)
