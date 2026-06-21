@@ -166,7 +166,7 @@ The point is to reduce the amount of “project setup work” that usually gets 
 
 ## Demo repository
 
-The template is exercised continuously against [mgaitan/yet-another-demo](https://github.com/mgaitan/yet-another-demo), a public repository generated from this scaffold.
+The canonical generated-project example is [mgaitan/yet-another-repo](https://github.com/mgaitan/yet-another-repo). Use experiment branches there when validating changes against a real repository created from this scaffold.
 That demo is useful for three different reasons:
 
 - it shows what the scaffold looks like after rendering,

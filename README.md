@@ -12,9 +12,6 @@ Canonical example repo generated from this template: [mgaitan/yet-another-repo](
 
 Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 
-Sister project for Django internal management systems:
-[mgaitan/django-unfold-copier-template](https://github.com/mgaitan/django-unfold-copier-template).
-
 ## Features
 
 - 🐍 Modern Python package (3.12+)
@@ -37,6 +34,10 @@ Sister project for Django internal management systems:
 - 🌀 Initial setup of the development environment and git repo
 - 🔁 Scheduled template refresh workflow that opens a PR every 20 days when updates are available
 - ♻️ Projects updatable with [`copier update`](https://copier.readthedocs.io/en/stable/updating/)
+
+> [!NOTE]
+> Sister project for Django internal management systems:
+> [mgaitan/django-unfold-copier-template](https://github.com/mgaitan/django-unfold-copier-template).
 
 Please read [my blog post](https://mgaitan.github.io/en/posts/opinionated-python-project-scaffolding/) to learn about the details of the decisions I made and the alternatives I considered.
 
