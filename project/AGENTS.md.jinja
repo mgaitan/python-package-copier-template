@@ -4,6 +4,13 @@ Repository: https://github.com/{{ repository_namespace }}/{{ repository_name }}
 
 Description: {{ project_description }}
 
+## Project Scope
+
+- This repository is generated from `mgaitan/python-package-copier-template`.
+- Keep local project code, docs, CI, and release automation aligned with the template defaults unless the project has an intentional reason to diverge.
+- When updating from the template, review generated changes carefully and preserve project-specific behavior.
+- `mgaitan/yet-another-repo` is the canonical example repository for this template. Use experiment branches there when validating template behavior before adopting it here.
+
 ## Stack
 
 - **Python:** Python 3.14. Check main dependencies in `pyproject.toml`.
@@ -37,6 +44,7 @@ Description: {{ project_description }}
 - Never commit or push automatically unless instructed otherwise.
 - Prefer `gh` CLI for all interactions with Github if possible. Eg. Use it to open PRs / manage issues.
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
+- After opening a PR, use `gh pr edit --add-reviewer @copilot` when Copilot review is useful for early feedback.
 - When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc release commands. Use the repository's release target to run checks and publish a release. When preparing a version-bump PR, use its bump target.
 - For issue categorization, use GitHub labels instead of title prefixes like `Bug:`, `Feat:`, or `Docs:`.
 - Before assigning labels, inspect labels already used in the target repository and follow that taxonomy first.

@@ -8,11 +8,11 @@
 A [Copier](https://github.com/copier-org/copier) template
 for modern Python projects. 
 
-Demo repo generated from this template: [mgaitan/yet-another-demo](https://github.com/mgaitan/yet-another-demo)
+Canonical example repo generated from this template: [mgaitan/yet-another-repo](https://github.com/mgaitan/yet-another-repo)
 
 Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 
-Related template for Django internal management systems:
+Sister project for Django internal management systems:
 [mgaitan/django-unfold-copier-template](https://github.com/mgaitan/django-unfold-copier-template).
 
 ## Features
