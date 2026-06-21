@@ -9,6 +9,13 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Scaffold a basic Python package with `uv`, CLI entrypoint, tests, docs, CI/CD (GitHub Actions), and optional PyPI publishing.
 - Supports optional GitHub repo creation via the `gh` CLI and an early PyPI name check.
 
+## Scope: Template Package vs Generated Project
+- This repository (`python-package-copier-template`) is itself a Python package. Keep its own package code, docs, CI, and release workflow healthy.
+- The generated project skeleton lives under `project/`. Changes there affect repositories created or updated from the template.
+- Most standards should match in both places: if you improve linting, docs, workflows, Python style, or agent guidance for the template package, consider whether the same expectation belongs in `project/`.
+- Keep exceptions explicit. The template package may need extra Copier-specific docs, tests, or release automation that generated projects should not inherit.
+- `mgaitan/yet-another-repo` is the canonical example repository for this template. Use experiment branches there when validating template behavior against a real generated project.
+
 ## Quick Facts for Agents
 - Template entrypoint: `copier.yml` (prompts, defaults, tasks).
 - Jinja helpers: see `python_package_copier_template/extensions.py` (slugify, PyPI check/suggestion, gh username/availability).
@@ -29,6 +36,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Never auto-commit/auto-push unless requested.
 - Network calls are limited to what the template already does (e.g., PyPI HEAD check).
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
+- To request review from a specific user or agent, use `gh`; for example, `gh pr edit --add-reviewer @copilot`.
 - When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc release commands. Use the repository's release target to run checks and publish a release. When preparing a version-bump PR, use its bump target.
 - If you need to credit an AI collaborator explicitly, use a standard co-author trailer such as:
   - "Co-authored-by: codex <codex@openai.com>".
