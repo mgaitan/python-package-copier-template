@@ -28,3 +28,5 @@ myst_url_schemes = {
         "classes": ["github"],
     },
 }
+
+myst_fence_as_directive = ["mermaid"]
