@@ -33,6 +33,8 @@ make docs-open
 
 The build runs in warning-as-error mode, so broken links or directives are caught early.
 
+CI routes checks by changed paths: documentation edits build docs, workflow edits run actionlint, and template or Python edits render the generated project and run its QA bundle.
+
 ## Conventions
 
 - **Environment variables** should be defined once in `configuration.md` using the Sphinx `glossary` directive and referenced everywhere else with `` {term}`VAR_NAME` ``.
