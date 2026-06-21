@@ -71,9 +71,7 @@ jobs:
         id: preview
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            branch="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
-            slug="$(printf '%s' "$branch" | tr '[:upper:]' '[:lower:]' | tr '/' '-' | tr -cs 'a-z0-9._-' '-' | sed 's/^-//;s/-$//')"
-            echo "docs_subdir=_preview/${slug}" >> "$GITHUB_OUTPUT"
+            echo "docs_subdir=_preview/pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: actions/configure-pages@v5
@@ -87,9 +85,9 @@ jobs:
       - name: Build stable docs from latest release
         if: github.event_name == 'pull_request'
         run: |
-          stable_ref="$(git tag --sort=-version:refname | head -n1 || true)"
+          stable_ref="$(git tag --sort=-creatordate | head -n1 || true)"
           if [ -z "$stable_ref" ]; then
-            stable_ref="$(git tag --sort=-creatordate | head -n1 || true)"
+            stable_ref="$(git tag --sort=-version:refname | head -n1 || true)"
           fi
           if [ -z "$stable_ref" ]; then
             echo "No release tag found; using main as stable docs fallback" >&2

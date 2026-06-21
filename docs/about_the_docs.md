@@ -44,5 +44,5 @@ The build runs in warning-as-error mode, so broken links or directives are caugh
 GitHub Actions (defined in `.github/workflows/cd.yml`) deploys docs to GitHub Pages automatically:
 
 - Release or manual dispatch publishes the canonical site.
-- PRs that touch `docs/` get a branch preview deployment under `/_preview/<BRANCH>/`.
+- PRs that touch `docs/` get a preview deployment under `/_preview/pr-<N>/`.
 - Preview deployments rebuild the canonical root from the latest release tag so `/` stays stable while preview branches coexist.

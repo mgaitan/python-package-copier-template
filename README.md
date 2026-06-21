@@ -25,7 +25,7 @@ Related template for Django internal management systems:
 - 🪝 Optional pre-commit style QA orchestration via [prek](https://github.com/j178/prek) as an external tool (`uv tool install prek`; hooks include `check-ast`, `check-yaml`, `check-toml`, Ruff, Ty)
 - 🧪 Tests with [pytest](https://docs.pytest.org/en/stable/), [coverage.py](https://coverage.readthedocs.io/en/latest/) and extensions
 - 📚 Docs with [Sphinx](https://www.sphinx-doc.org/en/master/), [MyST](https://myst-parser.readthedocs.io/en/stable/) and a few extensions, deployed to [GitHub Pages](https://pages.github.com/)
-- 👀 Automatic docs preview deployment for PRs that modify documentation (`/_preview/<BRANCH>/` on GitHub Pages)
+- 👀 Automatic docs preview deployment for PRs that modify documentation (`/_preview/pr-<PR_NUMBER>/` on GitHub Pages)
 - 🧭 Generated docs follow [Diataxis](https://diataxis.fr/) and document rationale in [`about_the_docs`](project/docs/about_the_docs.md.jinja)
 - 🏗️ Use of [GitHub CLI](https://cli.github.com/) for autotic project creation 
 - ⚙️ CI workflow on [GitHub Actions](https://github.com/features/actions)
