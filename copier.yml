@@ -130,7 +130,7 @@ repository_name:
 copyright_license:
   type: str
   help: Your project's license
-  default: "{{ 'none' if gh_repo_create | default('private') == 'private' else 'BSD-3-Clause' }}"
+  default: "{{ 'none' if ('gh' | command_available) and gh_repo_create == 'private' else 'BSD-3-Clause' }}"
   choices:
     No license: none
     BSD 3-Clause "New" or "Revised" License: BSD-3-Clause
