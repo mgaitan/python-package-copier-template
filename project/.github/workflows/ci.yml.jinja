@@ -3,9 +3,13 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - "**/*.md"
   push:
     branches:
       - main
+    paths-ignore:
+      - "**/*.md"
 
 jobs:
   changes:
@@ -15,6 +19,8 @@ jobs:
       workflows: {% raw %}${{ steps.filter.outputs.workflows }}{% endraw %}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: dorny/paths-filter@v3
         id: filter
         with:

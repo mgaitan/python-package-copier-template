@@ -38,11 +38,7 @@ jobs:
               - 'uv.lock'
               - 'python_package_copier_template/**'
               - 'tests/**'
-              - 'project/pyproject.toml.jinja'
-              - 'project/Makefile.jinja'
-              - 'project/src/**'
-              - 'project/tests/**'
-              - 'project/prek.toml.jinja'
+              - 'project/**/*.jinja'
             workflows:
               - '.github/workflows/**'
               - 'project/.github/workflows/**'
