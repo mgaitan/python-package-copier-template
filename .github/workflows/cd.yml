@@ -3,14 +3,6 @@ name: Publish to PyPI
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - main
-    paths:
-      - "docs/**"
-      - "README.md"
-      - "pyproject.toml"
-      - ".github/workflows/cd.yml"
   pull_request:
     branches:
       - main
@@ -79,7 +71,9 @@ jobs:
         id: preview
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "docs_subdir=_preview/pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+            branch="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+            slug="$(printf '%s' "$branch" | tr '[:upper:]' '[:lower:]' | tr '/' '-' | tr -cs 'a-z0-9._-' '-' | sed 's/^-//;s/-$//')"
+            echo "docs_subdir=_preview/${slug}" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: actions/configure-pages@v5
@@ -90,12 +84,19 @@ jobs:
           uv run --group docs sphinx-build docs docs/_build/html -b html -W
           mv docs/_build/html docs/_build/html-current
 
-      - name: Build stable docs from main
+      - name: Build stable docs from latest release
         if: github.event_name == 'pull_request'
         run: |
-          git fetch origin main --depth=1
-          git worktree add ../template-main origin/main
-          cd ../template-main
+          stable_ref="$(git tag --sort=-version:refname | head -n1 || true)"
+          if [ -z "$stable_ref" ]; then
+            stable_ref="$(git tag --sort=-creatordate | head -n1 || true)"
+          fi
+          if [ -z "$stable_ref" ]; then
+            echo "No release tag found; using main as stable docs fallback" >&2
+            stable_ref="origin/main"
+          fi
+          git worktree add ../template-stable "$stable_ref"
+          cd ../template-stable
           uv run --group docs sphinx-build docs docs/_build/html -b html -W
 
       - name: Stage documentation artifact
@@ -105,7 +106,7 @@ jobs:
           rm -rf "$out_dir"
           mkdir -p "$out_dir"
           if [ -n "$subdir" ]; then
-            cp -a ../template-main/docs/_build/html/. "$out_dir/"
+            cp -a ../template-stable/docs/_build/html/. "$out_dir/"
             mkdir -p "$out_dir/$subdir"
             cp -a docs/_build/html-current/. "$out_dir/$subdir/"
           else

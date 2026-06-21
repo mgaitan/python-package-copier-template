@@ -3,14 +3,6 @@ name: Publish to PyPI
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - main
-    paths:
-      - "docs/**"
-      - "README.md"
-      - "CONTRIBUTING.md"
-      - ".github/workflows/cd.yml"
   pull_request:
     branches:
       - main
@@ -67,15 +59,38 @@ jobs:
       url: {% raw %}${{ steps.preview_url.outputs.url }}{% endraw %}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Detect documentation preview target
         id: preview
         run: |
           if [ "{% raw %}${{ github.event_name }}{% endraw %}" = "pull_request" ]; then
-            echo "docs_subdir=_preview/pr-{% raw %}${{ github.event.pull_request.number }}{% endraw %}" >> "$GITHUB_OUTPUT"
+            branch="{% raw %}${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}{% endraw %}"
+            slug="$(printf '%s' "$branch" | tr '[:upper:]' '[:lower:]' | tr '/' '-' | tr -cs 'a-z0-9._-' '-' | sed 's/^-//;s/-$//')"
+            echo "docs_subdir=_preview/${slug}" >> "$GITHUB_OUTPUT"
           fi
       - uses: actions/configure-pages@v5
       - uses: astral-sh/setup-uv@v8.2.0
-      - run: make docs
+      - name: Build docs for current ref
+        run: |
+          make docs
+          mv docs/_build/html docs/_build/html-current
+
+      - name: Build stable docs from latest release
+        if: {% raw %}${{ github.event_name == 'pull_request' }}{% endraw %}
+        run: |
+          stable_ref="$(git tag --sort=-version:refname | head -n1 || true)"
+          if [ -z "$stable_ref" ]; then
+            stable_ref="$(git tag --sort=-creatordate | head -n1 || true)"
+          fi
+          if [ -z "$stable_ref" ]; then
+            echo "No release tag found; using main as stable docs fallback" >&2
+            stable_ref="origin/main"
+          fi
+          git worktree add ../project-stable "$stable_ref"
+          cd ../project-stable
+          make docs
+
       - name: Stage documentation artifact
         run: |
           out_dir="site"
@@ -83,10 +98,11 @@ jobs:
           rm -rf "$out_dir"
           if [ -n "$subdir" ]; then
             mkdir -p "$out_dir/$subdir"
-            cp -a docs/_build/html/. "$out_dir/$subdir/"
+            cp -a ../project-stable/docs/_build/html/. "$out_dir/"
+            cp -a docs/_build/html-current/. "$out_dir/$subdir/"
           else
             mkdir -p "$out_dir"
-            cp -a docs/_build/html/. "$out_dir/"
+            cp -a docs/_build/html-current/. "$out_dir/"
           fi
       - uses: actions/upload-pages-artifact@v4
         with:
