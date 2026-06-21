@@ -29,7 +29,7 @@ Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 - 🚀 Automated releases to PyPI via [Trusted Publishing](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
 - 🧠 Sensible defaults via introspection to minimize answers during the initial setup
 - 🛠️ Makefile with shortcuts for common tasks
-- 📄 Generation of generic docs such as `LICENSE`, `CODE_OF_CONDUCT`, etc.
+- 📄 Generation of generic docs such as `CODE_OF_CONDUCT`, plus an optional `LICENSE`
 - 🤖 Heavily curated [AGENTS.md](https://agents.md/)
 - 🌀 Initial setup of the development environment and git repo
 - 🔁 Scheduled template refresh workflow that opens a PR every 20 days when updates are available
