@@ -9,16 +9,70 @@ on:
       - main
 
 jobs:
-  smoke:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      docs: ${{ steps.filter.outputs.docs }}
+      generated_docs: ${{ steps.filter.outputs.generated_docs }}
+      python: ${{ steps.filter.outputs.python }}
+      workflows: ${{ steps.filter.outputs.workflows }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'docs/**'
+              - 'README.md'
+            generated_docs:
+              - 'project/docs/**'
+              - 'project/README.md.jinja'
+              - 'project/CONTRIBUTING.md.jinja'
+              - 'project/CODE_OF_CONDUCT.md.jinja'
+            python:
+              - 'copier.yml'
+              - 'pyproject.toml'
+              - 'uv.lock'
+              - 'python_package_copier_template/**'
+              - 'tests/**'
+              - 'project/**/*.jinja'
+            workflows:
+              - '.github/workflows/**'
+              - 'project/.github/workflows/**'
+
+  workflows-lint:
+    needs: changes
+    if: needs.changes.outputs.workflows == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Lint GitHub workflows
+        uses: rhysd/actionlint@v1.7.12
+
+  docs:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v8.2.0
+      - name: Template package docs
+        run: uv run --group docs sphinx-build docs docs/_build/html -b html -W
+
+  template-smoke:
+    needs: changes
+    if: needs.changes.outputs.python == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
-      - name: Lint GitHub workflows
-        uses: rhysd/actionlint@v1.7.12
 
       - name: Configure Git
         run: |
@@ -27,9 +81,6 @@ jobs:
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v8.2.0
-
-      - name: Template package docs
-        run: uv run --group docs sphinx-build docs docs/_build/html -b html -W
 
       - name: Install prek tool
         run: |
@@ -69,6 +120,26 @@ jobs:
         working-directory: test-project
         run: uv build
 
+      - name: Template docs
+        working-directory: test-project
+        run: make docs
+
+  generated-docs:
+    needs: changes
+    if: needs.changes.outputs.generated_docs == 'true' && needs.changes.outputs.python != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config --global user.name "Copier Bot"
+          git config --global user.email "bot@example.com"
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v8.2.0
+      - name: Generate project from template
+        run: uv run copier copy --trust --vcs-ref=HEAD . test-project --defaults
       - name: Template docs
         working-directory: test-project
         run: make docs

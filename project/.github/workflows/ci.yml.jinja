@@ -3,12 +3,40 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - "**/*.md"
   push:
     branches:
       - main
+    paths-ignore:
+      - "**/*.md"
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      python: {% raw %}${{ steps.filter.outputs.python }}{% endraw %}
+      workflows: {% raw %}${{ steps.filter.outputs.workflows }}{% endraw %}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'pyproject.toml'
+              - 'uv.lock'
+              - 'src/**'
+              - 'tests/**'
+              - 'Makefile'
+            workflows:
+              - '.github/workflows/**'
+
   workflows-lint:
+    needs: changes
+    if: {% raw %}${{ needs.changes.outputs.workflows == 'true' }}{% endraw %}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -16,7 +44,8 @@ jobs:
         uses: rhysd/actionlint@v1.7.12
 
   qa:
-    needs: workflows-lint
+    needs: changes
+    if: {% raw %}${{ needs.changes.outputs.python == 'true' }}{% endraw %}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -33,7 +62,8 @@ jobs:
 
 
   test:
-    needs: qa
+    needs: [changes, qa]
+    if: {% raw %}${{ needs.changes.outputs.python == 'true' }}{% endraw %}
     runs-on: ubuntu-latest
     strategy:
       matrix:
