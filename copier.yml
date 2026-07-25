@@ -9,6 +9,9 @@ _preserve_symlinks: true
 _exclude:
   - "{% if not ('prek' | command_available) %}prek.toml{% endif %}"
   - "{% if copyright_license == 'none' %}LICENSE{% endif %}"
+_skip_if_exists:
+  - README.md
+  - docs/**
 _jinja_extensions:
   - copier_template_extensions.TemplateExtensionLoader
   - python_package_copier_template.extensions:CurrentYearExtension
