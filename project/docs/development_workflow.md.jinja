@@ -35,6 +35,27 @@ make release
 
 Release workflows publish package artifacts and canonical docs.
 
+### Verify release attestations
+
+Each wheel and source distribution has signed provenance generated from the
+release workflow. The PEP 740 publish attestation is uploaded to PyPI with the
+package, while GitHub stores SLSA build provenance signed through Sigstore.
+
+After downloading an artifact, verify that it came from this repository:
+
+```bash
+gh attestation verify path/to/distribution.whl \
+  --repo {{ repository_namespace }}/{{ repository_name }}
+```
+
+To verify with an attestation bundle downloaded in advance:
+
+```bash
+gh attestation verify path/to/distribution.whl \
+  --repo {{ repository_namespace }}/{{ repository_name }} \
+  --bundle path/to/attestation.jsonl
+```
+
 ## Preview documentation in pull requests
 
 When docs files change in a PR, CI deploys a preview to:
