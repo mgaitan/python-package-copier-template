@@ -8,12 +8,9 @@
 A [Copier](https://github.com/copier-org/copier) template
 for modern Python projects. 
 
-Demo repo generated from this template: [mgaitan/yet-another-demo](https://github.com/mgaitan/yet-another-demo)
+Canonical example repo generated from this template: [mgaitan/yet-another-repo](https://github.com/mgaitan/yet-another-repo)
 
 Documentation: <https://mgaitan.github.io/python-package-copier-template/>
-
-Related template for Django internal management systems:
-[mgaitan/django-unfold-copier-template](https://github.com/mgaitan/django-unfold-copier-template).
 
 ## Features
 
@@ -32,11 +29,15 @@ Related template for Django internal management systems:
 - 🚀 Automated releases to PyPI via [Trusted Publishing](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
 - 🧠 Sensible defaults via introspection to minimize answers during the initial setup
 - 🛠️ Makefile with shortcuts for common tasks
-- 📄 Generation of generic docs such as `LICENSE`, `CODE_OF_CONDUCT`, etc.
+- 📄 Generation of generic docs such as `CODE_OF_CONDUCT`, plus an optional `LICENSE`
 - 🤖 Heavily curated [AGENTS.md](https://agents.md/)
 - 🌀 Initial setup of the development environment and git repo
 - 🔁 Scheduled template refresh workflow that opens a PR every 20 days when updates are available
 - ♻️ Projects updatable with [`copier update`](https://copier.readthedocs.io/en/stable/updating/)
+
+> [!NOTE]
+> Sister project for Django internal management systems:
+> [mgaitan/django-unfold-copier-template](https://github.com/mgaitan/django-unfold-copier-template).
 
 Please read [my blog post](https://mgaitan.github.io/en/posts/opinionated-python-project-scaffolding/) to learn about the details of the decisions I made and the alternatives I considered.
 

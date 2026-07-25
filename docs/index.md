@@ -14,7 +14,7 @@ The wrapper decides whether to run `copier copy` or `copier update` by inspectin
 If you want the details of how the wrapper resolves template versions and source locations, see [CLI Reference](cli.md).
 If you prefer the raw Copier commands, or want the latest development version from GitHub, the details are in [Getting Started](getting_started.md).
 
-A public example generated from the template lives at [mgaitan/yet-another-demo](https://github.com/mgaitan/yet-another-demo).
+The canonical example generated from the template lives at [mgaitan/yet-another-repo](https://github.com/mgaitan/yet-another-repo).
 It is useful both as a smoke target and as a concrete reference for what the scaffold looks like in practice.
 
 ## What this template includes

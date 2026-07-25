@@ -17,3 +17,11 @@ DEMO_REPO_TOKEN
   Repository secret used by this template repository's release workflow to push updates to the demo repository `mgaitan/yet-another-demo`.
   Use a fine-grained token with `Contents: Read and write` on that repository.
 ```
+
+## Template Choices
+
+`copyright_license` controls generated package license metadata, the `LICENSE`
+file, and license badges. Public repositories default to `BSD-3-Clause`;
+explicitly private repositories default to `none`, which omits license metadata
+and does not generate a `LICENSE` file. Local copies that skip GitHub repository
+creation keep the licensed `BSD-3-Clause` default.
