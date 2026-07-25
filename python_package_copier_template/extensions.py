@@ -4,18 +4,22 @@ import subprocess
 import unicodedata
 import urllib.error
 import urllib.request
+from collections.abc import Iterator
 from contextlib import contextmanager
 from contextvars import ContextVar
 from datetime import date
 from pathlib import Path
+from typing import cast
 
+from jinja2 import Environment
 from jinja2.ext import Extension
 
 _UPDATE_MODE: ContextVar[bool] = ContextVar("copier_template_update_mode", default=False)
+MAX_PYPI_SUFFIX = 50
 
 
 @contextmanager
-def update_mode():
+def update_mode() -> Iterator[None]:
     """Mark the current execution context as an update operation."""
 
     token = _UPDATE_MODE.set(True)
@@ -26,19 +30,39 @@ def update_mode():
 
 
 def git_user_name(default: str) -> str:
-    return subprocess.getoutput("git config user.name").strip() or default
+    return _git_config_value("user.name", default)
 
 
 def git_user_email(default: str) -> str:
-    return subprocess.getoutput("git config user.email").strip() or default
+    return _git_config_value("user.email", default)
+
+
+def _git_config_value(key: str, default: str) -> str:
+    if not (git := shutil.which("git")):
+        return default
+
+    try:
+        completed = subprocess.run(  # noqa: S603 - arguments are passed without a shell
+            [git, "config", key],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError:
+        return default
+
+    return completed.stdout.strip() or default
 
 
 def gh_user_login(default: str) -> str:
     """Return the authenticated GitHub username via the GH CLI when available."""
 
+    if not (gh := shutil.which("gh")):
+        return default
+
     try:
-        completed = subprocess.run(
-            ["gh", "api", "user", "-q", ".login"],
+        completed = subprocess.run(  # noqa: S603 - arguments are passed without a shell
+            [gh, "api", "user", "-q", ".login"],
             check=True,
             capture_output=True,
             text=True,
@@ -46,7 +70,7 @@ def gh_user_login(default: str) -> str:
         login = completed.stdout.strip()
         if login:
             return login
-    except (FileNotFoundError, subprocess.CalledProcessError):
+    except subprocess.CalledProcessError:
         return default
 
     return default
@@ -58,7 +82,7 @@ def command_available(command: str) -> bool:
     return shutil.which(command) is not None
 
 
-def slugify(value, separator="-"):
+def slugify(value: object, separator: str = "-") -> str:
     value = unicodedata.normalize("NFKD", str(value)).encode("ascii", "ignore").decode("ascii")
     value = re.sub(r"[^\w\s-]", "", value.lower())
     return re.sub(r"[-_\s]+", separator, value).strip("-_")
@@ -70,7 +94,7 @@ def path_exists(path: str) -> bool:
     return Path(path).expanduser().exists()
 
 
-def is_update(defaults: bool | None = None) -> bool:
+def is_update(defaults: bool | None = None) -> bool:  # noqa: FBT001 - Jinja filters receive positional values
     """Return True when running under `copier update`."""
 
     return bool(defaults)
@@ -92,9 +116,9 @@ def pypi_distribution_exists(name: str) -> bool:
         return False
 
     url = f"https://pypi.org/pypi/{name}/json"
-    request = urllib.request.Request(url, method="HEAD")
+    request = urllib.request.Request(url, method="HEAD")  # noqa: S310 - URL is a fixed HTTPS PyPI endpoint
     try:
-        with urllib.request.urlopen(request, timeout=3):
+        with urllib.request.urlopen(request, timeout=3):  # noqa: S310 - request URL is restricted above
             return True
     except (urllib.error.HTTPError, OSError):
         return False
@@ -109,14 +133,14 @@ def suggest_pypi_distribution_name(name: str) -> str:
 
     candidate = base
     suffix = 1
-    while pypi_distribution_exists(candidate) and suffix < 50:
+    while pypi_distribution_exists(candidate) and suffix < MAX_PYPI_SUFFIX:
         candidate = f"{base}-{suffix}"
         suffix += 1
     return candidate
 
 
 class GitExtension(Extension):
-    def __init__(self, environment):
+    def __init__(self, environment: Environment) -> None:
         super().__init__(environment)
         environment.filters["git_user_name"] = git_user_name
         environment.filters["git_user_email"] = git_user_email
@@ -127,7 +151,7 @@ class GitExtension(Extension):
 
 
 class SlugifyExtension(Extension):
-    def __init__(self, environment):
+    def __init__(self, environment: Environment) -> None:
         super().__init__(environment)
         environment.filters["slugify"] = slugify
         environment.filters["pypi_exists"] = pypi_distribution_exists
@@ -135,6 +159,6 @@ class SlugifyExtension(Extension):
 
 
 class CurrentYearExtension(Extension):
-    def __init__(self, environment):
+    def __init__(self, environment: Environment) -> None:
         super().__init__(environment)
-        environment.globals["current_year"] = date.today().year
+        cast("dict[str, object]", environment.globals)["current_year"] = date.today().year

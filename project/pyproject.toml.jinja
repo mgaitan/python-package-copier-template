@@ -45,9 +45,9 @@ line-length = 120
 
 [tool.ruff.lint]
 select = [
-    "E",
+    "E",      # Includes Ruff's default E4, E7, and E9 rules
     "W",      # pycodestyle (E, W) https://docs.astral.sh/ruff/rules/#pycodestyle-e-w
-    "F",      # https://docs.astral.sh/ruff/rules/#pyflakes-f
+    "F",      # Pyflakes and the remaining Ruff defaults
     "I",      # isort
     "C90",    # https://docs.astral.sh/ruff/rules/#mccabe-c90
     "A",      # https://docs.astral.sh/ruff/rules/#flake8-builtins-a
@@ -65,6 +65,10 @@ select = [
     "EXE",    # https://docs.astral.sh/ruff/rules/#flake8-executable-exe
     "FA",     # https://docs.astral.sh/ruff/rules/#flake8-future-annotations-fa
     "C4",     # https://docs.astral.sh/ruff/rules/#flake8-comprehensions-c4
+    "FBT",    # https://docs.astral.sh/ruff/rules/#flake8-boolean-trap-fbt
+    "S",      # https://docs.astral.sh/ruff/rules/#flake8-bandit-s
+    "G",      # https://docs.astral.sh/ruff/rules/#flake8-logging-format-g
+    "FLY",    # https://docs.astral.sh/ruff/rules/#flynt-fly
     "N",      # https://docs.astral.sh/ruff/rules/#pep8-naming-n
     "PIE",    # https://docs.astral.sh/ruff/rules/#flake8-pie-pie
     "PERF",   # https://docs.astral.sh/ruff/rules/#perflint-perf
@@ -75,7 +79,7 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["ANN"]
+"tests/**/*.py" = ["ANN", "S101"]
 "docs/conf.py" = ["A"]
 
 [tool.pytest.ini_options]

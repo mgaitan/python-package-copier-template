@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import shutil
 import subprocess
 from dataclasses import dataclass
 from importlib.metadata import PackageNotFoundError, distribution, version
@@ -33,9 +34,12 @@ def has_answers(dst: Path) -> bool:
 
 
 def get_local_git_head(path: str) -> str | None:
+    if not (git := shutil.which("git")):
+        return None
+
     try:
-        result = subprocess.run(
-            ["git", "-C", path, "rev-parse", "HEAD"],
+        result = subprocess.run(  # noqa: S603 - arguments are passed without a shell
+            [git, "-C", path, "rev-parse", "HEAD"],
             check=True,
             capture_output=True,
             text=True,

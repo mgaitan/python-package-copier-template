@@ -28,6 +28,45 @@ exclude = [".worktrees/", ".external-worktrees/"]
 [tool.ruff]
 line-length = 120
 
+[tool.ruff.lint]
+select = [
+    "E",      # Includes Ruff's default E4, E7, and E9 rules
+    "W",      # pycodestyle
+    "F",      # Pyflakes and the remaining Ruff defaults
+    "I",      # isort
+    "C90",    # mccabe
+    "A",      # flake8-builtins
+    "ANN",    # flake8-annotations
+    "UP",     # pyupgrade
+    "RUF",    # Ruff-specific rules
+    "T10",    # flake8-debugger
+    "ISC",    # flake8-implicit-str-concat
+    "SIM",    # flake8-simplify
+    "ASYNC",  # flake8-async
+    "ERA",    # eradicate
+    "TRY",    # tryceratops
+    "BLE",    # flake8-blind-except
+    "B",      # flake8-bugbear
+    "EXE",    # flake8-executable
+    "FA",     # flake8-future-annotations
+    "C4",     # flake8-comprehensions
+    "FBT",    # flake8-boolean-trap
+    "S",      # flake8-bandit
+    "G",      # flake8-logging-format
+    "FLY",    # flynt
+    "N",      # pep8-naming
+    "PIE",    # flake8-pie
+    "PERF",   # Perflint
+    "PL",     # Pylint
+    "FURB",   # refurb
+    "RET",    # flake8-return
+    "TID252", # flake8-tidy-imports
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["ANN", "S101", "S108", "S603", "S607"]
+"docs/conf.py" = ["A"]
+
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
