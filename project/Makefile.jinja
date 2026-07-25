@@ -1,4 +1,6 @@
 .PHONY: install
+export UV_MALWARE_CHECK := 1
+
 install: ## Install the virtual environment and install the pre-commit hooks
 	@echo "🚀 Creating virtual environment using uv"
 	@uv sync

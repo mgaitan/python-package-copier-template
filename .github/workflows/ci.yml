@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  UV_MALWARE_CHECK: "1"
+
 jobs:
   smoke:
     runs-on: ubuntu-latest

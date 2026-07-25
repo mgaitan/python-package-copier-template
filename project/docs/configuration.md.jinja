@@ -16,6 +16,10 @@ GITHUB_TOKEN
   Ephemeral token automatically injected by GitHub Actions jobs.
   Used by workflows to interact with repository APIs with job-scoped permissions.
 
+UV_MALWARE_CHECK
+  Enables uv's preview lockfile scan against malicious-package advisories from OSV.
+  Make targets and GitHub Actions set it to `1`, causing syncs to stop when a locked dependency matches a known malware advisory.
+
 NO_COLOR
   De-facto standard variable used by CLI tools to disable ANSI colors.
   Prefer this for plain-text logs where color escape sequences are undesirable.

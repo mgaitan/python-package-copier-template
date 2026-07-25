@@ -13,6 +13,10 @@ GITHUB_TOKEN
   Ephemeral token automatically provided by GitHub Actions.
   Its effective permissions are controlled by workflow/job `permissions` blocks.
 
+UV_MALWARE_CHECK
+  Enables uv's preview lockfile scan against malicious-package advisories from OSV.
+  Make targets and GitHub Actions set it to `1`, causing syncs to stop when a locked dependency matches a known malware advisory.
+
 DEMO_REPO_TOKEN
   Repository secret used by this template repository's release workflow to push updates to the demo repository `mgaitan/yet-another-demo`.
   Use a fine-grained token with `Contents: Read and write` on that repository.

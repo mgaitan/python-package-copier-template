@@ -5,6 +5,9 @@ on:
     - cron: "0 0 */20 * *"
   workflow_dispatch:
 
+env:
+  UV_MALWARE_CHECK: "1"
+
 permissions:
   contents: write
   pull-requests: write

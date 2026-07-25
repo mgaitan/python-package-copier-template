@@ -18,7 +18,7 @@ _tasks:
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: uv python pin 3.14
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
-    command: uv sync
+    command: UV_MALWARE_CHECK=1 uv sync
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: git init -b main
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"

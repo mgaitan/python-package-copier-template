@@ -32,6 +32,7 @@ uv tool install {{ python_package_distribution_name }}
 
 - Install dependencies with `uv sync`.
 - New dependency releases are delayed by one week via `uv` cooldown (`[tool.uv].exclude-newer = "1 week"`), with per-package overrides when required (for example, `ty`).
+- Make targets and GitHub Actions enable uv's malware check against known malicious-package advisories.
 - Install [`prek`](https://github.com/j178/prek) as an external tool:
 
 ```bash
