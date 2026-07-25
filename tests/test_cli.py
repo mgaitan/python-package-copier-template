@@ -85,6 +85,14 @@ def test_prek_task_runs_on_update_even_with_defaults() -> None:
     assert expected_when in content
 
 
+def test_github_setup_enables_immutable_releases() -> None:
+    copier_yml = Path(__file__).resolve().parent.parent / "copier.yml"
+    content = copier_yml.read_text(encoding="utf-8")
+
+    assert '"X-GitHub-Api-Version: 2026-03-10"' in content
+    assert '"repos/${repo}/immutable-releases"' in content
+
+
 def test_resolve_template_target_uses_package_version_for_registry_installs(monkeypatch) -> None:
     class _DummyDistribution:
         version = "0.4.2"
