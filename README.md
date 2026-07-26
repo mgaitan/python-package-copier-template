@@ -17,6 +17,7 @@ Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 - 🐍 Modern Python package (3.12+)
 - 📦 Build and dependency management with [uv](https://docs.astral.sh/uv/), split by groups (dev/qa/docs)
 - 🧊 Dependency cooldowns enabled by default in `uv` (`[tool.uv].exclude-newer = "1 week"`), with targeted overrides when needed (for example `ty`) to reduce supply-chain risk without blocking QA tools
+- 🛡️ uv malware checks enabled in Make targets and GitHub Actions to reject locked dependencies with known malicious-package advisories
 - 🧹 Linting and formatting via [Ruff](https://docs.astral.sh/ruff/) with a broad set of rules enabled
 - ✅ Type checking via [ty](https://github.com/astral-sh/ty)
 - 🪝 Optional pre-commit style QA orchestration via [prek](https://github.com/j178/prek) as an external tool (`uv tool install prek`; hooks include `check-ast`, `check-yaml`, `check-toml`, Ruff, Ty)

@@ -1,5 +1,7 @@
 .PHONY: install lint format test qa bump release docs docs-open smoke help
 
+export UV_MALWARE_CHECK := 1
+
 DOCS_SOURCE := docs
 DOCS_BUILD := $(DOCS_SOURCE)/_build
 
