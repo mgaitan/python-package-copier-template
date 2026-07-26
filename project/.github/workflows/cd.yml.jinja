@@ -26,6 +26,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  UV_MALWARE_CHECK: "1"
+
 jobs:
   pypi-publish:
     name: upload release to PyPI

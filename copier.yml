@@ -9,6 +9,9 @@ _preserve_symlinks: true
 _exclude:
   - "{% if not ('prek' | command_available) %}prek.toml{% endif %}"
   - "{% if copyright_license == 'none' %}LICENSE{% endif %}"
+_skip_if_exists:
+  - README.md
+  - docs/**
 _jinja_extensions:
   - copier_template_extensions.TemplateExtensionLoader
   - python_package_copier_template.extensions:CurrentYearExtension
@@ -18,7 +21,7 @@ _tasks:
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: uv python pin 3.14
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
-    command: uv sync
+    command: UV_MALWARE_CHECK=1 uv sync
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: git init -b main
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
@@ -43,6 +46,15 @@ _tasks:
         fi
         git push -u origin main
         gh repo edit "$repo" --enable-wiki=false --enable-projects=false >/dev/null 2>&1 || true
+        if gh api \
+          --method PUT \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2026-03-10" \
+          "repos/${repo}/immutable-releases" >/dev/null 2>&1; then
+          echo "Immutable releases enabled for ${repo}"
+        else
+          echo "Warning: could not enable immutable releases for ${repo}." >&2
+        fi
         # Enable Pages for workflow builds (required by deploy-pages).
         if gh api \
           --method POST \

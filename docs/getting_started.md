@@ -113,6 +113,8 @@ That uses the local repository as the template source and resolves updates again
 
 If you choose GitHub repository creation during the questionnaire and have `gh` available, the template can bootstrap the repository for you.
 For public repositories, it also tries to enable GitHub Pages so the generated docs workflow can publish without extra manual setup.
+It also enables immutable releases, which prevents assets and tags from being
+changed after future releases are published. Existing releases are unaffected.
 
 For PyPI publishing in generated projects, the release workflow is based on [Trusted Publishing](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/).
 That still requires one manual registration step in PyPI for the project and workflow identity.

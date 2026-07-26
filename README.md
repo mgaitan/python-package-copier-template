@@ -17,6 +17,7 @@ Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 - 🐍 Modern Python package (3.12+)
 - 📦 Build and dependency management with [uv](https://docs.astral.sh/uv/), split by groups (dev/qa/docs)
 - 🧊 Dependency cooldowns enabled by default in `uv` (`[tool.uv].exclude-newer = "1 week"`), with targeted overrides when needed (for example `ty`) to reduce supply-chain risk without blocking QA tools
+- 🛡️ uv malware checks enabled in Make targets and GitHub Actions to reject locked dependencies with known malicious-package advisories
 - 🧹 Linting and formatting via [Ruff](https://docs.astral.sh/ruff/) with a broad set of rules enabled
 - ✅ Type checking via [ty](https://github.com/astral-sh/ty)
 - 🪝 Optional pre-commit style QA orchestration via [prek](https://github.com/j178/prek) as an external tool (`uv tool install prek`; hooks include `check-ast`, `check-yaml`, `check-toml`, Ruff, Ty)
@@ -73,7 +74,11 @@ To upgrade an existing project created from this template to the latest version,
 uvx --with=copier-template-extensions copier update . --trust 
 ```
 
-This will fetch the latest template version and guide you through updating your project, preserving your customizations whenever possible.
+This fetches the latest template version and guides you through updating your project.
+Existing `README.md` and `docs/**` files are left untouched so project-specific
+documentation is not replaced. New documentation files are still added when the
+template introduces them; adopt later changes to existing pages manually from the
+template diff when they are relevant to your project.
 
 The generated project also ships a `Template Update` GitHub Actions workflow that runs every 20 days (or on manual dispatch) to execute `uvx copier update --trust --defaults .` and open a pull request with the changes and template version bump.
 
@@ -84,7 +89,11 @@ uv sync
 uv run copier copy --trust  --vcs-ref=HEAD . /path/to/your/test/project
 ```
 
-If you create the GitHub repository via the `gh` CLI prompt, the template will attempt to enable GitHub Pages (using the Actions build type) so documentation deployments succeed. If Pages is unavailable (for example, with some private repositories or account policies), the docs workflow will keep failing until Pages is allowed.
+If you create the GitHub repository via the `gh` CLI prompt, the template will
+attempt to enable immutable releases and GitHub Pages (using the Actions build
+type). Immutability protects assets and tags for future releases. If Pages is
+unavailable (for example, with some private repositories or account policies),
+the docs workflow will keep failing until Pages is allowed.
 
 
 To publish a release of your project to PyPI, you need to [register the project with trusted publishing](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/). Read more about how this workflow works [here](https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/).
