@@ -114,6 +114,20 @@ That tradeoff keeps projects conservative by default while preserving room to ad
 [Ruff](https://docs.astral.sh/ruff/) is the linting and formatting baseline.
 The main value here is consolidation: a single fast tool can cover what used to require multiple linters and formatters, which makes local feedback and CI simpler.
 
+The selected rules are deliberately a superset of
+[Ruff's default rules](https://docs.astral.sh/ruff/rules/#default-rules).
+The configuration keeps `E` and `F`, which include the default `E4`, `E7`,
+`E9`, and `F` checks, then adds the broader correctness, security, naming,
+logging, modernization, testing, and documentation families listed in
+`pyproject.toml`. A regression test protects the required selectors in both
+this package and the generated project template.
+
+Specific per-file ignores remain narrow: test modules may use assertions and
+fixture-oriented patterns, while Sphinx configuration files are not required
+to behave like public Python modules. The incompatible pydocstyle pairs
+`D203`/`D211` and `D212`/`D213` are resolved explicitly in favor of `D211` and
+`D212`.
+
 ## ty for type checking
 
 [ty](https://github.com/astral-sh/ty) is the default type checker.
