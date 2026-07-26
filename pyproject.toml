@@ -6,16 +6,15 @@ readme = "README.md"
 authors = [{ name = "Martín Gaitán", email = "gaitan@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = [
-    "copier>=9.11.0",
+    "copier>=9.17.0",
     "copier-templates-extensions>=0.3.2",
-    "ruff>=0.14.9",
 ]
 
 [project.scripts]
 python-package-copier-template = "python_package_copier_template.cli:main"
 
 [build-system]
-requires = ["uv_build>=0.9.18,<0.10.0"]
+requires = ["uv_build>=0.11.32,<0.12.0"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
@@ -80,15 +79,19 @@ ignore = ["D203", "D213"]
 
 [dependency-groups]
 dev = [
-    "pytest>=9.0.2",
+    "pytest>=9.1.1",
 ]
 docs = [
-    "myst-parser>=4.0.1",
+    "myst-parser>=5.1.0",
     "richterm[sphinx]>=0.2.0",
-    "sphinx>=8.2.3",
-    "sphinx-book-theme>=1.1.4",
-    "sphinxcontrib-mermaid>=1.0.0",
+    "sphinx>=9.1.0",
+    "sphinx-book-theme>=1.4.0",
+    "sphinxcontrib-mermaid>=2.1.0",
+]
+lint = [
+    "ruff>=0.16.0",
 ]
 qa = [
-    "ty>=0.0.27",
+    { include-group = "lint" },
+    "ty>=0.0.63",
 ]

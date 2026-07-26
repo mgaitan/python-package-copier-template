@@ -115,7 +115,7 @@ def pypi_distribution_exists(name: str) -> bool:
         return False
 
     url = f"https://pypi.org/pypi/{name}/json"
-    request = urllib.request.Request(url, method="HEAD")  # noqa: S310 - URL is a fixed HTTPS PyPI endpoint
+    request = urllib.request.Request(url, method="HEAD")
     try:
         with urllib.request.urlopen(request, timeout=3):  # noqa: S310 - request URL is restricted above
             return True
