@@ -73,7 +73,11 @@ To upgrade an existing project created from this template to the latest version,
 uvx --with=copier-template-extensions copier update . --trust 
 ```
 
-This will fetch the latest template version and guide you through updating your project, preserving your customizations whenever possible.
+This fetches the latest template version and guides you through updating your project.
+Existing `README.md` and `docs/**` files are left untouched so project-specific
+documentation is not replaced. New documentation files are still added when the
+template introduces them; adopt later changes to existing pages manually from the
+template diff when they are relevant to your project.
 
 The generated project also ships a `Template Update` GitHub Actions workflow that runs every 20 days (or on manual dispatch) to execute `uvx copier update --trust --defaults .` and open a pull request with the changes and template version bump.
 
