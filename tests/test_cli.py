@@ -6,6 +6,10 @@ import urllib.error
 from email.message import Message
 from importlib.metadata import PackageNotFoundError
 from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+from jinja2 import Environment
 
 from python_package_copier_template import cli, extensions
 
@@ -34,7 +38,7 @@ def render_from_clean_template(tmp_path: Path, monkeypatch) -> tuple[Path, Path]
     template_src = Path(__file__).resolve().parent.parent
     clean_template = tmp_path / "template-src"
     subprocess.run(["git", "clone", str(template_src), str(clean_template)], check=True)
-    subprocess.run(["git", "-C", str(clean_template), "tag", "999.0.0"], check=True)
+    subprocess.run(["git", "-C", str(clean_template), "tag", "--force", "999.0.0"], check=True)
     monkeypatch.setattr(
         cli,
         "resolve_template_target",
@@ -96,6 +100,15 @@ def test_generated_project_files_do_not_keep_jinja_markers(tmp_path: Path, monke
         assert "{{" not in text
         assert "{%" not in text
         assert "%}" not in text
+
+
+def test_python_version_extension_rejects_unsupported_python(monkeypatch) -> None:
+    version_info = SimpleNamespace(major=3, minor=11)
+    monkeypatch.setattr(extensions, "sys", SimpleNamespace(version_info=version_info))
+    monkeypatch.setattr(extensions.platform, "python_version", lambda: "3.11.9")
+
+    with pytest.raises(RuntimeError, match=r"Python 3\.12 or newer.*Python 3\.11\.9"):
+        extensions.PythonVersionExtension(Environment(autoescape=True))
 
 
 def test_ruff_rules_include_defaults_and_requested_families() -> None:
