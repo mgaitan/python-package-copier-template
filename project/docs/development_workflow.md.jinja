@@ -35,6 +35,19 @@ make release
 
 Release workflows publish package artifacts and canonical docs.
 
+### Verify release attestations
+
+Each wheel and source distribution has a PEP 740 publish attestation signed
+through Sigstore and uploaded to PyPI with the package.
+
+Verify a published artifact by passing its PyPI file URL:
+
+```bash
+uvx pypi-attestations verify pypi \
+  --repository https://github.com/{{ repository_namespace }}/{{ repository_name }} \
+  https://files.pythonhosted.org/path/to/distribution.whl
+```
+
 ## Preview documentation in pull requests
 
 When docs files change in a PR, CI deploys a preview to:
