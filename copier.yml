@@ -10,16 +10,16 @@ _exclude:
   - "{% if not ('prek' | command_available) %}prek.toml{% endif %}"
   - "{% if copyright_license == 'none' %}LICENSE{% endif %}"
 _skip_if_exists:
+  - .python-version
   - README.md
   - docs/**
 _jinja_extensions:
   - copier_template_extensions.TemplateExtensionLoader
   - python_package_copier_template.extensions:CurrentYearExtension
   - python_package_copier_template.extensions:GitExtension
+  - python_package_copier_template.extensions:PythonVersionExtension
   - python_package_copier_template.extensions:SlugifyExtension
 _tasks:
-  - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
-    command: uv python pin 3.14
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"
     command: UV_MALWARE_CHECK=1 uv sync
   - when: "{{ (not (defaults | default(false))) and (not '.git' | path_exists) }}"

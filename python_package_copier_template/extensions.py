@@ -1,5 +1,6 @@
 """Jinja extensions and filters used while rendering the template."""
 
+import platform
 import re
 import shutil
 import subprocess
@@ -169,3 +170,12 @@ class CurrentYearExtension(Extension):
         """Register the current year in a Jinja environment."""
         super().__init__(environment)
         cast("dict[str, object]", environment.globals)["current_year"] = datetime.now(tz=UTC).year
+
+
+class PythonVersionExtension(Extension):
+    """Expose the running Python version to templates."""
+
+    def __init__(self, environment: Environment) -> None:
+        """Register the running Python version in a Jinja environment."""
+        super().__init__(environment)
+        cast("dict[str, object]", environment.globals)["python_version"] = platform.python_version()
