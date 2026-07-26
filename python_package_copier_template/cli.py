@@ -1,6 +1,9 @@
+"""Command-line wrapper for copying and updating projects."""
+
 import argparse
 import json
 import os
+import shutil
 import subprocess
 from dataclasses import dataclass
 from importlib.metadata import PackageNotFoundError, distribution, version
@@ -17,11 +20,14 @@ ANSWER_FILES: tuple[str, ...] = (".copier-answers.yml", ".copier-answers.yaml")
 
 @dataclass(frozen=True)
 class TemplateTarget:
+    """Template source and optional version control reference."""
+
     src_path: str
     vcs_ref: str | None = None
 
 
 def get_version() -> str:
+    """Return the installed package version."""
     try:
         return version("python-package-copier-template")
     except PackageNotFoundError:
@@ -29,13 +35,18 @@ def get_version() -> str:
 
 
 def has_answers(dst: Path) -> bool:
+    """Return whether a destination contains Copier answers."""
     return any((dst / filename).exists() for filename in ANSWER_FILES)
 
 
 def get_local_git_head(path: str) -> str | None:
+    """Return the current commit for a local Git repository."""
+    if not (git := shutil.which("git")):
+        return None
+
     try:
-        result = subprocess.run(
-            ["git", "-C", path, "rev-parse", "HEAD"],
+        result = subprocess.run(  # noqa: S603 - arguments are passed without a shell
+            [git, "-C", path, "rev-parse", "HEAD"],
             check=True,
             capture_output=True,
             text=True,
@@ -47,6 +58,7 @@ def get_local_git_head(path: str) -> str | None:
 
 
 def resolve_template_target() -> TemplateTarget:
+    """Resolve the template source matching the installed package."""
     try:
         dist = distribution("python-package-copier-template")
     except PackageNotFoundError:
@@ -72,6 +84,7 @@ def resolve_template_target() -> TemplateTarget:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build the package command-line parser."""
     parser = argparse.ArgumentParser(
         prog="python-package-copier-template",
         description=(
@@ -89,6 +102,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Copy or update a project based on its Copier answers file."""
     parser = build_parser()
     args = parser.parse_args(argv)
 

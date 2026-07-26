@@ -1,11 +1,32 @@
 import os
 import subprocess
+import tomllib
 import urllib.error
 from email.message import Message
 from importlib.metadata import PackageNotFoundError
 from pathlib import Path
 
 from python_package_copier_template import cli, extensions
+
+REQUIRED_RUFF_SELECTORS = {
+    "E",
+    "F",
+    "FBT",
+    "S",
+    "G",
+    "FLY",
+    "N",
+    "YTT",
+    "DTZ",
+    "INT",
+    "LOG",
+    "PYI",
+    "PT",
+    "TC",
+    "PTH",
+    "D",
+    "PGH",
+}
 
 
 def render_from_clean_template(tmp_path: Path, monkeypatch) -> tuple[Path, Path]:
@@ -37,7 +58,7 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
         def __exit__(self, exc_type, exc, tb):
             return False
 
-    def _fake_urlopen(_request, timeout):  # noqa: ANN001
+    def _fake_urlopen(_request, timeout):
         if project_exists_on_pypi:
             return _DummyResponse()
         raise urllib.error.HTTPError("", 404, "not found", Message(), None)
@@ -72,6 +93,16 @@ def test_generated_project_files_do_not_keep_jinja_markers(tmp_path: Path, monke
         assert "{{" not in text
         assert "{%" not in text
         assert "%}" not in text
+
+
+def test_ruff_rules_include_defaults_and_requested_families() -> None:
+    template_root = Path(__file__).resolve().parent.parent
+    root_config = tomllib.loads((template_root / "pyproject.toml").read_text(encoding="utf-8"))
+    assert set(root_config["tool"]["ruff"]["lint"]["select"]) >= REQUIRED_RUFF_SELECTORS
+
+    generated_template = (template_root / "project/pyproject.toml.jinja").read_text(encoding="utf-8")
+    for selector in REQUIRED_RUFF_SELECTORS:
+        assert f'"{selector}"' in generated_template
 
 
 def test_update_preserves_existing_docs_and_adds_new_pages(tmp_path: Path, monkeypatch) -> None:
@@ -125,6 +156,20 @@ def test_prek_task_runs_on_update_even_with_defaults() -> None:
         "or (_copier_operation == 'update')) and ('prek' | command_available)) }}"
     )
     assert expected_when in content
+
+
+def test_pypi_suggestion_does_not_return_a_known_existing_name(monkeypatch) -> None:
+    checked: list[str] = []
+
+    def exists(name: str) -> bool:
+        checked.append(name)
+        return True
+
+    monkeypatch.setattr(extensions, "MAX_PYPI_SUFFIX", 3)
+    monkeypatch.setattr(extensions, "pypi_distribution_exists", exists)
+
+    assert extensions.suggest_pypi_distribution_name("package") == "package-3"
+    assert checked == ["package", "package-1", "package-2"]
 
 
 def test_github_setup_enables_immutable_releases() -> None:
@@ -208,7 +253,7 @@ def test_resolve_template_target_falls_back_to_plain_path_for_non_git_file_insta
 
 
 def test_resolve_template_target_falls_back_when_distribution_missing(monkeypatch) -> None:
-    def _raise(_name: str):  # noqa: ANN001
+    def _raise(_name: str):
         raise PackageNotFoundError
 
     monkeypatch.setattr(cli, "distribution", _raise)

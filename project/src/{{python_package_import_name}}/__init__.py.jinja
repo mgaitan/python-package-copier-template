@@ -1,5 +1,4 @@
-"""
-{{ project_name }}
+"""{{ project_name }}.
 
 {{ project_description }}
 """
@@ -10,6 +9,7 @@ from importlib import metadata
 
 
 def get_version() -> str:
+    """Return the installed package version."""
     try:
         return metadata.version("{{ python_package_distribution_name }}")
     except metadata.PackageNotFoundError:
