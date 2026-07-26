@@ -46,6 +46,15 @@ _tasks:
         fi
         git push -u origin main
         gh repo edit "$repo" --enable-wiki=false --enable-projects=false >/dev/null 2>&1 || true
+        if gh api \
+          --method PUT \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2026-03-10" \
+          "repos/${repo}/immutable-releases" >/dev/null 2>&1; then
+          echo "Immutable releases enabled for ${repo}"
+        else
+          echo "Warning: could not enable immutable releases for ${repo}." >&2
+        fi
         # Enable Pages for workflow builds (required by deploy-pages).
         if gh api \
           --method POST \
