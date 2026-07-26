@@ -11,7 +11,7 @@ from python_package_copier_template import cli, extensions
 REQUIRED_RUFF_SELECTORS = {"E", "F", "FBT", "S", "G", "FLY", "N"}
 
 
-def render_from_clean_template(tmp_path: Path, monkeypatch) -> Path:
+def render_from_clean_template(tmp_path: Path, monkeypatch) -> tuple[Path, Path]:
     template_src = Path(__file__).resolve().parent.parent
     clean_template = tmp_path / "template-src"
     subprocess.run(["git", "clone", str(template_src), str(clean_template)], check=True)
@@ -25,11 +25,11 @@ def render_from_clean_template(tmp_path: Path, monkeypatch) -> Path:
 
     dest = tmp_path / "proj"
     cli.main([str(dest)])
-    return dest
+    return dest, clean_template
 
 
 def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
-    dest = render_from_clean_template(tmp_path, monkeypatch)
+    dest, _ = render_from_clean_template(tmp_path, monkeypatch)
     project_exists_on_pypi = False
 
     # First run: copy should create the project (defaults provided via env).
@@ -68,7 +68,7 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
 
 
 def test_generated_project_files_do_not_keep_jinja_markers(tmp_path: Path, monkeypatch) -> None:
-    dest = render_from_clean_template(tmp_path, monkeypatch)
+    dest, _ = render_from_clean_template(tmp_path, monkeypatch)
 
     for relative_path in ("README.md", "pyproject.toml", "docs/index.md"):
         text = (dest / relative_path).read_text(encoding="utf-8")
@@ -87,6 +87,48 @@ def test_ruff_rules_include_defaults_and_requested_families() -> None:
         assert f'"{selector}"' in generated_template
 
 
+def test_update_preserves_existing_docs_and_adds_new_pages(tmp_path: Path, monkeypatch) -> None:
+    dest, clean_template = render_from_clean_template(tmp_path, monkeypatch)
+    env = {
+        **os.environ,
+        "GIT_AUTHOR_NAME": "Test",
+        "GIT_AUTHOR_EMAIL": "test@example.com",
+        "GIT_COMMITTER_NAME": "Test",
+        "GIT_COMMITTER_EMAIL": "test@example.com",
+    }
+
+    readme = dest / "README.md"
+    configuration = dest / "docs/configuration.md"
+    readme.write_text("# Custom project\n", encoding="utf-8")
+    configuration.write_text("# Custom configuration\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-b", "main"], cwd=dest, check=True, env=env)
+    subprocess.run(["git", "add", "."], cwd=dest, check=True, env=env)
+    subprocess.run(["git", "commit", "-m", "customize docs"], cwd=dest, check=True, env=env)
+
+    new_page = clean_template / "project/docs/new_guide.md.jinja"
+    new_page.write_text("# New guide\n", encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=clean_template, check=True, env=env)
+    subprocess.run(
+        ["git", "commit", "-m", "add a new documentation page"],
+        cwd=clean_template,
+        check=True,
+        env=env,
+    )
+    with extensions.update_mode():
+        cli.run_update(
+            dst_path=str(dest),
+            defaults=True,
+            unsafe=True,
+            overwrite=True,
+            skip_answered=True,
+            vcs_ref="HEAD",
+        )
+
+    assert readme.read_text(encoding="utf-8") == "# Custom project\n"
+    assert configuration.read_text(encoding="utf-8") == "# Custom configuration\n"
+    assert (dest / "docs/new_guide.md").read_text(encoding="utf-8") == "# New guide\n"
+
+
 def test_prek_task_runs_on_update_even_with_defaults() -> None:
     copier_yml = Path(__file__).resolve().parent.parent / "copier.yml"
     content = copier_yml.read_text(encoding="utf-8")
@@ -96,6 +138,14 @@ def test_prek_task_runs_on_update_even_with_defaults() -> None:
         "or (_copier_operation == 'update')) and ('prek' | command_available)) }}"
     )
     assert expected_when in content
+
+
+def test_github_setup_enables_immutable_releases() -> None:
+    copier_yml = Path(__file__).resolve().parent.parent / "copier.yml"
+    content = copier_yml.read_text(encoding="utf-8")
+
+    assert '"X-GitHub-Api-Version: 2026-03-10"' in content
+    assert '"repos/${repo}/immutable-releases"' in content
 
 
 def test_resolve_template_target_uses_package_version_for_registry_installs(monkeypatch) -> None:

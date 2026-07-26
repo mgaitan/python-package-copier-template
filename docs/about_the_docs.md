@@ -39,6 +39,11 @@ The build runs in warning-as-error mode, so broken links or directives are caugh
 - **Any behavior or feature change** should update the relevant doc page in the same PR.
 - **Generated projects should prefer adding new sections** over rewriting seeded ones, to keep `copier update` diffs clean.
 
+Copier treats generated `README.md` and `docs/**` files as project-owned after
+their initial creation. Template updates add missing documentation pages but do
+not overwrite existing ones. Review documentation changes in the template when
+you want to adopt improvements manually.
+
 ## Publishing
 
 GitHub Actions (defined in `.github/workflows/cd.yml`) deploys docs to GitHub Pages automatically:
