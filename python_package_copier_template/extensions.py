@@ -1,8 +1,10 @@
 """Jinja extensions and filters used while rendering the template."""
 
+import platform
 import re
 import shutil
 import subprocess
+import sys
 import unicodedata
 import urllib.error
 import urllib.request
@@ -18,6 +20,17 @@ from jinja2.ext import Extension
 
 _UPDATE_MODE: ContextVar[bool] = ContextVar("copier_template_update_mode", default=False)
 MAX_PYPI_SUFFIX = 50
+MIN_PROJECT_PYTHON = (3, 12)
+
+
+class UnsupportedPythonError(RuntimeError):
+    """Raised when Copier runs below the generated project's Python minimum."""
+
+    def __init__(self, minimum: str, running: str) -> None:
+        """Describe the required and running Python versions."""
+        super().__init__(
+            f"Python {minimum} or newer is required to generate a project; Copier is running on Python {running}."
+        )
 
 
 @contextmanager
@@ -169,3 +182,16 @@ class CurrentYearExtension(Extension):
         """Register the current year in a Jinja environment."""
         super().__init__(environment)
         cast("dict[str, object]", environment.globals)["current_year"] = datetime.now(tz=UTC).year
+
+
+class PythonVersionExtension(Extension):
+    """Expose the running Python version to templates."""
+
+    def __init__(self, environment: Environment) -> None:
+        """Register the running Python version in a Jinja environment."""
+        super().__init__(environment)
+        running_python = (sys.version_info.major, sys.version_info.minor)
+        if running_python < MIN_PROJECT_PYTHON:
+            minimum = ".".join(str(part) for part in MIN_PROJECT_PYTHON)
+            raise UnsupportedPythonError(minimum, platform.python_version())
+        cast("dict[str, object]", environment.globals)["python_version"] = platform.python_version()

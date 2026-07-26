@@ -1,10 +1,15 @@
 import os
+import platform
 import subprocess
 import tomllib
 import urllib.error
 from email.message import Message
 from importlib.metadata import PackageNotFoundError
 from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+from jinja2 import Environment
 
 from python_package_copier_template import cli, extensions
 
@@ -33,6 +38,7 @@ def render_from_clean_template(tmp_path: Path, monkeypatch) -> tuple[Path, Path]
     template_src = Path(__file__).resolve().parent.parent
     clean_template = tmp_path / "template-src"
     subprocess.run(["git", "clone", str(template_src), str(clean_template)], check=True)
+    subprocess.run(["git", "-C", str(clean_template), "tag", "--force", "999.0.0"], check=True)
     monkeypatch.setattr(
         cli,
         "resolve_template_target",
@@ -88,11 +94,21 @@ def test_cli_copy_and_update(tmp_path: Path, monkeypatch) -> None:
 def test_generated_project_files_do_not_keep_jinja_markers(tmp_path: Path, monkeypatch) -> None:
     dest, _ = render_from_clean_template(tmp_path, monkeypatch)
 
+    assert (dest / ".python-version").read_text(encoding="utf-8").strip() == platform.python_version()
     for relative_path in ("README.md", "pyproject.toml", "docs/index.md"):
         text = (dest / relative_path).read_text(encoding="utf-8")
         assert "{{" not in text
         assert "{%" not in text
         assert "%}" not in text
+
+
+def test_python_version_extension_rejects_unsupported_python(monkeypatch) -> None:
+    version_info = SimpleNamespace(major=3, minor=11)
+    monkeypatch.setattr(extensions, "sys", SimpleNamespace(version_info=version_info))
+    monkeypatch.setattr(extensions.platform, "python_version", lambda: "3.11.9")
+
+    with pytest.raises(RuntimeError, match=r"Python 3\.12 or newer.*Python 3\.11\.9"):
+        extensions.PythonVersionExtension(Environment(autoescape=True))
 
 
 def test_ruff_rules_include_defaults_and_requested_families() -> None:
@@ -117,8 +133,10 @@ def test_update_preserves_existing_docs_and_adds_new_pages(tmp_path: Path, monke
 
     readme = dest / "README.md"
     configuration = dest / "docs/configuration.md"
+    python_version = dest / ".python-version"
     readme.write_text("# Custom project\n", encoding="utf-8")
     configuration.write_text("# Custom configuration\n", encoding="utf-8")
+    python_version.write_text("3.12.9\n", encoding="utf-8")
     subprocess.run(["git", "init", "-b", "main"], cwd=dest, check=True, env=env)
     subprocess.run(["git", "add", "."], cwd=dest, check=True, env=env)
     subprocess.run(["git", "commit", "-m", "customize docs"], cwd=dest, check=True, env=env)
@@ -144,6 +162,7 @@ def test_update_preserves_existing_docs_and_adds_new_pages(tmp_path: Path, monke
 
     assert readme.read_text(encoding="utf-8") == "# Custom project\n"
     assert configuration.read_text(encoding="utf-8") == "# Custom configuration\n"
+    assert python_version.read_text(encoding="utf-8") == "3.12.9\n"
     assert (dest / "docs/new_guide.md").read_text(encoding="utf-8") == "# New guide\n"
 
 
