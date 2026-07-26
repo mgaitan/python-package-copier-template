@@ -1,3 +1,5 @@
+"""Jinja extensions and filters used while rendering the template."""
+
 import re
 import shutil
 import subprocess
@@ -7,7 +9,7 @@ import urllib.request
 from collections.abc import Iterator
 from contextlib import contextmanager
 from contextvars import ContextVar
-from datetime import date
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
 
@@ -21,7 +23,6 @@ MAX_PYPI_SUFFIX = 50
 @contextmanager
 def update_mode() -> Iterator[None]:
     """Mark the current execution context as an update operation."""
-
     token = _UPDATE_MODE.set(True)
     try:
         yield
@@ -30,10 +31,12 @@ def update_mode() -> Iterator[None]:
 
 
 def git_user_name(default: str) -> str:
+    """Return the configured Git author name or a fallback."""
     return _git_config_value("user.name", default)
 
 
 def git_user_email(default: str) -> str:
+    """Return the configured Git author email or a fallback."""
     return _git_config_value("user.email", default)
 
 
@@ -56,7 +59,6 @@ def _git_config_value(key: str, default: str) -> str:
 
 def gh_user_login(default: str) -> str:
     """Return the authenticated GitHub username via the GH CLI when available."""
-
     if not (gh := shutil.which("gh")):
         return default
 
@@ -78,11 +80,11 @@ def gh_user_login(default: str) -> str:
 
 def command_available(command: str) -> bool:
     """Return True if the command exists on PATH."""
-
     return shutil.which(command) is not None
 
 
 def slugify(value: object, separator: str = "-") -> str:
+    """Normalize a value for use in package and repository names."""
     value = unicodedata.normalize("NFKD", str(value)).encode("ascii", "ignore").decode("ascii")
     value = re.sub(r"[^\w\s-]", "", value.lower())
     return re.sub(r"[-_\s]+", separator, value).strip("-_")
@@ -90,13 +92,11 @@ def slugify(value: object, separator: str = "-") -> str:
 
 def path_exists(path: str) -> bool:
     """Return True when ``path`` exists relative to the destination."""
-
     return Path(path).expanduser().exists()
 
 
 def is_update(defaults: bool | None = None) -> bool:  # noqa: FBT001 - Jinja filters receive positional values
     """Return True when running under `copier update`."""
-
     return bool(defaults)
 
 
@@ -106,7 +106,6 @@ def pypi_distribution_exists(name: str) -> bool:
     Uses the lightweight JSON endpoint and handles network failures gracefully
     by treating them as "not found" so template execution is not blocked.
     """
-
     # During updates we keep the previously selected distribution name and
     # should not block on global PyPI availability checks.
     if _UPDATE_MODE.get():
@@ -126,21 +125,23 @@ def pypi_distribution_exists(name: str) -> bool:
 
 def suggest_pypi_distribution_name(name: str) -> str:
     """Return a PyPI-safe distribution name, adding a suffix if needed."""
-
     base = slugify(name)
     if not base:
         base = "package"
 
     candidate = base
-    suffix = 1
-    while pypi_distribution_exists(candidate) and suffix < MAX_PYPI_SUFFIX:
+    for suffix in range(1, MAX_PYPI_SUFFIX + 1):
+        if not pypi_distribution_exists(candidate):
+            return candidate
         candidate = f"{base}-{suffix}"
-        suffix += 1
     return candidate
 
 
 class GitExtension(Extension):
+    """Register Git, GitHub, command, and path filters."""
+
     def __init__(self, environment: Environment) -> None:
+        """Register filters in a Jinja environment."""
         super().__init__(environment)
         environment.filters["git_user_name"] = git_user_name
         environment.filters["git_user_email"] = git_user_email
@@ -151,7 +152,10 @@ class GitExtension(Extension):
 
 
 class SlugifyExtension(Extension):
+    """Register slug and PyPI name filters."""
+
     def __init__(self, environment: Environment) -> None:
+        """Register filters in a Jinja environment."""
         super().__init__(environment)
         environment.filters["slugify"] = slugify
         environment.filters["pypi_exists"] = pypi_distribution_exists
@@ -159,6 +163,9 @@ class SlugifyExtension(Extension):
 
 
 class CurrentYearExtension(Extension):
+    """Expose the current UTC year to templates."""
+
     def __init__(self, environment: Environment) -> None:
+        """Register the current year in a Jinja environment."""
         super().__init__(environment)
-        cast("dict[str, object]", environment.globals)["current_year"] = date.today().year
+        cast("dict[str, object]", environment.globals)["current_year"] = datetime.now(tz=UTC).year

@@ -8,7 +8,25 @@ from pathlib import Path
 
 from python_package_copier_template import cli, extensions
 
-REQUIRED_RUFF_SELECTORS = {"E", "F", "FBT", "S", "G", "FLY", "N"}
+REQUIRED_RUFF_SELECTORS = {
+    "E",
+    "F",
+    "FBT",
+    "S",
+    "G",
+    "FLY",
+    "N",
+    "YTT",
+    "DTZ",
+    "INT",
+    "LOG",
+    "PYI",
+    "PT",
+    "TC",
+    "PTH",
+    "D",
+    "PGH",
+}
 
 
 def render_from_clean_template(tmp_path: Path, monkeypatch) -> tuple[Path, Path]:
@@ -138,6 +156,20 @@ def test_prek_task_runs_on_update_even_with_defaults() -> None:
         "or (_copier_operation == 'update')) and ('prek' | command_available)) }}"
     )
     assert expected_when in content
+
+
+def test_pypi_suggestion_does_not_return_a_known_existing_name(monkeypatch) -> None:
+    checked: list[str] = []
+
+    def exists(name: str) -> bool:
+        checked.append(name)
+        return True
+
+    monkeypatch.setattr(extensions, "MAX_PYPI_SUFFIX", 3)
+    monkeypatch.setattr(extensions, "pypi_distribution_exists", exists)
+
+    assert extensions.suggest_pypi_distribution_name("package") == "package-3"
+    assert checked == ["package", "package-1", "package-2"]
 
 
 def test_github_setup_enables_immutable_releases() -> None:
