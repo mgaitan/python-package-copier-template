@@ -34,6 +34,7 @@ def render_from_clean_template(tmp_path: Path, monkeypatch) -> tuple[Path, Path]
     template_src = Path(__file__).resolve().parent.parent
     clean_template = tmp_path / "template-src"
     subprocess.run(["git", "clone", str(template_src), str(clean_template)], check=True)
+    subprocess.run(["git", "-C", str(clean_template), "tag", "999.0.0"], check=True)
     monkeypatch.setattr(
         cli,
         "resolve_template_target",
