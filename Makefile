@@ -1,4 +1,4 @@
-.PHONY: install lint format test qa bump release docs docs-open smoke help
+.PHONY: install lint format type test qa bump release docs docs-open smoke help
 
 export UV_MALWARE_CHECK := 1
 
@@ -9,10 +9,13 @@ install: ## Install project dependencies with uv
 	@uv sync
 
 lint: ## Run Ruff checks on this repository
-	@uv run ruff check .
+	@uv run --group lint ruff check .
 
 format: ## Format code with Ruff
-	@uv run ruff format .
+	@uv run --group lint ruff format .
+
+type: ## Run ty checks on this repository
+	@uv run --group qa ty check
 
 test: ## Run repository tests
 	@uv run pytest -q
@@ -23,7 +26,7 @@ docs: ## Build package documentation as HTML
 docs-open: docs ## Build docs and open them in the browser
 	@uv run -m webbrowser $(DOCS_BUILD)/html/index.html
 
-qa: lint test docs ## Run local quality checks
+qa: lint type test docs ## Run local quality checks
 
 bump: ## Bump the project minor version
 	@uv version --bump minor

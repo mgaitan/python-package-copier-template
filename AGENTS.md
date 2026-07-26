@@ -14,7 +14,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - The generated project skeleton lives under `project/`. Changes there affect repositories created or updated from the template.
 - Most standards should match in both places: if you improve linting, docs, workflows, Python style, or agent guidance for the template package, consider whether the same expectation belongs in `project/`.
 - Keep exceptions explicit. The template package may need extra Copier-specific docs, tests, or release automation that generated projects should not inherit.
-- `mgaitan/yet-another-repo` is the canonical example repository for this template. Use experiment branches there when validating template behavior against a real generated project.
+- `mgaitan/yet-another-demo` is the canonical example repository for this template. Use experiment branches there when validating template behavior against a real generated project.
 
 ## Quick Facts for Agents
 - Template entrypoint: `copier.yml` (prompts, defaults, tasks).
@@ -57,6 +57,6 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Docstrings in Markdown ("myst") format, expressing intentions rather than implementation details.
   Make references to other code if appropriate. Eg: "See also `{py:func}`other_module.helper_function`.".
 - Explicit and robust type annotations using built-in generics (`list`, `dict`, etc.), union types with `|`, etc.
-- Validate type safety with `uv run ty check` after relevant code changes.
+- Validate type safety with `uv run --group qa ty check` after relevant code changes.
 - Prefer flat code: use early returns, guard clauses, fixtures over context managers on tests, etc.
 - Never hallucinate APIs or behaviours. If uncertain, inspect the code and/or check online documentation (ensure it's the correct version declared by uv.lock) or ask the developer
