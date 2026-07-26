@@ -172,7 +172,8 @@ def test_prek_task_runs_on_update_even_with_defaults() -> None:
 
     expected_when = (
         "{{ ((((not (defaults | default(false))) and (not '.git' | path_exists)) "
-        "or (_copier_operation == 'update')) and ('prek' | command_available)) }}"
+        "or ((_copier_operation | default('copy')) == 'update')) "
+        "and ('prek' | command_available)) }}"
     )
     assert expected_when in content
 
