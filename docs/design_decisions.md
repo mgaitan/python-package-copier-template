@@ -193,28 +193,16 @@ long-lived signing key. GitHub Actions exchanges its OIDC identity for a
 short-lived Sigstore certificate, and the resulting signed statement binds the
 artifact digest to the workflow that produced it.
 
-The workflow produces two complementary records:
+`astral-sh/attest-action` creates
+[PEP 740](https://peps.python.org/pep-0740/) publish attestations, which
+`uv publish` uploads with the distributions to PyPI.
 
-- `astral-sh/attest-action` creates
-  [PEP 740](https://peps.python.org/pep-0740/) publish attestations, which
-  `uv publish` uploads with the distributions to PyPI.
-- `actions/attest` records SLSA build provenance in GitHub Artifact
-  Attestations, allowing consumers to verify the files against this repository.
-
-After downloading a wheel or source distribution, verify its GitHub provenance:
+Verify a published wheel or source distribution by passing its PyPI file URL:
 
 ```bash
-gh attestation verify path/to/distribution.whl \
-  --repo mgaitan/python-package-copier-template
-```
-
-For offline verification, download the attestation bundle first and pass it
-explicitly:
-
-```bash
-gh attestation verify path/to/distribution.whl \
-  --repo mgaitan/python-package-copier-template \
-  --bundle path/to/attestation.jsonl
+uvx pypi-attestations verify pypi \
+  --repository https://github.com/mgaitan/python-package-copier-template \
+  https://files.pythonhosted.org/path/to/distribution.whl
 ```
 
 ## Repository ergonomics
