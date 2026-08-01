@@ -1,21 +1,31 @@
 [[repos]]
-repo = "https://github.com/pre-commit/pre-commit-hooks"
-rev = "v6.0.0"
+repo = "builtin"
 hooks = [
-  { id = "check-ast" },
   { id = "trailing-whitespace" },
   { id = "check-added-large-files" },
   { id = "check-case-conflict" },
+  { id = "check-illegal-windows-names" },
   { id = "end-of-file-fixer" },
+  { id = "fix-byte-order-marker" },
   { id = "check-json" },
   { id = "check-yaml" },
   { id = "check-toml" },
   { id = "check-xml" },
+  { id = "check-vcs-permalinks" },
   { id = "mixed-line-ending" },
   { id = "check-symlinks" },
+  { id = "destroyed-symlinks" },
   { id = "check-merge-conflict" },
   { id = "detect-private-key" },
   { id = "check-executables-have-shebangs" },
+  { id = "check-shebang-scripts-are-executable" },
+]
+
+[[repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+rev = "v6.0.0"
+hooks = [
+  { id = "check-ast" },
 ]
 
 [[repos]]
@@ -25,7 +35,7 @@ repo = "local"
 id = "ruff-check"
 name = "ruff check"
 language = "system"
-entry = "uv run --only-group lint ruff check"
+entry = "uv run --only-group lint ruff check --fix"
 pass_filenames = false
 always_run = true
 
@@ -33,7 +43,7 @@ always_run = true
 id = "ruff-format"
 name = "ruff format"
 language = "system"
-entry = "uv run --only-group lint ruff format --check"
+entry = "uv run --only-group lint ruff format"
 pass_filenames = false
 always_run = true
 
