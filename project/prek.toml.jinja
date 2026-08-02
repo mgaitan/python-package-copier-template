@@ -6,7 +6,6 @@ hooks = [
   { id = "check-case-conflict" },
   { id = "check-illegal-windows-names" },
   { id = "end-of-file-fixer" },
-  { id = "fix-byte-order-marker" },
   { id = "check-json" },
   { id = "check-yaml" },
   { id = "check-toml" },
@@ -19,13 +18,7 @@ hooks = [
   { id = "detect-private-key" },
   { id = "check-executables-have-shebangs" },
   { id = "check-shebang-scripts-are-executable" },
-]
-
-[[repos]]
-repo = "https://github.com/pre-commit/pre-commit-hooks"
-rev = "v6.0.0"
-hooks = [
-  { id = "check-ast" },
+  { id = "no-commit-to-branch", args = ["--branch", "main"] },
 ]
 
 [[repos]]
@@ -35,7 +28,7 @@ repo = "local"
 id = "ruff-check"
 name = "ruff check"
 language = "system"
-entry = "uv run --only-group lint ruff check --fix"
+entry = "uv run ruff check --fix"
 pass_filenames = false
 always_run = true
 
@@ -43,7 +36,7 @@ always_run = true
 id = "ruff-format"
 name = "ruff format"
 language = "system"
-entry = "uv run --only-group lint ruff format"
+entry = "uv run ruff format"
 pass_filenames = false
 always_run = true
 
@@ -51,6 +44,6 @@ always_run = true
 id = "ty-check"
 name = "ty check"
 language = "system"
-entry = "uv run --group qa ty check"
+entry = "uv run ty check"
 pass_filenames = false
 always_run = true
