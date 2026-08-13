@@ -80,7 +80,7 @@ documentation is not replaced. New documentation files are still added when the
 template introduces them; adopt later changes to existing pages manually from the
 template diff when they are relevant to your project.
 
-The generated project also ships a `Template Update` GitHub Actions workflow that runs every 20 days (or on manual dispatch) to execute `uvx copier update --trust --defaults .` and open a pull request with the changes and template version bump.
+The generated project also ships a `Template Update` GitHub Actions workflow that runs every 20 days (or on manual dispatch) with `actions-ext/copier/update@main` and opens a pull request when the template changes. Configure a `WORKFLOW_TOKEN` secret with repository contents, pull request, and workflow write permissions so template updates can include `.github/workflows/` changes.
 
 To test a local development version of the template, clone the repository and run:
 
