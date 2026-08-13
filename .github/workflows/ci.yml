@@ -18,6 +18,7 @@ jobs:
       docs: ${{ steps.filter.outputs.docs }}
       generated_docs: ${{ steps.filter.outputs.generated_docs }}
       python: ${{ steps.filter.outputs.python }}
+      templates: ${{ steps.filter.outputs.templates }}
       workflows: ${{ steps.filter.outputs.workflows }}
     steps:
       - uses: actions/checkout@v6
@@ -41,6 +42,7 @@ jobs:
               - 'uv.lock'
               - 'python_package_copier_template/**'
               - 'tests/**'
+            templates:
               - 'project/**/*.jinja'
             workflows:
               - '.github/workflows/**'
@@ -69,7 +71,7 @@ jobs:
 
   template-smoke:
     needs: changes
-    if: needs.changes.outputs.python == 'true'
+    if: needs.changes.outputs.python == 'true' || needs.changes.outputs.templates == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -129,7 +131,7 @@ jobs:
 
   generated-docs:
     needs: changes
-    if: needs.changes.outputs.generated_docs == 'true' && needs.changes.outputs.python != 'true'
+    if: needs.changes.outputs.generated_docs == 'true' && needs.changes.outputs.python != 'true' && needs.changes.outputs.templates != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
