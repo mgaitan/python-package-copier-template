@@ -102,6 +102,19 @@ def test_generated_project_files_do_not_keep_jinja_markers(tmp_path: Path, monke
         assert "%}" not in text
 
 
+def test_generated_project_targets_python_315() -> None:
+    template_root = Path(__file__).resolve().parent.parent
+
+    project_template = (template_root / "project/pyproject.toml.jinja").read_text(encoding="utf-8")
+    assert '"Programming Language :: Python :: 3.15"' in project_template
+
+    workflow_template = (template_root / "project/.github/workflows/ci.yml.jinja").read_text(encoding="utf-8")
+    assert 'python-version: ["3.12", "3.13", "3.14", "3.15"]' in workflow_template
+
+    agents_template = (template_root / "project/AGENTS.md.jinja").read_text(encoding="utf-8")
+    assert "**Python:** Python 3.15." in agents_template
+
+
 def test_python_version_extension_rejects_unsupported_python(monkeypatch) -> None:
     version_info = SimpleNamespace(major=3, minor=11)
     monkeypatch.setattr(extensions, "sys", SimpleNamespace(version_info=version_info))
