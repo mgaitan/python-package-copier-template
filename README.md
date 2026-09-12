@@ -14,7 +14,7 @@ Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 
 ## Features
 
-- 🐍 Modern Python package (3.12+)
+- 🐍 Modern Python package supporting Python 3.12-3.15
 - 📦 Build and dependency management with [uv](https://docs.astral.sh/uv/), split by groups (dev/qa/docs)
 - 🧊 Dependency cooldowns enabled by default in `uv` (`[tool.uv].exclude-newer = "1 week"`), with targeted overrides when needed (for example `ty`) to reduce supply-chain risk without blocking QA tools
 - 🛡️ uv malware checks enabled in Make targets and GitHub Actions to reject locked dependencies with known malicious-package advisories
