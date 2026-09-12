@@ -38,10 +38,10 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: astral-sh/setup-uv@v10.1.0
       - run: uv build
 
       - name: Smoke test built wheel in isolation
@@ -84,7 +84,7 @@ jobs:
       name: ${{ github.event_name == 'pull_request' && 'github-pages-preview' || 'github-pages' }}
       url: ${{ steps.preview_url.outputs.url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
@@ -95,8 +95,8 @@ jobs:
             echo "docs_subdir=_preview/pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: actions/configure-pages@v5
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/configure-pages@v6.0.0
+      - uses: astral-sh/setup-uv@v10.1.0
 
       - name: Build docs for current ref
         run: |
@@ -125,12 +125,12 @@ jobs:
             cp -a docs/_build/html-current/. "$out_dir/"
           fi
 
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: site
 
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5.0.1
 
       - name: Compute documentation URL
         id: preview_url

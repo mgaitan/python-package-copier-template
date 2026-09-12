@@ -18,15 +18,15 @@ jobs:
   workflows-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - name: Lint GitHub workflows
         uses: rhysd/actionlint@v1.7.12
 
   qa:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.1.0
 
       - name: Ruff check
         run: uv run --only-group lint ruff check --output-format=github
@@ -46,7 +46,7 @@ jobs:
         python-version: ["3.12", "3.13", "3.14", "3.15"]
 
     steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.1.0
       - name: Run tests with coverage
         run: uv run --group test -p {% raw %}${{ matrix.python-version }}{% endraw %} pytest

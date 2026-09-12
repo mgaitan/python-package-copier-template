@@ -38,8 +38,8 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.1.0
       - run: uv build
 
       - name: Smoke test built wheel in isolation
@@ -79,15 +79,15 @@ jobs:
       name: {% raw %}${{ github.event_name == 'pull_request' && 'github-pages-preview' || 'github-pages' }}{% endraw %}
       url: {% raw %}${{ steps.preview_url.outputs.url }}{% endraw %}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - name: Detect documentation preview target
         id: preview
         run: |
           if [ "{% raw %}${{ github.event_name }}{% endraw %}" = "pull_request" ]; then
             echo "docs_subdir=_preview/pr-{% raw %}${{ github.event.pull_request.number }}{% endraw %}" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/configure-pages@v5
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: actions/configure-pages@v6.0.0
+      - uses: astral-sh/setup-uv@v10.1.0
       - run: make docs
       - name: Stage documentation artifact
         run: |
@@ -101,11 +101,11 @@ jobs:
             mkdir -p "$out_dir"
             cp -a docs/_build/html/. "$out_dir/"
           fi
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: site
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5.0.1
       - name: Compute documentation URL
         id: preview_url
         run: |
