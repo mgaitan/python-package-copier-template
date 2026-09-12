@@ -36,7 +36,7 @@ module-name = "{{ python_package_import_name }}"
 
 [tool.uv]
 exclude-newer = "1 week"
-exclude-newer-package = { ty = "0 days" }
+exclude-newer-package = { ruff = "0 days", ty = "0 days" }
 
 [tool.ty.src]
 exclude = [".worktrees/", ".external-worktrees/"]
@@ -72,6 +72,7 @@ select = [
     "INT",    # https://docs.astral.sh/ruff/rules/#flake8-gettext-int
     "LOG",    # https://docs.astral.sh/ruff/rules/#flake8-logging-log
     "S",      # https://docs.astral.sh/ruff/rules/#flake8-bandit-s
+    "SLF",    # https://docs.astral.sh/ruff/rules/#flake8-self-slf
     "G",      # https://docs.astral.sh/ruff/rules/#flake8-logging-format-g
     "FLY",    # https://docs.astral.sh/ruff/rules/#flynt-fly
     "N",      # https://docs.astral.sh/ruff/rules/#pep8-naming-n

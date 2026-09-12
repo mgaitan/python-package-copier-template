@@ -18,6 +18,7 @@ REQUIRED_RUFF_SELECTORS = {
     "F",
     "FBT",
     "S",
+    "SLF",
     "G",
     "FLY",
     "N",
@@ -113,6 +114,13 @@ def test_generated_project_targets_python_315() -> None:
 
     agents_template = (template_root / "project/AGENTS.md.jinja").read_text(encoding="utf-8")
     assert "**Python:** Python 3.15." in agents_template
+
+
+def test_generated_project_allows_current_lint_tools() -> None:
+    template_root = Path(__file__).resolve().parent.parent
+    project_template = (template_root / "project/pyproject.toml.jinja").read_text(encoding="utf-8")
+
+    assert 'exclude-newer-package = { ruff = "0 days", ty = "0 days" }' in project_template
 
 
 def test_python_version_extension_rejects_unsupported_python(monkeypatch) -> None:
