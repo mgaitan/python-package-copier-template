@@ -131,6 +131,7 @@ def test_generated_release_workflow_smoke_tests_built_wheel() -> None:
     assert 'uv run --isolated --no-project --with "$wheel" python -c "import {{ python_package_import_name }}"' in (
         workflow_template
     )
+    assert "yet-another-demo" not in workflow_template
 
 
 def test_python_version_extension_rejects_unsupported_python(monkeypatch) -> None:
