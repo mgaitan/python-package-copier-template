@@ -123,6 +123,16 @@ def test_generated_project_allows_current_lint_tools() -> None:
     assert 'exclude-newer-package = { ruff = "0 days", ty = "0 days" }' in project_template
 
 
+def test_generated_release_workflow_smoke_tests_built_wheel() -> None:
+    template_root = Path(__file__).resolve().parent.parent
+    workflow_template = (template_root / "project/.github/workflows/cd.yml.jinja").read_text(encoding="utf-8")
+
+    assert "wheel=$(find dist -name '*.whl' -print -quit)" in workflow_template
+    assert 'uv run --isolated --no-project --with "$wheel" python -c "import {{ python_package_import_name }}"' in (
+        workflow_template
+    )
+
+
 def test_python_version_extension_rejects_unsupported_python(monkeypatch) -> None:
     version_info = SimpleNamespace(major=3, minor=11)
     monkeypatch.setattr(extensions, "sys", SimpleNamespace(version_info=version_info))
