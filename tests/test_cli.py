@@ -18,6 +18,7 @@ REQUIRED_RUFF_SELECTORS = {
     "F",
     "FBT",
     "S",
+    "SLF001",
     "G",
     "FLY",
     "N",

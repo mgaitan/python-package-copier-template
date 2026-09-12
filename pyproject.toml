@@ -55,6 +55,7 @@ select = [
     "INT",    # https://docs.astral.sh/ruff/rules/#flake8-gettext-int
     "LOG",    # https://docs.astral.sh/ruff/rules/#flake8-logging-log
     "S",      # https://docs.astral.sh/ruff/rules/#flake8-bandit-s
+    "SLF001", # https://docs.astral.sh/ruff/rules/private-member-access/
     "G",      # https://docs.astral.sh/ruff/rules/#flake8-logging-format-g
     "FLY",    # https://docs.astral.sh/ruff/rules/#flynt-fly
     "N",      # https://docs.astral.sh/ruff/rules/#pep8-naming-n
