@@ -119,6 +119,7 @@ def main(argv: list[str] | None = None) -> int:
                 unsafe=True,
                 overwrite=True,
                 skip_answered=True,
+                vcs_ref="HEAD",
             )
     else:
         template_target = resolve_template_target()

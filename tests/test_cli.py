@@ -42,7 +42,7 @@ def render_from_clean_template(tmp_path: Path, monkeypatch) -> tuple[Path, Path]
     monkeypatch.setattr(
         cli,
         "resolve_template_target",
-        lambda: cli.TemplateTarget(src_path=str(clean_template)),
+        lambda: cli.TemplateTarget(src_path=str(clean_template), vcs_ref="HEAD"),
     )
     monkeypatch.setenv("COPIER_TEMPLATE_DEFAULTS", "1")
     monkeypatch.setattr(extensions, "command_available", lambda command: command != "prek")

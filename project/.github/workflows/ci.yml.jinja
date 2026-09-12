@@ -3,9 +3,13 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - "**/*.md"
   push:
     branches:
       - main
+    paths-ignore:
+      - "**/*.md"
 
 env:
   UV_MALWARE_CHECK: "1"
@@ -19,7 +23,6 @@ jobs:
         uses: rhysd/actionlint@v1.7.12
 
   qa:
-    needs: workflows-lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
