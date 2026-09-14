@@ -1,15 +1,18 @@
 # Features and Decisions
 
-This template is intentionally opinionated.
-It is meant to capture a working baseline for modern Python projects, not to be a neutral scaffold with every choice deferred.
+This template makes explicit choices for a working baseline for modern Python projects.
 
 The original rationale is described in the blog post [My opinionated scaffolding for modern Python projects](https://mgaitan.github.io/en/posts/opinionated-python-project-scaffolding/).
 This chapter translates that rationale into a feature-by-feature reference.
 
 ## Copier template, plus a wrapper
 
-The foundation is [Copier](https://copier.readthedocs.io/), not a plain GitHub template repository.
-That matters because Copier supports project updates, so conventions can evolve after the initial scaffold.
+The foundation is [Copier](https://copier.readthedocs.io/).
+Copier treats the generated project as a maintained instance of the template:
+it records the template version and the answers used during generation, then
+uses that information to apply later template updates. This gives the project
+a clear lifecycle from the initial scaffold through subsequent improvements,
+while leaving conflicts visible for the project maintainer to review.
 
 This repository also publishes a wrapper CLI as `python-package-copier-template`.
 The wrapper is intentionally small:
@@ -24,14 +27,15 @@ When you want full control, you can always drop to raw Copier commands.
 
 Generated projects assume:
 
-- Python 3.12+,
+- Python 3.12 or newer; CI currently tests Python 3.12 through 3.15,
+- the exact Python version used to run Copier is recorded in `.python-version`,
 - a `src/` layout,
 - metadata centralized in `pyproject.toml`,
 - [`uv_build`](https://docs.astral.sh/uv/concepts/build-backend/) as the build backend for pure-Python packages,
 - an optional CLI entrypoint implemented with [`argparse`](https://docs.python.org/3/library/argparse.html).
 
-These defaults aim for a modern baseline without introducing unnecessary packaging complexity.
-They match current packaging guidance better than older `setup.py`-centric layouts and are a good fit for libraries and small applications that do not need compiled extensions.
+These defaults provide a modern baseline with a small packaging surface.
+They fit libraries and small applications that do not need compiled extensions.
 
 ## Dependency management with uv
 
@@ -114,25 +118,73 @@ That tradeoff keeps projects conservative by default while preserving room to ad
 [Ruff](https://docs.astral.sh/ruff/) is the linting and formatting baseline.
 The main value here is consolidation: a single fast tool can cover what used to require multiple linters and formatters, which makes local feedback and CI simpler.
 
-The selected rules are deliberately a superset of
-[Ruff's default rules](https://docs.astral.sh/ruff/rules/#default-rules).
-The configuration keeps `E` and `F`, which include the default `E4`, `E7`,
-`E9`, and `F` checks, then adds the broader correctness, security, naming,
-logging, modernization, testing, and documentation families listed in
-`pyproject.toml`. A regression test protects the required selectors in both
-this package and the generated project template.
+The configuration includes [Ruff's default rules](https://docs.astral.sh/ruff/default-rules/)
+and selects every rule in each listed family. Ruff's default selection is
+limited to `E4`, `E7`, `E9`, and `F`; selecting `E`, `W`, and `F` therefore
+activates the complete families containing those defaults. The table lists the
+complete selection. The remaining families and rule are additional checks.
 
-Specific per-file ignores remain narrow: test modules may use assertions and
-fixture-oriented patterns, while Sphinx configuration files are not required
-to behave like public Python modules. The incompatible pydocstyle pairs
-`D203`/`D211` and `D212`/`D213` are resolved explicitly in favor of `D211` and
-`D212`.
+| Selector | Documentation | Scope |
+| --- | --- | --- |
+| [`E`, `W`](https://docs.astral.sh/ruff/rules/#pycodestyle-e-w) | pycodestyle | Includes default `E4`, `E7`, and `E9`, plus the complete families; catches style and syntax-adjacent issues. |
+| [`F`](https://docs.astral.sh/ruff/rules/#pyflakes-f) | Pyflakes | Includes the default family; finds undefined names and other likely errors. |
+| [`I`](https://docs.astral.sh/ruff/rules/#isort-i) | isort | Sorts and groups imports. |
+| [`C90`](https://docs.astral.sh/ruff/rules/#mccabe-c90) | McCabe | Flags functions above complexity 10, Ruff's default threshold. |
+| [`A`](https://docs.astral.sh/ruff/rules/#flake8-builtins-a) | flake8-builtins | Prevents shadowing Python built-ins. |
+| [`ANN`](https://docs.astral.sh/ruff/rules/#flake8-annotations-ann) | flake8-annotations | Checks function annotations. |
+| [`UP`](https://docs.astral.sh/ruff/rules/#pyupgrade-up) | pyupgrade | Encourages modern Python syntax. |
+| [`RUF`](https://docs.astral.sh/ruff/rules/#ruff-specific-rules-ruf) | Ruff-specific | Applies Ruff-specific correctness and style checks. |
+| [`T10`](https://docs.astral.sh/ruff/rules/#flake8-debugger-t10) | flake8-debugger | Finds debugger calls. |
+| [`ISC`](https://docs.astral.sh/ruff/rules/#flake8-implicit-str-concat-isc) | flake8-implicit-str-concat | Detects implicit string concatenation. |
+| [`SIM`](https://docs.astral.sh/ruff/rules/#flake8-simplify-sim) | flake8-simplify | Suggests simpler control flow. |
+| [`ASYNC`](https://docs.astral.sh/ruff/rules/#flake8-async-async) | flake8-async | Checks async code for common problems. |
+| [`ERA`](https://docs.astral.sh/ruff/rules/#eradicate-era) | eradicate | Finds commented-out code. |
+| [`TRY`](https://docs.astral.sh/ruff/rules/#tryceratops-try) | tryceratops | Checks exception handling practices. |
+| [`YTT`](https://docs.astral.sh/ruff/rules/#flake8-2020-ytt) | flake8-2020 | Finds Python-version compatibility traps. |
+| [`BLE`](https://docs.astral.sh/ruff/rules/#flake8-blind-except-ble) | flake8-blind-except | Flags overly broad exception handling. |
+| [`B`](https://docs.astral.sh/ruff/rules/#flake8-bugbear-b) | flake8-bugbear | Finds likely bugs and design problems. |
+| [`EXE`](https://docs.astral.sh/ruff/rules/#flake8-executable-exe) | flake8-executable | Checks executable files and shebangs. |
+| [`FA`](https://docs.astral.sh/ruff/rules/#flake8-future-annotations-fa) | flake8-future-annotations | Checks safe use of future annotations. |
+| [`C4`](https://docs.astral.sh/ruff/rules/#flake8-comprehensions-c4) | flake8-comprehensions | Simplifies unnecessary comprehensions. |
+| [`DTZ`](https://docs.astral.sh/ruff/rules/#flake8-datetimez-dtz) | flake8-datetimez | Requires explicit timezone handling. |
+| [`FBT`](https://docs.astral.sh/ruff/rules/#flake8-boolean-trap-fbt) | flake8-boolean-trap | Flags ambiguous boolean arguments. |
+| [`INT`](https://docs.astral.sh/ruff/rules/#flake8-gettext-int) | flake8-gettext | Checks gettext usage. |
+| [`LOG`, `G`](https://docs.astral.sh/ruff/rules/#flake8-logging-log) | flake8-logging | Checks logging calls and format strings. |
+| [`S`](https://docs.astral.sh/ruff/rules/#flake8-bandit-s) | flake8-bandit | Finds common security issues. |
+| [`SLF`](https://docs.astral.sh/ruff/rules/#flake8-self-slf) | flake8-self | Restricts access to private members across classes. |
+| [`FLY`](https://docs.astral.sh/ruff/rules/#flynt-fly) | flynt | Simplifies string formatting. |
+| [`N`](https://docs.astral.sh/ruff/rules/#pep8-naming-n) | pep8-naming | Checks naming conventions. |
+| [`PIE`](https://docs.astral.sh/ruff/rules/#flake8-pie-pie) | flake8-pie | Finds unnecessary or error-prone code. |
+| [`PYI`](https://docs.astral.sh/ruff/rules/#flake8-pyi-pyi) | flake8-pyi | Checks type stub files. |
+| [`PT`](https://docs.astral.sh/ruff/rules/#flake8-pytest-style-pt) | flake8-pytest-style | Checks pytest conventions. |
+| [`TC`](https://docs.astral.sh/ruff/rules/#flake8-type-checking-tc) | flake8-type-checking | Organizes type-checking imports. |
+| [`PTH`](https://docs.astral.sh/ruff/rules/#flake8-use-pathlib-pth) | flake8-use-pathlib | Encourages pathlib APIs. |
+| [`PERF`](https://docs.astral.sh/ruff/rules/#perflint-perf) | Perflint | Finds avoidable performance issues. |
+| [`D`](https://docs.astral.sh/ruff/rules/#pydocstyle-d) | pydocstyle | Checks docstring conventions. |
+| [`PGH`](https://docs.astral.sh/ruff/rules/#pygrep-hooks-pgh) | pygrep-hooks | Checks fragile code patterns. |
+| [`PL`](https://docs.astral.sh/ruff/rules/#pylint-pl) | Pylint | Adds broader code-quality checks. |
+| [`FURB`](https://docs.astral.sh/ruff/rules/#refurb-furb) | refurb | Suggests modern Python improvements. |
+| [`RET`](https://docs.astral.sh/ruff/rules/#flake8-return-ret) | flake8-return | Checks return statements. |
+| [`TID252`](https://docs.astral.sh/ruff/rules/relative-imports/) | flake8-tidy-imports | Requires absolute imports. |
+
+A regression test protects the required selectors in both this package and the
+generated project template.
+
+Specific per-file ignores remain narrow. Test modules skip `ANN` and `D`, and
+also allow the security patterns `S101`, `S108`, `S603`, and `S607` that are
+common in test fixtures. `docs/conf.py` skips `A` and `D100` because it is a
+Sphinx configuration module. The incompatible pydocstyle pairs `D203`/`D211`
+and `D212`/`D213` are resolved explicitly in favor of `D211` and `D212`.
 
 ## ty for type checking
 
 [ty](https://github.com/astral-sh/ty) is the default type checker.
-That is an intentionally modern choice rather than the most conservative one.
-For a fresh template, the tradeoff is acceptable: the tool is fast, improving quickly, and a good fit for projects that want explicit types without a lot of ceremony.
+This is a modern choice: the tool is fast, improving quickly, and a good fit
+for projects that want explicit types with little ceremony.
+The generated package includes a `py.typed` marker, which declares that its
+inline annotations are intended to be consumed by type checkers downstream.
+`ty check` runs as part of the QA group and as a Prek hook, checking the
+package source and reporting type errors before they reach CI.
 
 ## pytest for tests
 
@@ -144,7 +196,18 @@ It is still the least surprising default for most Python teams, and it keeps the
 [prek](https://github.com/j178/prek) is included as an optional layer for QA orchestration and git hook management.
 The template does not hard-require it to exist everywhere, but when it is available it gives generated projects a convenient way to install hooks and run the whole QA suite consistently.
 
-The generated `Makefile` exposes stable shortcuts such as `make qa` and `make test` so contributors do not need to remember long commands.
+The generated `Makefile` exposes stable shortcuts such as `make qa` and `make test`.
+
+The configured checks are:
+
+| Group | Checks |
+| --- | --- |
+| File hygiene | `trailing-whitespace`, `end-of-file-fixer`, `mixed-line-ending`, `check-added-large-files` |
+| Names and links | `check-case-conflict`, `check-illegal-windows-names`, `check-symlinks`, `destroyed-symlinks`, `check-vcs-permalinks` |
+| File formats | `check-json`, `check-yaml`, `check-toml`, `check-xml` |
+| Repository safety | `check-merge-conflict`, `detect-private-key`, `no-commit-to-branch` for `main` |
+| Executables | `check-executables-have-shebangs`, `check-shebang-scripts-are-executable` |
+| Python QA | `ruff check --fix`, `ruff format`, `ty check` |
 
 ## Documentation with Sphinx and MyST
 
