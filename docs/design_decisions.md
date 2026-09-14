@@ -97,9 +97,9 @@ This keeps each group focused:
 
 Simon Willison called out this exact pattern in [Dependency groups and uv run](https://til.simonwillison.net/uv/dependency-groups#bonus-tip-defining-dev-in-terms-of-other-dependency-groups), noting that he learned it from `python-package-copier-template`.
 
-:::{note}
-We learn from Simon's writing all the time, so it felt especially meaningful to give something back for once. Seeing this project teach him one small trick was a real point of pride and gratitude. 🙏
-:::
+```{note}
+I learn from Simon's writing all the time, so it felt especially meaningful to give something back for once. Seeing this project teach him one small trick was a real point of pride and gratitude. 🙏
+```
 
 ## Dependency cooldowns
 
