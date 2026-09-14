@@ -38,11 +38,11 @@ The broader rationale for these choices is described in the original blog post:
 :maxdepth: 2
 
 getting_started.md
+design_decisions.md
 cli.md
 adopt_existing_project.md
 maintain_template.md
 configuration.md
-design_decisions.md
 agents.md
 about_the_docs.md
 ```
