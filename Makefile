@@ -9,22 +9,22 @@ install: ## Install project dependencies with uv
 	@uv sync
 
 lint: ## Run Ruff checks on this repository
-	@uv run --group lint ruff check .
+	@uv run --locked --group lint ruff check .
 
 format: ## Format code with Ruff
-	@uv run --group lint ruff format .
+	@uv run --locked --group lint ruff format .
 
 type: ## Run ty checks on this repository
-	@uv run --group qa ty check
+	@uv run --locked --group qa ty check
 
 test: ## Run repository tests
-	@uv run pytest -q
+	@uv run --locked pytest -q
 
 docs: ## Build package documentation as HTML
-	@uv run --group docs sphinx-build $(DOCS_SOURCE) $(DOCS_BUILD)/html -b html -W
+	@uv run --locked --group docs sphinx-build $(DOCS_SOURCE) $(DOCS_BUILD)/html -b html -W
 
 docs-open: docs ## Build docs and open them in the browser
-	@uv run -m webbrowser $(DOCS_BUILD)/html/index.html
+	@uv run --locked -m webbrowser $(DOCS_BUILD)/html/index.html
 
 qa: lint type test docs ## Run local quality checks
 
@@ -43,11 +43,11 @@ release: ## Create a GitHub release for the current version
 smoke: ## Generate a project from template defaults and run generated QA
 	@tmp_dir=$$(mktemp -d); \
 	echo "Using $$tmp_dir"; \
-	uv run copier copy --trust --vcs-ref=HEAD . "$$tmp_dir/test-project" --defaults; \
+	uv run --locked copier copy --trust --vcs-ref=HEAD . "$$tmp_dir/test-project" --defaults; \
 	$(MAKE) -C "$$tmp_dir/test-project" qa
 
 help: ## Show available targets
-	@uv run python -c "import re; \
+	@uv run --locked python -c "import re; \
 	[[print(f'\033[36m{m[0]:<20}\033[0m {m[1]}') for m in re.findall(r'^([a-zA-Z_.-]+):.*?## (.*)$$', open(makefile).read(), re.M)] for makefile in ('$(MAKEFILE_LIST)').strip().split()]"
 
 .DEFAULT_GOAL := help

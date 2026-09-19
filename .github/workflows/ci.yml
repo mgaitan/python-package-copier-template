@@ -12,6 +12,15 @@ env:
   UV_MALWARE_CHECK: "1"
 
 jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.1.0
+      - name: Check lockfile
+        run: uv lock --check
+
   changes:
     runs-on: ubuntu-latest
     outputs:
@@ -59,7 +68,7 @@ jobs:
         uses: rhysd/actionlint@v1.7.12
 
   docs:
-    needs: changes
+    needs: [changes, lockfile]
     if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -67,10 +76,10 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v10.1.0
       - name: Template package docs
-        run: uv run --group docs sphinx-build docs docs/_build/html -b html -W
+        run: uv run --locked --group docs sphinx-build docs docs/_build/html -b html -W
 
   template-smoke:
-    needs: changes
+    needs: [changes, lockfile]
     if: needs.changes.outputs.python == 'true' || needs.changes.outputs.templates == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -93,7 +102,11 @@ jobs:
           uv tool dir --bin >> "$GITHUB_PATH"
 
       - name: Generate project from template
-        run: uv run copier copy --trust --vcs-ref=HEAD . test-project --defaults
+        run: uv run --locked copier copy --trust --vcs-ref=HEAD . test-project --defaults
+
+      - name: Initialize generated project dependencies
+        working-directory: test-project
+        run: uv sync
 
       - name: Initialize Git for prek smoke
         working-directory: test-project
@@ -107,19 +120,19 @@ jobs:
 
       - name: Template Ruff check
         working-directory: test-project
-        run: uv run --only-group lint ruff check --output-format=github
+        run: uv run --locked --only-group lint ruff check --output-format=github
 
       - name: Template Ruff format
         working-directory: test-project
-        run: uv run --only-group lint ruff format --check
+        run: uv run --locked --only-group lint ruff format --check
 
       - name: Template Ty check
         working-directory: test-project
-        run: uv run --group qa ty check --output-format=github
+        run: uv run --locked --group qa ty check --output-format=github
 
       - name: Template tests
         working-directory: test-project
-        run: uv run --group test pytest
+        run: uv run --locked --group test pytest
 
       - name: Template build
         working-directory: test-project
@@ -130,7 +143,7 @@ jobs:
         run: make docs
 
   generated-docs:
-    needs: changes
+    needs: [changes, lockfile]
     if: needs.changes.outputs.generated_docs == 'true' && needs.changes.outputs.python != 'true' && needs.changes.outputs.templates != 'true'
     runs-on: ubuntu-latest
     steps:
@@ -144,7 +157,10 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v10.1.0
       - name: Generate project from template
-        run: uv run copier copy --trust --vcs-ref=HEAD . test-project --defaults
+        run: uv run --locked copier copy --trust --vcs-ref=HEAD . test-project --defaults
+      - name: Initialize generated project dependencies
+        working-directory: test-project
+        run: uv sync
       - name: Template docs
         working-directory: test-project
         run: make docs
