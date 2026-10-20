@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.1.0
+      - uses: astral-sh/setup-uv@v10.3.0
 
       - name: Ruff check
         run: uv run --only-group lint ruff check --output-format=github
@@ -47,6 +47,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.1.0
+      - uses: astral-sh/setup-uv@v10.3.0
       - name: Run tests with coverage
         run: uv run --group test -p {% raw %}${{ matrix.python-version }}{% endraw %} pytest
