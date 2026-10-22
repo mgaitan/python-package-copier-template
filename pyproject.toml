@@ -90,9 +90,9 @@ docs = [
     "sphinxcontrib-mermaid>=2.1.0",
 ]
 lint = [
-    "ruff>=0.16.7",
+    "ruff>=0.17.1",
 ]
 qa = [
     { include-group = "lint" },
-    "ty>=0.0.80",
+    "ty>=0.0.90",
 ]
