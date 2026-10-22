@@ -55,6 +55,27 @@ Commit and push `.github/dependabot.yml` to the default branch to activate
 scheduled version updates. See [Configuration](configuration.md) for
 the schedule and grouping policy.
 
+### Enable the LLM documentation index
+
+New projects generate `llms.txt` with the HTML documentation. Existing projects
+preserve their `docs/**` files during template updates, so adopt this feature
+manually if `docs/conf.py` does not already enable it.
+
+Add the documentation dependency:
+
+```bash
+uv add --group docs 'sphinx-llms-txt>=0.7.1'
+```
+
+Add `"sphinx_llms_txt"` to `extensions` in `docs/conf.py`, then configure:
+
+```python
+llms_txt_uri_template = "_sources/{docname}{suffix}{sourcelink_suffix}"
+```
+
+Run `make docs` and check `docs/_build/html/llms.txt`. Relative source URLs work
+under both the canonical site path and PR previews.
+
 ## Maintain this repository (the template package)
 
 When editing `python-package-copier-template` itself, use local checks:
