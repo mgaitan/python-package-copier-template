@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
         with:
           ref: {% raw %}${{ github.event.pull_request.merge_commit_sha }}{% endraw %}
-      - uses: astral-sh/setup-uv@v10.1.0
+      - uses: astral-sh/setup-uv@v10.3.2
 
       - name: Create draft release at the integrated commit
         env:
