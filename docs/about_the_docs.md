@@ -35,6 +35,26 @@ The build runs in warning-as-error mode, so broken links or directives are caugh
 
 CI routes checks by changed paths: documentation edits build docs, workflow edits run actionlint, and template or Python edits render the generated project and run its QA bundle.
 
+## Documentation for LLMs
+
+The HTML build generates `llms.txt` using
+[sphinx-llms-txt](https://sphinx-llms-txt.readthedocs.io/). It lists documentation
+pages with links to their published Markdown sources under `_sources/`.
+The index is included in the existing GitHub Pages deployment; no separate
+publishing step is needed.
+
+Source links are relative to the index, so they also work under project paths
+and PR preview directories. Inspect `docs/_build/html/llms.txt` after `make docs`.
+
+These are the original MyST sources, including their directives. The extension
+also generates `llms-full.txt` by concatenating sources. That file retains MyST
+includes and CLI capture directives, so it is not a self-contained export of the
+rendered documentation. Use `llms.txt` to find the relevant source pages.
+
+New generated projects include this configuration. For existing projects, see
+[Maintain the Template](maintain_template.md) to enable it while preserving
+customized documentation.
+
 ## Conventions
 
 - **Environment variables** should be defined once in `configuration.md` using the Sphinx `glossary` directive and referenced everywhere else with `` {term}`VAR_NAME` ``.

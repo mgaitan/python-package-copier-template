@@ -601,6 +601,7 @@ docs = [
     { name = "richterm", extra = ["sphinx"] },
     { name = "sphinx" },
     { name = "sphinx-book-theme" },
+    { name = "sphinx-llms-txt" },
     { name = "sphinxcontrib-mermaid" },
 ]
 lint = [
@@ -627,6 +628,7 @@ docs = [
     { name = "richterm", extras = ["sphinx"], specifier = ">=0.2.0" },
     { name = "sphinx", specifier = ">=9.1.0" },
     { name = "sphinx-book-theme", specifier = ">=1.4.0" },
+    { name = "sphinx-llms-txt", specifier = ">=0.7.1" },
     { name = "sphinxcontrib-mermaid", specifier = ">=2.1.0" },
 ]
 lint = [{ name = "ruff", specifier = ">=0.17.1" }]
@@ -830,6 +832,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e9/8a/cb008736682b3974cae6925c54939792fe56f5a167e37984cb45d8a85d8a/sphinx_book_theme-1.4.0.tar.gz", hash = "sha256:fee3cd70573d9a8cd4ab380a3cb1f11139c24dcaa2cf47d06d7f924f1b44eaff", size = 406113, upload-time = "2026-07-19T21:23:54.183Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/00/5e/6c41ee74f0a4caef53f224c3e6c3869b577dade1a283767bdc874f11e51c/sphinx_book_theme-1.4.0-py3-none-any.whl", hash = "sha256:10fd57d667ee0b565928c3ce95562e281c5d1b94bd5a2aafc5cd41a5d498dcd0", size = 458862, upload-time = "2026-07-19T21:23:52.852Z" },
+]
+
+[[package]]
+name = "sphinx-llms-txt"
+version = "0.7.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "sphinx" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d3/dd/6d7fa7d6f51ee20959f1734cdbd62e99880dcd87576ce554d4bb8aaabdd7/sphinx_llms_txt-0.7.1.tar.gz", hash = "sha256:b5cefec19d3fd56670aa4a28917d17d32b22c61a9feadbab8564ad11e932f5c0", size = 32464, upload-time = "2025-12-16T22:31:26.379Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c2/17/a751012a0910e3c3afa41a5d40bdf00132466d072d25891ae7ec1f70dafd/sphinx_llms_txt-0.7.1-py3-none-any.whl", hash = "sha256:8f1cfcfe5897f5be118792f33f73eeb04cbbf66fc60c4c15982ec59252522263", size = 22545, upload-time = "2025-12-16T22:31:25.075Z" },
 ]
 
 [[package]]

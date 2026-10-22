@@ -67,7 +67,9 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v10.3.0
       - name: Template package docs
-        run: uv run --group docs sphinx-build docs docs/_build/html -b html -W
+        run: |
+          uv run --group docs sphinx-build docs docs/_build/html -b html -W
+          test -s docs/_build/html/llms.txt
 
   template-smoke:
     needs: changes
@@ -127,7 +129,9 @@ jobs:
 
       - name: Template docs
         working-directory: test-project
-        run: make docs
+        run: |
+          make docs
+          test -s docs/_build/html/llms.txt
 
   generated-docs:
     needs: changes
@@ -147,4 +151,6 @@ jobs:
         run: uv run copier copy --trust --vcs-ref=HEAD . test-project --defaults
       - name: Template docs
         working-directory: test-project
-        run: make docs
+        run: |
+          make docs
+          test -s docs/_build/html/llms.txt

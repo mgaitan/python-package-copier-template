@@ -48,6 +48,19 @@ We ship [richterm](https://github.com/mgaitan/richterm) for CLI captures and
 For manual dispatch using `gh` CLI, authentication usually relies on {term}`GH_TOKEN`.
 Workflow internals rely on {term}`GITHUB_TOKEN`.
 
+## Documentation for LLMs
+
+The HTML build generates `llms.txt` using
+[sphinx-llms-txt](https://sphinx-llms-txt.readthedocs.io/). The index links to the
+published MyST sources under `_sources/` and is deployed with the rest of the
+documentation. Inspect `docs/_build/html/llms.txt` after `make docs`.
+
+Links are relative to the index, so they work on both the canonical site and PR
+previews. The extension also concatenates sources into `llms-full.txt`. That
+file retains MyST includes and CLI capture directives, so it is not a
+self-contained export of the rendered documentation. Use `llms.txt` to find the
+relevant source pages.
+
 ## Configuration and glossary
 
 Environment variables used by commands, docs examples, or workflows are documented in [Configuration](configuration.md).
