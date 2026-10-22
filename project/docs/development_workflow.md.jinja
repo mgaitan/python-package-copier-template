@@ -33,14 +33,16 @@ make qa
 make test
 ```
 
-## Publish a release
+## Prepare a release
+
+Start from a clean, up-to-date `main` and run the project checks first. Then prepare a version-bump PR:
 
 ```bash
-make bump
-make release
+make qa
+make release-pr BUMP=minor
 ```
 
-Release workflows publish package artifacts and canonical docs.
+`BUMP` accepts `patch`, `minor`, or `major` and defaults to `minor`. The target creates a `release/<version>` branch and opens a PR. When the PR is merged, GitHub creates a draft release at the integrated commit. Review the generated notes and publish the draft to publish package artifacts and canonical docs.
 
 ### Verify release attestations
 
