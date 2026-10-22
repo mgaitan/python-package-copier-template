@@ -12,6 +12,10 @@ Canonical example repo generated from this template: [mgaitan/yet-another-demo](
 
 Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 
+## Security
+
+Please follow the [security policy](SECURITY.md) to report vulnerabilities privately.
+
 ## Features
 
 - 🐍 Modern Python package supporting Python 3.12-3.15
@@ -75,7 +79,7 @@ uvx --with=copier-template-extensions copier update . --trust
 ```
 
 This fetches the latest template version and guides you through updating your project.
-Existing `README.md` and `docs/**` files are left untouched so project-specific
+Existing `README.md`, `SECURITY.md`, and `docs/**` files are left untouched so project-specific
 documentation is not replaced. New documentation files are still added when the
 template introduces them; adopt later changes to existing pages manually from the
 template diff when they are relevant to your project.

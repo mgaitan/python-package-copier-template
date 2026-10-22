@@ -43,6 +43,7 @@ cli.md
 adopt_existing_project.md
 maintain_template.md
 configuration.md
+SECURITY.md
 agents.md
 about_the_docs.md
 ```

@@ -17,6 +17,18 @@ If you prefer the package wrapper behavior (copy vs update autodetected), run `u
 
 The generated project also includes an optional scheduled workflow (`template-update.yml`) that opens PRs with template refreshes.
 
+### Customize the security policy
+
+Generated projects receive a `SECURITY.md` with a private reporting contact taken
+from `author_fullname` and `author_email`. Review that contact and the supported
+versions before publishing the project. By default, only the latest published
+release receives security fixes; before the first release, the default branch
+is supported.
+
+Customize the policy if your project needs a different support scope or reporting
+route. Template updates preserve an existing `SECURITY.md`, including these
+customizations. Existing projects receive the policy on their next template update.
+
 ### Enable Dependabot on GitHub
 
 New repositories created by the template automatically enable Dependabot alerts,
