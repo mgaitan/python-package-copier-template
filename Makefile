@@ -1,4 +1,4 @@
-.PHONY: install lint format type test qa bump release docs docs-open smoke help
+.PHONY: install lint format type test qa bump release docs docs-open smoke dependabot help
 
 export UV_MALWARE_CHECK := 1
 
@@ -7,6 +7,9 @@ DOCS_BUILD := $(DOCS_SOURCE)/_build
 
 install: ## Install project dependencies with uv
 	@uv sync
+
+dependabot: ## Enable GitHub Dependabot alerts and security updates (idempotent)
+	@sh .github/configure-dependabot.sh
 
 lint: ## Run Ruff checks on this repository
 	@uv run --group lint ruff check .

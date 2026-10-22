@@ -25,6 +25,30 @@ uv tool install prek
 ## Update dependencies safely
 
 This template uses `uv` groups and cooldown windows.
+Dependabot checks Python dependencies (including all `uv` groups and the build
+backend) and GitHub Actions every Monday at a random time assigned by GitHub.
+No fixed `time` is configured, so generated repositories do not share a forced
+start time. Minor and patch version
+updates are grouped per ecosystem; major updates remain separate. Security
+updates use separate groups and are triggered independently of that schedule.
+All updates target this repository's default branch.
+
+New repositories created through `gh` automatically enable Dependabot alerts,
+the dependency graph, and security updates. To enable these settings on an
+existing repository or retry setup, authenticate `gh` with repository admin
+access and run:
+
+```bash
+make dependabot
+```
+
+The command is idempotent and reports permission or policy failures. Fine-grained
+tokens need repository **Administration: write**. You can also opt in during a
+template update with `uvx python-package-copier-template --configure-dependabot .`
+or `copier update --trust --data gh_dependabot_configure=true .`; this choice is
+not saved for future updates. Commit and push `.github/dependabot.yml` to the
+default branch to activate scheduled version updates.
+
 After dependency changes:
 
 ```bash

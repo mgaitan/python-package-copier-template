@@ -29,3 +29,24 @@ file, and license badges. Public repositories default to `BSD-3-Clause`;
 explicitly private repositories default to `none`, which omits license metadata
 and does not generate a `LICENSE` file. Local copies that skip GitHub repository
 creation keep the licensed `BSD-3-Clause` default.
+
+`gh_dependabot_configure` enables Dependabot alerts, the dependency graph, and
+security updates through `gh` during a template update. It defaults to `false`
+and is excluded from the answers file so each update requires a fresh opt-in.
+New repositories created through `gh_repo_create` receive this setup automatically.
+
+## Dependabot
+
+Both this repository and generated projects include `.github/dependabot.yml`.
+Version checks run every Monday for `uv` and GitHub Actions. No fixed `time` is
+configured, so GitHub assigns a random time instead of scheduling every generated
+repository at the same hour.
+The `uv` entry covers `pyproject.toml` and `uv.lock`, including runtime dependencies,
+the build backend, and all declared dependency groups (`dev`, `docs`, `lint`, and
+`qa`). The Actions entry covers references in `.github/workflows/`.
+
+Minor and patch updates are grouped per ecosystem; major updates get individual
+PRs. Security updates have separate groups and run when vulnerabilities are
+identified, independently of the weekly version-update schedule. No target branch
+is pinned: Dependabot uses each repository's default branch.
+See the [GitHub Dependabot reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference).

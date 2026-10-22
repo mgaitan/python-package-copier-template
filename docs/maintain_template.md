@@ -17,6 +17,44 @@ If you prefer the package wrapper behavior (copy vs update autodetected), run `u
 
 The generated project also includes an optional scheduled workflow (`template-update.yml`) that opens PRs with template refreshes.
 
+### Enable Dependabot on GitHub
+
+New repositories created by the template automatically enable Dependabot alerts,
+the dependency graph, and security updates after the initial push. Copies made
+with GitHub creation skipped do not change GitHub settings.
+
+Existing projects receive the Dependabot configuration on update, but GitHub
+settings change only when explicitly requested:
+
+```bash
+uvx python-package-copier-template --configure-dependabot .
+```
+
+With Copier directly, answer yes to `gh_dependabot_configure`, or run:
+
+```bash
+uvx --with=copier-template-extensions copier update --trust --defaults --data gh_dependabot_configure=true .
+```
+
+This opt-in is not saved for subsequent updates. Scheduled template refreshes
+therefore leave GitHub settings alone.
+
+To configure GitHub separately or retry a failed setup, run `make dependabot`
+inside the generated project or this template repository. This command uses
+`gh repo view` to resolve the current repository, as does update setup; you can also pass an explicit
+repository to `sh .github/configure-dependabot.sh OWNER/REPO`.
+Repeated runs use idempotent `PUT` requests and preserve enabled settings.
+
+Authenticate `gh` with repository admin access. Fine-grained tokens require
+repository **Administration: write**; organization policies may restrict these
+settings. Setup errors include a retry instruction; automatic creation warns and
+continues, while explicit update setup and `make dependabot` fail visibly.
+See [GitHub's repository API](https://docs.github.com/en/rest/repos/repos#enable-vulnerability-alerts).
+
+Commit and push `.github/dependabot.yml` to the default branch to activate
+scheduled version updates. See [Configuration](configuration.md) for
+the schedule and grouping policy.
+
 ## Maintain this repository (the template package)
 
 When editing `python-package-copier-template` itself, use local checks:
