@@ -256,12 +256,13 @@ Generated projects are configured to publish to PyPI through OIDC-based Trusted 
 That removes a class of secret-management problems from normal release automation.
 
 It still requires a one-time manual registration in PyPI, because PyPI must know which repository and workflow are allowed to publish the project.
-After that, the release flow is intentionally boring:
+After that, prepare a version-bump PR from a clean, up-to-date `main`:
 
 ```bash
-make bump
-make release
+make release-pr BUMP=minor
 ```
+
+The target accepts `patch`, `minor`, or `major` (default: `minor`), creates a `release/<version>` branch, and opens a PR. Merging that PR creates a draft release at the integrated commit. Review the generated notes and publish the draft to start package and documentation publishing.
 
 ## Release attestations
 

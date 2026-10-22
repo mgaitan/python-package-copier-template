@@ -28,17 +28,30 @@ docs-open: docs ## Build docs and open them in the browser
 
 qa: lint type test docs ## Run local quality checks
 
-bump: ## Bump the project minor version
-	@uv version --bump minor
+BUMP ?= minor
 
-release: ## Create a GitHub release for the current version
-	@version=$$(uv version --short); \
-	git commit -am "Bump $$version"; \
-	git push origin main; \
-	owner=$$(gh repo view --json owner -q .owner.login); \
-	gh api repos/{owner}/{repo}/releases/generate-notes -f tag_name="$$version" --jq .body \
-		| sed "s/ by @$$owner\$$//g; s/ by @$$owner / /g" \
-		| gh release create "$$version" --notes-file -
+.PHONY: bump
+bump: ## Bump the project version
+	@uv version --bump $(BUMP)
+
+.PHONY: release-pr release
+release-pr: ## Prepare a version bump PR; merging it creates a draft release
+	@set -eu; \
+	bump="$(BUMP)"; \
+	case "$$bump" in patch|minor|major) ;; *) echo "BUMP must be patch, minor, or major" >&2; exit 2 ;; esac; \
+	test "$$(git branch --show-current)" = main || { echo "Switch to main to prepare a release" >&2; exit 1; }; \
+	test -z "$$(git status --porcelain)" || { echo "The working tree must be clean" >&2; exit 1; }; \
+	git pull --ff-only origin main; \
+	uv version --bump "$$bump"; \
+	version=$$(uv version --short); \
+	branch="release/$$version"; \
+	git switch -c "$$branch"; \
+	git add pyproject.toml uv.lock; \
+	git commit -m "chore: bump version to $$version"; \
+	git push --set-upstream origin "$$branch"; \
+	gh pr create --base main --head "$$branch" --title "chore: bump version to $$version" --body "This PR bumps the version to $$version. Merging it creates a draft GitHub release at the integrated commit. Review and publish the draft when the version and release notes are ready."
+
+release: release-pr ## Prepare a version bump PR (alias for release-pr)
 
 smoke: ## Generate a project from template defaults and run generated QA
 	@tmp_dir=$$(mktemp -d); \

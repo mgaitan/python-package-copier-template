@@ -1,0 +1,35 @@
+name: Create draft release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  create-draft:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+      - uses: astral-sh/setup-uv@v10.1.0
+
+      - name: Create draft release at the integrated commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          version="$(uv version --short)"
+          if gh release view "$version" >/dev/null 2>&1; then
+            echo "A release for $version already exists" >&2
+            exit 1
+          fi
+          target="$(git rev-parse HEAD)"
+          gh release create "$version" \
+            --draft \
+            --generate-notes \
+            --target "$target"
