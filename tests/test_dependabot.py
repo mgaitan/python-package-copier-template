@@ -139,7 +139,7 @@ def test_wrapper_dependabot_update_opt_in(tmp_path, mocker, configure):
     assert cli.main(arguments) == 0
     update.assert_called_once_with(
         dst_path=str(tmp_path),
-        data={"gh_dependabot_configure": configure},
+        data={"gh_dependabot_configure": configure, "gh_main_protection_configure": False},
         defaults=True,
         unsafe=True,
         overwrite=True,
@@ -148,7 +148,8 @@ def test_wrapper_dependabot_update_opt_in(tmp_path, mocker, configure):
     )
 
 
-def test_copier_update_does_not_persist_dependabot_opt_in(generated_project, fake_gh, monkeypatch):
+@pytest.mark.parametrize("feature", ["dependabot", "main-protection"])
+def test_copier_update_does_not_persist_github_opt_in(generated_project, fake_gh, monkeypatch, feature):
     for variable, value in {
         "GIT_AUTHOR_NAME": "Test",
         "GIT_AUTHOR_EMAIL": "test@example.com",
@@ -176,12 +177,18 @@ def test_copier_update_does_not_persist_dependabot_opt_in(generated_project, fak
 
     cli.main([str(generated_project)])
     assert not fake_gh.exists()
-    cli.main(["--configure-dependabot", str(generated_project)])
+    cli.main([f"--configure-{feature}", str(generated_project)])
     calls = fake_gh.read_text()
-    assert "repos/example/custom/vulnerability-alerts" in calls
-    assert "repos/example/custom/automated-security-fixes" in calls
+    if feature == "dependabot":
+        assert "repos/example/custom/vulnerability-alerts" in calls
+        assert "repos/example/custom/automated-security-fixes" in calls
+        assert "repos/example/custom/rulesets" not in calls
+    else:
+        assert "--method POST repos/example/custom/rulesets" in calls
+        assert "repos/example/custom/vulnerability-alerts" not in calls
     answers = yaml.safe_load((generated_project / ".copier-answers.yml").read_text())
     assert "gh_dependabot_configure" not in answers
+    assert "gh_main_protection_configure" not in answers
     with extensions.update_mode():
         run_update(str(generated_project), defaults=True, unsafe=True, overwrite=True, vcs_ref="HEAD")
     assert fake_gh.read_text() == calls
@@ -197,7 +204,7 @@ def test_repository_creation_configures_dependabot(generated_project, fake_gh, m
     executable.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
     executable.chmod(0o755)
     config = yaml.safe_load((TEMPLATE_ROOT / "copier.yml").read_text())
-    task = config["_tasks"][-2]
+    task = next(task for task in config["_tasks"] if "gh repo create" in task["command"])
     command = (
         Environment(autoescape=True, undefined=StrictUndefined)
         .from_string(task["command"])

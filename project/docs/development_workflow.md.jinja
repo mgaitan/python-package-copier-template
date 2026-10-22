@@ -57,6 +57,38 @@ make qa
 make test
 ```
 
+## Protect main
+
+New GitHub repositories created by the template automatically receive a
+`python-package-template-main` branch ruleset after the initial push. It requires
+PRs into `main` even for administrators, blocks force pushes and deletion, and
+requires review conversations to be resolved. No approval is required, so solo
+maintainers can merge their own PRs. The baseline does not require specific CI
+checks because some jobs are conditional; existing stricter rules still apply.
+Tags and `release/*` branches are not restricted, and releases have no bypass.
+
+Reusing or updating an existing repository leaves GitHub protection unchanged
+unless you opt in with `uvx python-package-copier-template --configure-main-protection .`
+or `copier update --trust --data gh_main_protection_configure=true .`.
+This choice is not saved for future updates. To configure protection separately
+or retry failed setup, run:
+
+```bash
+make protect-main
+```
+
+The command resolves the current repository with `gh repo view`. You can also
+run `sh .github/configure-main-protection.sh OWNER/REPO`. Repeated runs update
+only the named ruleset, resetting its manual edits to this baseline; other
+rulesets and classic branch protection are preserved.
+
+Authenticate `gh` with repository admin access; fine-grained tokens need
+**Administration: write**. Rulesets are available for public repositories on
+Free plans; private repositories need an eligible paid plan. Organization
+policies may also restrict setup. Automatic setup warns and continues on
+failure; explicit updates and `make protect-main` fail visibly. See
+[GitHub's rulesets documentation](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets).
+
 ## Prepare a release
 
 Start from a clean, up-to-date `main` and run the project checks first. Then prepare a version-bump PR:

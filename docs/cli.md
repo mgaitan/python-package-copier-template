@@ -25,6 +25,18 @@ This opt-in applies only to the current update and requires authenticated `gh`
 with repository admin access. New repositories created through `gh` are
 configured automatically. See [Maintain the Template](maintain_template.md).
 
+To require PRs for `main` on an existing repository during an update:
+
+```bash
+uvx python-package-copier-template --configure-main-protection [PATH_TO_PROJECT]
+```
+
+This flag also opts in when copy mode reuses an existing GitHub remote through
+the repository-creation prompt. Newly created GitHub repositories are protected
+automatically. The opt-in is not saved for later updates. See
+[Maintain the Template](maintain_template.md) for
+permissions, plan requirements, and the manual `make protect-main` target.
+
 Version output:
 
 ```bash

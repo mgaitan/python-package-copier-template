@@ -35,6 +35,27 @@ security updates through `gh` during a template update. It defaults to `false`
 and is excluded from the answers file so each update requires a fresh opt-in.
 New repositories created through `gh_repo_create` receive this setup automatically.
 
+`gh_main_protection_configure` opts an existing GitHub repository into the
+managed `main` ruleset. It defaults to `false` and is not saved in the answers
+file. Newly created GitHub repositories are protected automatically after the
+initial push; reusing an existing remote requires this opt-in.
+See [Maintain the Template](maintain_template.md) for setup commands.
+
+## Main protection
+
+The `python-package-template-main` branch ruleset requires pull requests into
+`main`, including for administrators, blocks force pushes and deletion, and
+requires review conversations to be resolved. No approving review is required,
+so solo-maintained projects can merge their own PRs, including release PRs.
+No status-check names are required by this baseline: CI jobs are conditional,
+and existing required checks and stricter rules remain effective.
+
+The setup creates this named ruleset once and updates it on subsequent runs.
+It manages only this ruleset; other rulesets and classic branch protection are
+left untouched and apply alongside it. Manual changes to the managed ruleset
+are reset to the template baseline when setup is explicitly rerun.
+It does not restrict tags or `release/*` branches or grant release bypasses.
+
 ## Dependabot
 
 Both this repository and generated projects include `.github/dependabot.yml`.

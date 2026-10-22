@@ -95,7 +95,12 @@ uv run copier copy --trust  --vcs-ref=HEAD . /path/to/your/test/project
 ```
 
 If you create the GitHub repository via the `gh` CLI prompt, the template will
-attempt to enable immutable releases and GitHub Pages (using the Actions build
+also protect `main` after the initial push: PRs are required, and force pushes
+and deletion are blocked. Existing repositories are opt-in; see
+[Protect main on GitHub](docs/maintain_template.md#protect-main-on-github).
+Releases continue through version-bump PRs with `make release-pr`.
+
+The template also attempts to enable immutable releases and GitHub Pages (using the Actions build
 type). Immutability protects assets and tags for future releases. If Pages is
 unavailable (for example, with some private repositories or account policies),
 the docs workflow will keep failing until Pages is allowed.
