@@ -98,6 +98,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Destination directory.",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {get_version()}")
+    parser.add_argument(
+        "--configure-dependabot",
+        action="store_true",
+        help="Enable GitHub Dependabot alerts and security updates during a template update.",
+    )
     return parser
 
 
@@ -115,6 +120,7 @@ def main(argv: list[str] | None = None) -> int:
         with extensions.update_mode():
             run_update(
                 dst_path=str(dst),
+                data={"gh_dependabot_configure": args.configure_dependabot},
                 defaults=True,
                 unsafe=True,
                 overwrite=True,

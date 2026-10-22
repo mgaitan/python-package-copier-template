@@ -14,6 +14,17 @@ The wrapper inspects `PATH_TO_PROJECT`:
 - if there is no `.copier-answers.yml` or `.copier-answers.yaml`, it runs copy mode;
 - if there is a Copier answers file, it runs update mode.
 
+To also enable GitHub Dependabot alerts, the dependency graph, and security
+updates during that update:
+
+```bash
+uvx python-package-copier-template --configure-dependabot [PATH_TO_PROJECT]
+```
+
+This opt-in applies only to the current update and requires authenticated `gh`
+with repository admin access. New repositories created through `gh` are
+configured automatically. See [Maintain the Template](maintain_template.md).
+
 Version output:
 
 ```bash

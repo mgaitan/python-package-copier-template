@@ -24,6 +24,10 @@ qa: ## Run local QA checks via prek
 		echo "ℹ️  prek is not installed. Install it with: uv tool install prek"; \
 	fi
 
+.PHONY: dependabot
+dependabot: ## Enable GitHub Dependabot alerts and security updates (idempotent)
+	@sh .github/configure-dependabot.sh
+
 BUMP ?= minor
 
 .PHONY: bump
