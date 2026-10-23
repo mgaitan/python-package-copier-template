@@ -41,7 +41,7 @@ bump: ## Bump the project version
 	@uv version --bump $(BUMP)
 
 .PHONY: release-pr release
-release-pr: ## Open a version PR with a draft release; merging publishes it
+release-pr: ## Open a version and release-notes PR; merging publishes it
 	@set -eu; \
 	bump="$(BUMP)"; \
 	case "$$bump" in patch|minor|major) ;; *) echo "BUMP must be patch, minor, or major" >&2; exit 2 ;; esac; \
@@ -58,7 +58,10 @@ release-pr: ## Open a version PR with a draft release; merging publishes it
 	git add pyproject.toml uv.lock; \
 	git commit -m "chore: bump version to $$version"; \
 	git push --set-upstream origin "$$branch"; \
-	gh pr create --base main --head "$$branch" --title "chore: bump version to $$version" --body "This PR bumps the version to $$version. A draft release is prepared while the PR is open. Review its notes before merging: merging publishes the release at the integrated commit and starts PyPI publishing."
+	notes_file=$$(mktemp); \
+	trap 'rm -f "$$notes_file"' EXIT; \
+	gh api repos/{owner}/{repo}/releases/generate-notes -f tag_name="$$version" -f target_commitish="$$(git rev-parse HEAD)" --jq .body > "$$notes_file"; \
+	gh pr create --base main --head "$$branch" --title "chore: bump version to $$version" --body-file "$$notes_file"
 
 release: release-pr ## Prepare a version bump PR (alias for release-pr)
 

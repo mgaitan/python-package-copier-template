@@ -107,23 +107,12 @@ make release-pr BUMP=minor
 ```
 
 `BUMP` accepts `patch`, `minor`, or `major` and defaults to `minor`. The target
-creates a `release/<version>` branch and opens a PR. GitHub creates a draft release
-while the PR is open; subsequent pushes update its target without overwriting
-edited notes. Review those notes before merging. Do not publish the draft manually
-before merge: the final tag must point to the integrated commit, not the PR head.
-
-Merging the PR publishes the draft at the integrated commit and dispatches
-`cd.yml` on its tag with `publish=true`, starting PyPI publishing. This explicit
-dispatch uses the existing {term}`GITHUB_TOKEN` and avoids relying on another
-workflow being triggered by a bot-generated release event. No extra secret is
-required. CD validates that the published tag is already integrated into `main`
-before building. Normal manual dispatches without `publish=true` remain
-documentation-only.
-
-The workflow refuses a missing draft or a tag pointing to another commit. If CD
-dispatch fails after publication, rerun the release workflow to retry the dispatch;
-already-published releases are accepted only when their tag matches the integrated
-commit. Closing an unmerged PR does not publish anything.
+opens a `release/<version>` PR with generated release notes in its body. Edit and
+review the version and notes before merging. Merging runs `cd.yml` on the integrated
+commit: build, attest, publish to PyPI, then create the GitHub release and tag from
+the reviewed PR body. Existing tags are refused rather than moved or reused.
+No draft release or manual tag is needed; unmerged PRs never publish. Manual
+workflow dispatch remains documentation-only.
 
 ### Verify release attestations
 

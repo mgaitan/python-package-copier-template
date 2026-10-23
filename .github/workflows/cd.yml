@@ -1,8 +1,6 @@
-name: Publish to PyPI
+name: Publish
 
 on:
-  release:
-    types: [published]
   push:
     branches:
       - main
@@ -12,6 +10,7 @@ on:
       - "pyproject.toml"
       - ".github/workflows/cd.yml"
   pull_request:
+    types: [opened, reopened, synchronize, closed]
     branches:
       - main
     paths:
@@ -20,11 +19,6 @@ on:
       - "pyproject.toml"
       - ".github/workflows/cd.yml"
   workflow_dispatch:
-    inputs:
-      publish:
-        description: Publish the selected released tag to PyPI
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -36,27 +30,32 @@ env:
 
 jobs:
   pypi-publish:
-    name: upload release to PyPI
+    name: Publish release
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.publish)
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') && github.event.pull_request.head.repo.full_name == github.repository
     permissions:
       id-token: write
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
       - uses: astral-sh/setup-uv@v10.3.0
 
-      - name: Verify published release tag
+      - name: Validate release version
+        id: release
         env:
-          GH_TOKEN: ${{ github.token }}
+          RELEASE_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
-          test "$GITHUB_REF_TYPE" = tag
-          test "${GITHUB_REF_NAME#v}" = "$(uv version --short)"
-          test "$(gh release view "$GITHUB_REF_NAME" --json isDraft --jq .isDraft)" = false
-          git fetch origin main
-          git merge-base --is-ancestor HEAD origin/main
+          version="$(uv version --short)"
+          test "$RELEASE_BRANCH" = "release/$version"
+          tag_ref="$(git ls-remote origin "refs/tags/$version")"
+          if [ -n "$tag_ref" ]; then
+            echo "Tag $version already exists; choose a new version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - run: uv build
 
@@ -71,10 +70,19 @@ jobs:
 
       - run: uv publish
 
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+          RELEASE_NOTES: ${{ github.event.pull_request.body }}
+        run: |
+          printf '%s\n' "$RELEASE_NOTES" > "$RUNNER_TEMP/release-notes.md"
+          gh release create "$RELEASE_VERSION" --target "$(git rev-parse HEAD)" --notes-file "$RUNNER_TEMP/release-notes.md"
+
       - name: Refresh demo repository
         env:
           DEMO_REPO_TOKEN: ${{ secrets.DEMO_REPO_TOKEN }}
-          RELEASE_TAG: ${{ github.event.release.tag_name || github.ref_name }}
+          RELEASE_TAG: ${{ steps.release.outputs.version }}
         run: |
           git clone "https://x-access-token:${DEMO_REPO_TOKEN}@github.com/mgaitan/yet-another-demo.git" /tmp/yet-another-demo
           uvx --with copier-template-extensions --with . \
@@ -95,7 +103,7 @@ jobs:
   docs-publish:
     name: Publish documentation to GitHub Pages
     runs-on: ubuntu-latest
-    if: inputs.publish != true && github.event_name != 'release' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event.action != 'closed' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     environment:
       name: ${{ github.event_name == 'pull_request' && 'github-pages-preview' || 'github-pages' }}
       url: ${{ steps.preview_url.outputs.url }}

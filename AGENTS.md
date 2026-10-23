@@ -22,7 +22,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Project skeleton lives under `project/`.
 - Package docs for this repository live under `docs/` and follow Diataxis.
 - CI: `project/.github/workflows/ci.yml.jinja` (lint/tests).
-- CD: `project/.github/workflows/cd.yml.jinja` (PyPI publish on release; docs publish on release or manual dispatch).
+- CD: `project/.github/workflows/cd.yml.jinja` (publish merged release PRs; docs on push, PR, or manual dispatch).
 - Makefile: `project/Makefile.jinja` (install, test, qa, docs, etc.).
 
 ## Running the Template Locally
@@ -37,7 +37,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Network calls are limited to what the template already does (e.g., PyPI HEAD check).
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
 - To request review from a specific user or agent, use `gh`; for example, `gh pr edit --add-reviewer @copilot`.
-- When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc commands. Run checks before `make release-pr`. Review the draft release while the version PR is open; merging the PR publishes the release at the integrated commit and starts PyPI publishing.
+- Releases: run checks, then `make release-pr`. Review the version and notes in the PR; merging publishes PyPI and the GitHub release through `cd.yml`, without drafts or manual tags.
 - If you need to credit an AI collaborator explicitly, use a standard co-author trailer such as:
   - "Co-authored-by: codex <codex@openai.com>".
   - "Co-authored-by: Claude <noreply@anthropic.com>".
