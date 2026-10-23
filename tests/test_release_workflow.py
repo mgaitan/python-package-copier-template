@@ -43,6 +43,9 @@ def test_release_is_published_in_one_workflow(directory):
     makefile = (TEMPLATE_ROOT / directory / f"Makefile{suffix}").read_text()
     assert makefile.index("releases/generate-notes") < makefile.index("gh pr create")
     assert '--body-file "$$notes_file"' in makefile
+    if directory == ".":
+        demo = next(step["run"] for step in steps if step.get("name") == "Refresh demo repository")
+        assert demo.index("uv lock") < demo.index("git diff --quiet")
 
 
 @pytest.fixture

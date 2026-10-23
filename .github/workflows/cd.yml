@@ -90,6 +90,7 @@ jobs:
             --vcs-ref="$RELEASE_TAG" \
             /tmp/yet-another-demo
           cd /tmp/yet-another-demo
+          uv lock
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git diff --quiet; then
