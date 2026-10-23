@@ -28,6 +28,9 @@ jobs:
       - name: Refresh from template
         run: uvx git+https://github.com/mgaitan/python-package-copier-template -- .
 
+      - name: Regenerate lockfile
+        run: uv lock
+
       - name: Capture template version (after)
         id: template-version-after
         run: |

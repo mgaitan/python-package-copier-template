@@ -71,3 +71,17 @@ PRs. Security updates have separate groups and run when vulnerabilities are
 identified, independently of the weekly version-update schedule. No target branch
 is pinned: Dependabot uses each repository's default branch.
 See the [GitHub Dependabot reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference).
+
+## Lockfile maintenance
+
+The local `uv-lock` prek hook runs `uv lock` when `pyproject.toml`, `uv.toml`, or
+`uv.lock` changes, following [uv-pre-commit](https://github.com/astral-sh/uv-pre-commit).
+If the lockfile changes, prek fails so you can review and stage the update before
+retrying. CI directly runs `uv lock --check` inside existing QA/smoke jobs, before
+`uv run` can update the lockfile. No separate job or prek installation is needed
+for this check, and commands do not need blanket `--locked` flags.
+
+Commit `uv.lock` for reproducible development and CI, including for libraries;
+it does not pin dependencies for people installing the published package.
+The generated template-update workflow runs `uv lock` after Copier and includes
+the result in its PR. To install the local hook, run `prek install`.

@@ -57,6 +57,14 @@ make qa
 make test
 ```
 
+Commit `uv.lock` for reproducible development and CI, even for a library; it does
+not constrain dependencies for consumers of the published package. The local
+`uv-lock` prek hook runs `uv lock` when `pyproject.toml`, `uv.toml`, or `uv.lock`
+changes. If it updates the lockfile, review and stage the changes before retrying
+the commit. CI checks `uv lock --check` directly in the existing QA job, before
+running project commands; prek is not needed for that check. The template-update
+workflow regenerates the lockfile after Copier and includes it in its PR.
+
 ## Protect main
 
 New GitHub repositories created by the template automatically receive a

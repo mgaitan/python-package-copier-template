@@ -28,6 +28,9 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.3.0
 
+      - name: Check lockfile
+        run: uv lock --check
+
       - name: Ruff check
         run: uv run --only-group lint ruff check --output-format=github
 

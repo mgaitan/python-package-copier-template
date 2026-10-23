@@ -38,6 +38,7 @@ jobs:
               - 'project/CODE_OF_CONDUCT.md.jinja'
             python:
               - 'copier.yml'
+              - 'prek.toml'
               - 'pyproject.toml'
               - 'uv.lock'
               - 'python_package_copier_template/**'
@@ -95,7 +96,13 @@ jobs:
           uv tool dir --bin >> "$GITHUB_PATH"
 
       - name: Generate project from template
-        run: uv run copier copy --trust --vcs-ref=HEAD . test-project --defaults
+        run: |
+          uv lock --check
+          uv run copier copy --trust --vcs-ref=HEAD . test-project --defaults
+
+      - name: Initialize generated project dependencies
+        working-directory: test-project
+        run: uv sync
 
       - name: Initialize Git for prek smoke
         working-directory: test-project
