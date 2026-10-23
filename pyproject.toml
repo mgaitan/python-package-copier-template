@@ -1,6 +1,6 @@
 [project]
 name = "python-package-copier-template"
-version = "0.7.1"
+version = "0.8.0"
 description = "A Copier template for modern Python projects."
 readme = "README.md"
 authors = [{ name = "Martín Gaitán", email = "gaitan@gmail.com" }]
