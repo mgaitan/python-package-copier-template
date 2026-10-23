@@ -77,8 +77,9 @@ See the [GitHub Dependabot reference](https://docs.github.com/en/code-security/r
 The local `uv-lock` prek hook runs `uv lock` when `pyproject.toml`, `uv.toml`, or
 `uv.lock` changes, following [uv-pre-commit](https://github.com/astral-sh/uv-pre-commit).
 If the lockfile changes, prek fails so you can review and stage the update before
-retrying. CI runs the same hook inside existing QA/smoke jobs, without a separate
-lockfile job or requiring `--locked` on every command.
+retrying. CI directly runs `uv lock --check` inside existing QA/smoke jobs, before
+`uv run` can update the lockfile. No separate job or prek installation is needed
+for this check, and commands do not need blanket `--locked` flags.
 
 Commit `uv.lock` for reproducible development and CI, including for libraries;
 it does not pin dependencies for people installing the published package.

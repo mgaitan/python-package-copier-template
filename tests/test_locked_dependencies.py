@@ -27,7 +27,7 @@ def test_uv_lock_hook_matches_upstream(relative_path):
 
 
 @pytest.mark.parametrize("directory", [".github/workflows", "project/.github/workflows"])
-def test_ci_reuses_existing_job_for_lockfile_hook(directory):
+def test_ci_checks_lockfile_directly_in_existing_job(directory):
     path = TEMPLATE_ROOT / directory / ("ci.yml.jinja" if directory.startswith("project/") else "ci.yml")
     content = path.read_text()
     if path.suffix == ".jinja":
@@ -36,7 +36,8 @@ def test_ci_reuses_existing_job_for_lockfile_hook(directory):
     assert "lockfile" not in jobs
     job = jobs["qa"] if "qa" in jobs else jobs["template-smoke"]
     commands = "\n".join(step.get("run", "") for step in job["steps"])
-    assert commands.index("prek run uv-lock --all-files") < commands.index("uv run ")
+    assert commands.index("uv lock --check") < commands.index("uv run ")
+    assert "prek run uv-lock" not in commands
 
 
 def test_template_update_regenerates_lockfile_before_creating_pr():
@@ -67,6 +68,11 @@ def test_prek_updates_stale_lockfile_and_fails(tmp_path, monkeypatch, directory)
     subprocess.run(["git", "add", "."], cwd=tmp_path, check=True)
     subprocess.run(["git", "ls-files", "--error-unmatch", "uv.lock"], cwd=tmp_path, check=True)
     project.write_text(original.replace('"0.1.0"', '"0.2.0"'))
+
+    locked = (tmp_path / "uv.lock").read_bytes()
+    check = subprocess.run([uv, "lock", "--check"], cwd=tmp_path, capture_output=True, text=True, check=False)
+    assert check.returncode != 0
+    assert (tmp_path / "uv.lock").read_bytes() == locked
 
     skipped = subprocess.run(
         [prek, "run", "uv-lock", "--files", "README.md"], cwd=tmp_path, capture_output=True, text=True, check=True
