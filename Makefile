@@ -15,22 +15,22 @@ protect-main: ## Require pull requests and block force pushes and deletion on ma
 	@sh .github/configure-main-protection.sh
 
 lint: ## Run Ruff checks on this repository
-	@uv run --locked --group lint ruff check .
+	@uv run --group lint ruff check .
 
 format: ## Format code with Ruff
-	@uv run --locked --group lint ruff format .
+	@uv run --group lint ruff format .
 
 type: ## Run ty checks on this repository
-	@uv run --locked --group qa ty check
+	@uv run --group qa ty check
 
 test: ## Run repository tests
-	@uv run --locked pytest -q
+	@uv run pytest -q
 
 docs: ## Build package documentation as HTML
-	@uv run --locked --group docs sphinx-build $(DOCS_SOURCE) $(DOCS_BUILD)/html -b html -W
+	@uv run --group docs sphinx-build $(DOCS_SOURCE) $(DOCS_BUILD)/html -b html -W
 
 docs-open: docs ## Build docs and open them in the browser
-	@uv run --locked -m webbrowser $(DOCS_BUILD)/html/index.html
+	@uv run -m webbrowser $(DOCS_BUILD)/html/index.html
 
 qa: lint type test docs ## Run local quality checks
 
@@ -65,11 +65,11 @@ release: release-pr ## Prepare a version bump PR (alias for release-pr)
 smoke: ## Generate a project from template defaults and run generated QA
 	@tmp_dir=$$(mktemp -d); \
 	echo "Using $$tmp_dir"; \
-	uv run --locked copier copy --trust --vcs-ref=HEAD . "$$tmp_dir/test-project" --defaults; \
+	uv run copier copy --trust --vcs-ref=HEAD . "$$tmp_dir/test-project" --defaults; \
 	$(MAKE) -C "$$tmp_dir/test-project" qa
 
 help: ## Show available targets
-	@uv run --locked python -c "import re; \
+	@uv run python -c "import re; \
 	[[print(f'\033[36m{m[0]:<20}\033[0m {m[1]}') for m in re.findall(r'^([a-zA-Z_.-]+):.*?## (.*)$$', open(makefile).read(), re.M)] for makefile in ('$(MAKEFILE_LIST)').strip().split()]"
 
 .DEFAULT_GOAL := help

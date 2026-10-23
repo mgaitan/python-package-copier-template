@@ -72,15 +72,15 @@ identified, independently of the weekly version-update schedule. No target branc
 is pinned: Dependabot uses each repository's default branch.
 See the [GitHub Dependabot reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference).
 
-## Locked dependencies
+## Lockfile maintenance
 
-CI checks `uv.lock` with `uv lock --check` before dependency-backed jobs.
-Project commands run with `uv run --locked`, so stale or missing lockfiles fail
-instead of being silently refreshed on a runner. The isolated wheel smoke test
-uses `--no-project` and intentionally does not use the project's lockfile.
+The local `uv-lock` prek hook runs `uv lock` when `pyproject.toml`, `uv.toml`, or
+`uv.lock` changes, following [uv-pre-commit](https://github.com/astral-sh/uv-pre-commit).
+If the lockfile changes, prek fails so you can review and stage the update before
+retrying. CI runs the same hook inside existing QA/smoke jobs, without a separate
+lockfile job or requiring `--locked` on every command.
 
-After changing dependency declarations, run `uv lock` (or `uv sync`) locally and
-commit the updated `uv.lock` alongside `pyproject.toml`. The generated template
-update workflow regenerates the lockfile after Copier updates and includes it
-in the update PR. Fresh generated smoke projects initialize their dependencies
-once before running locked checks.
+Commit `uv.lock` for reproducible development and CI, including for libraries;
+it does not pin dependencies for people installing the published package.
+The generated template-update workflow runs `uv lock` after Copier and includes
+the result in its PR. To install the local hook, run `prek install`.

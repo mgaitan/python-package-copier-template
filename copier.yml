@@ -8,7 +8,6 @@ _subdirectory: project
 _templates_suffix: .jinja
 _preserve_symlinks: true
 _exclude:
-  - "{% if not ('prek' | command_available) %}prek.toml{% endif %}"
   - "{% if copyright_license == 'none' %}LICENSE{% endif %}"
 _skip_if_exists:
   - .python-version

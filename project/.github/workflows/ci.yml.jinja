@@ -15,14 +15,6 @@ env:
   UV_MALWARE_CHECK: "1"
 
 jobs:
-  lockfile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.3.0
-      - name: Check lockfile
-        run: uv lock --check
-
   workflows-lint:
     runs-on: ubuntu-latest
     steps:
@@ -31,20 +23,22 @@ jobs:
         uses: rhysd/actionlint@v1.7.12
 
   qa:
-    needs: lockfile
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.3.0
 
+      - name: Check lockfile with prek
+        run: uvx prek run uv-lock --all-files
+
       - name: Ruff check
-        run: uv run --locked --only-group lint ruff check --output-format=github
+        run: uv run --only-group lint ruff check --output-format=github
 
       - name: Ruff format
-        run: uv run --locked --only-group lint ruff format --check
+        run: uv run --only-group lint ruff format --check
 
       - name: Ty check
-        run: uv run --locked --group qa ty check --output-format=github
+        run: uv run --group qa ty check --output-format=github
 
 
   test:
@@ -58,4 +52,4 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.3.0
       - name: Run tests with coverage
-        run: uv run --locked --group test -p {% raw %}${{ matrix.python-version }}{% endraw %} pytest
+        run: uv run --group test -p {% raw %}${{ matrix.python-version }}{% endraw %} pytest
