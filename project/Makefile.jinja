@@ -28,6 +28,10 @@ qa: ## Run local QA checks via prek
 dependabot: ## Enable GitHub Dependabot alerts and security updates (idempotent)
 	@sh .github/configure-dependabot.sh
 
+.PHONY: protect-main
+protect-main: ## Require pull requests and block force pushes and deletion on main (idempotent)
+	@sh .github/configure-main-protection.sh
+
 BUMP ?= minor
 
 .PHONY: bump
