@@ -45,7 +45,7 @@ Description: {{ project_description }}
 - Prefer `gh` CLI for all interactions with GitHub if possible. Eg. Use it to open PRs / manage issues.
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
 - To request review from a specific user or agent, use `gh`; for example, `gh pr edit --add-reviewer @copilot`.
-- When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc commands. Run checks before `make release-pr`; merging the generated version PR creates a draft release, which must be reviewed and published to start the release workflow.
+- When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc commands. Run checks before `make release-pr`. Review the draft release while the version PR is open; merging the PR publishes the release at the integrated commit and starts PyPI publishing.
 - For issue categorization, use GitHub labels instead of title prefixes like `Bug:`, `Feat:`, or `Docs:`.
 - Before assigning labels, inspect labels already used in the target repository and follow that taxonomy first.
 - If labels are missing or incomplete, use this baseline set: `bug`, `enhancement`, `documentation`, `maintenance`, `refactor`, `test`, `ci`, `dependencies`, `security`, `performance`, `ux`, `question`.

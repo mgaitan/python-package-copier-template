@@ -20,6 +20,11 @@ on:
       - "pyproject.toml"
       - ".github/workflows/cd.yml"
   workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the selected released tag to PyPI
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -33,7 +38,7 @@ jobs:
   pypi-publish:
     name: upload release to PyPI
     runs-on: ubuntu-latest
-    if: github.event_name == 'release'
+    if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.publish)
     permissions:
       id-token: write
       contents: read
@@ -42,6 +47,17 @@ jobs:
         with:
           fetch-depth: 0
       - uses: astral-sh/setup-uv@v10.3.0
+
+      - name: Verify published release tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$GITHUB_REF_TYPE" = tag
+          test "${GITHUB_REF_NAME#v}" = "$(uv version --short)"
+          test "$(gh release view "$GITHUB_REF_NAME" --json isDraft --jq .isDraft)" = false
+          git fetch origin main
+          git merge-base --is-ancestor HEAD origin/main
+
       - run: uv build
 
       - name: Smoke test built wheel in isolation
@@ -56,14 +72,14 @@ jobs:
       - run: uv publish
 
       - name: Refresh demo repository
-        if: github.event_name == 'release'
         env:
           DEMO_REPO_TOKEN: ${{ secrets.DEMO_REPO_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || github.ref_name }}
         run: |
           git clone "https://x-access-token:${DEMO_REPO_TOKEN}@github.com/mgaitan/yet-another-demo.git" /tmp/yet-another-demo
           uvx --with copier-template-extensions --with . \
             copier update --trust --defaults \
-            --vcs-ref="${{ github.event.release.tag_name }}" \
+            --vcs-ref="$RELEASE_TAG" \
             /tmp/yet-another-demo
           cd /tmp/yet-another-demo
           git config user.name "github-actions[bot]"
@@ -73,13 +89,13 @@ jobs:
             exit 0
           fi
           git add .
-          git commit -m "chore: update project template to ${{ github.event.release.tag_name }}"
+          git commit -m "chore: update project template to $RELEASE_TAG"
           git push origin HEAD:main
 
   docs-publish:
     name: Publish documentation to GitHub Pages
     runs-on: ubuntu-latest
-    if: github.event_name != 'release' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    if: inputs.publish != true && github.event_name != 'release' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     environment:
       name: ${{ github.event_name == 'pull_request' && 'github-pages-preview' || 'github-pages' }}
       url: ${{ steps.preview_url.outputs.url }}

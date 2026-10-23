@@ -37,7 +37,7 @@ Copier docs: https://copier.readthedocs.io/en/stable/
 - Network calls are limited to what the template already does (e.g., PyPI HEAD check).
 - For `gh pr` interactions, prefer `--body-file` with a temporary file created under `/tmp/`.
 - To request review from a specific user or agent, use `gh`; for example, `gh pr edit --add-reviewer @copilot`.
-- When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc commands. Run checks before `make release-pr`; merging the generated version PR creates a draft release, which must be reviewed and published to start the release workflow.
+- When a repository defines release targets in `Makefile`, prefer those targets over ad-hoc commands. Run checks before `make release-pr`. Review the draft release while the version PR is open; merging the PR publishes the release at the integrated commit and starts PyPI publishing.
 - If you need to credit an AI collaborator explicitly, use a standard co-author trailer such as:
   - "Co-authored-by: codex <codex@openai.com>".
   - "Co-authored-by: Claude <noreply@anthropic.com>".
