@@ -12,6 +12,10 @@ Canonical example repo generated from this template: [mgaitan/yet-another-demo](
 
 Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 
+## Security
+
+Please follow the [security policy](SECURITY.md) to report vulnerabilities privately.
+
 ## Features
 
 - 🐍 Modern Python package supporting Python 3.12-3.15
@@ -23,6 +27,7 @@ Documentation: <https://mgaitan.github.io/python-package-copier-template/>
 - 🪝 Optional pre-commit style QA orchestration via [prek](https://github.com/j178/prek) as an external tool (`uv tool install prek`; hooks include `check-ast`, `check-yaml`, `check-toml`, Ruff, Ty)
 - 🧪 Tests with [pytest](https://docs.pytest.org/en/stable/), [coverage.py](https://coverage.readthedocs.io/en/latest/) and extensions
 - 📚 Docs with [Sphinx](https://www.sphinx-doc.org/en/master/), [MyST](https://myst-parser.readthedocs.io/en/stable/) and a few extensions, deployed to [GitHub Pages](https://pages.github.com/)
+- 📑 [LLM documentation index](https://mgaitan.github.io/python-package-copier-template/llms.txt) linking to documentation sources
 - 👀 Automatic docs preview deployment for PRs that modify documentation (`/_preview/pr-<PR_NUMBER>/` on GitHub Pages)
 - 🧭 Generated docs follow [Diataxis](https://diataxis.fr/) and document rationale in [`about_the_docs`](project/docs/about_the_docs.md.jinja)
 - 🏗️ Use of [GitHub CLI](https://cli.github.com/) for autotic project creation 
@@ -75,7 +80,7 @@ uvx --with=copier-template-extensions copier update . --trust
 ```
 
 This fetches the latest template version and guides you through updating your project.
-Existing `README.md` and `docs/**` files are left untouched so project-specific
+Existing `README.md`, `SECURITY.md`, and `docs/**` files are left untouched so project-specific
 documentation is not replaced. New documentation files are still added when the
 template introduces them; adopt later changes to existing pages manually from the
 template diff when they are relevant to your project.
@@ -90,7 +95,12 @@ uv run copier copy --trust  --vcs-ref=HEAD . /path/to/your/test/project
 ```
 
 If you create the GitHub repository via the `gh` CLI prompt, the template will
-attempt to enable immutable releases and GitHub Pages (using the Actions build
+also protect `main` after the initial push: PRs are required, and force pushes
+and deletion are blocked. Existing repositories are opt-in; see
+[Protect main on GitHub](docs/maintain_template.md#protect-main-on-github).
+Releases continue through version-bump PRs with `make release-pr`.
+
+The template also attempts to enable immutable releases and GitHub Pages (using the Actions build
 type). Immutability protects assets and tags for future releases. If Pages is
 unavailable (for example, with some private repositories or account policies),
 the docs workflow will keep failing until Pages is allowed.

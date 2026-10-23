@@ -98,6 +98,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Destination directory.",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {get_version()}")
+    parser.add_argument(
+        "--configure-dependabot",
+        action="store_true",
+        help="Enable GitHub Dependabot alerts and security updates during a template update.",
+    )
+    parser.add_argument(
+        "--configure-main-protection",
+        action="store_true",
+        help="Require pull requests for main on an existing GitHub repository.",
+    )
     return parser
 
 
@@ -115,6 +125,10 @@ def main(argv: list[str] | None = None) -> int:
         with extensions.update_mode():
             run_update(
                 dst_path=str(dst),
+                data={
+                    "gh_dependabot_configure": args.configure_dependabot,
+                    "gh_main_protection_configure": args.configure_main_protection,
+                },
                 defaults=True,
                 unsafe=True,
                 overwrite=True,
@@ -126,6 +140,7 @@ def main(argv: list[str] | None = None) -> int:
         run_copy(
             src_path=template_target.src_path,
             dst_path=str(dst),
+            data={"gh_main_protection_configure": True} if args.configure_main_protection else None,
             defaults=copy_defaults,
             unsafe=True,
             vcs_ref=template_target.vcs_ref,

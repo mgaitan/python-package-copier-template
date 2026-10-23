@@ -25,6 +25,30 @@ uv tool install prek
 ## Update dependencies safely
 
 This template uses `uv` groups and cooldown windows.
+Dependabot checks Python dependencies (including all `uv` groups and the build
+backend) and GitHub Actions every Monday at a random time assigned by GitHub.
+No fixed `time` is configured, so generated repositories do not share a forced
+start time. Minor and patch version
+updates are grouped per ecosystem; major updates remain separate. Security
+updates use separate groups and are triggered independently of that schedule.
+All updates target this repository's default branch.
+
+New repositories created through `gh` automatically enable Dependabot alerts,
+the dependency graph, and security updates. To enable these settings on an
+existing repository or retry setup, authenticate `gh` with repository admin
+access and run:
+
+```bash
+make dependabot
+```
+
+The command is idempotent and reports permission or policy failures. Fine-grained
+tokens need repository **Administration: write**. You can also opt in during a
+template update with `uvx python-package-copier-template --configure-dependabot .`
+or `copier update --trust --data gh_dependabot_configure=true .`; this choice is
+not saved for future updates. Commit and push `.github/dependabot.yml` to the
+default branch to activate scheduled version updates.
+
 After dependency changes:
 
 ```bash
@@ -33,14 +57,54 @@ make qa
 make test
 ```
 
-## Publish a release
+Commit `uv.lock` together with dependency declaration changes. CI checks
+`uv lock --check` before QA and tests, and project commands use `uv run --locked`;
+an outdated or missing lockfile fails rather than being silently refreshed.
+The template-update workflow runs `uv lock` after Copier and includes the result
+in its PR. Run `uv sync` once before locked commands in a fresh generated project.
+
+## Protect main
+
+New GitHub repositories created by the template automatically receive a
+`python-package-template-main` branch ruleset after the initial push. It requires
+PRs into `main` even for administrators, blocks force pushes and deletion, and
+requires review conversations to be resolved. No approval is required, so solo
+maintainers can merge their own PRs. The baseline does not require specific CI
+checks because some jobs are conditional; existing stricter rules still apply.
+Tags and `release/*` branches are not restricted, and releases have no bypass.
+
+Reusing or updating an existing repository leaves GitHub protection unchanged
+unless you opt in with `uvx python-package-copier-template --configure-main-protection .`
+or `copier update --trust --data gh_main_protection_configure=true .`.
+This choice is not saved for future updates. To configure protection separately
+or retry failed setup, run:
 
 ```bash
-make bump
-make release
+make protect-main
 ```
 
-Release workflows publish package artifacts and canonical docs.
+The command resolves the current repository with `gh repo view`. You can also
+run `sh .github/configure-main-protection.sh OWNER/REPO`. Repeated runs update
+only the named ruleset, resetting its manual edits to this baseline; other
+rulesets and classic branch protection are preserved.
+
+Authenticate `gh` with repository admin access; fine-grained tokens need
+**Administration: write**. Rulesets are available for public repositories on
+Free plans; private repositories need an eligible paid plan. Organization
+policies may also restrict setup. Automatic setup warns and continues on
+failure; explicit updates and `make protect-main` fail visibly. See
+[GitHub's rulesets documentation](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets).
+
+## Prepare a release
+
+Start from a clean, up-to-date `main` and run the project checks first. Then prepare a version-bump PR:
+
+```bash
+make qa
+make release-pr BUMP=minor
+```
+
+`BUMP` accepts `patch`, `minor`, or `major` and defaults to `minor`. The target creates a `release/<version>` branch and opens a PR. When the PR is merged, GitHub creates a draft release at the integrated commit. Review the generated notes and publish the draft to publish package artifacts and canonical docs.
 
 ### Verify release attestations
 

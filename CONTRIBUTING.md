@@ -3,6 +3,11 @@
 Contributions are welcome, and they are greatly appreciated!
 Every little bit helps, and credit will always be given.
 
+## Reporting security issues
+
+Follow the [security policy](SECURITY.md) to report suspected vulnerabilities
+privately instead of opening a public issue or pull request.
+
 ## Environment setup
 
 Install [uv](https://github.com/astral-sh/uv) following the

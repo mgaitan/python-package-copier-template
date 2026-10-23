@@ -8,6 +8,7 @@ extensions = [
     "myst_parser",
     "richterm.sphinxext",
     "sphinxcontrib.mermaid",
+    "sphinx_llms_txt",
 ]
 
 templates_path = ["_templates"]
@@ -30,3 +31,5 @@ myst_url_schemes = {
 }
 
 myst_fence_as_directive = ["mermaid"]
+
+llms_txt_uri_template = "_sources/{docname}{suffix}{sourcelink_suffix}"

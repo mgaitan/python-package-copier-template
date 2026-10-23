@@ -13,6 +13,7 @@ _exclude:
 _skip_if_exists:
   - .python-version
   - README.md
+  - SECURITY.md
   - docs/**
 _jinja_extensions:
   - copier_template_extensions.TemplateExtensionLoader
@@ -40,12 +41,20 @@ _tasks:
         fi
         repo="{{ repository_namespace }}/{{ repository_name }}"
         url="git@github.com:${repo}.git"
+        repo_created=false
         if gh repo view "$repo" >/dev/null 2>&1; then
           git remote add origin "$url" 2>/dev/null || git remote set-url origin "$url"
         else
-          gh repo create "$repo" $visibility --description "{{ project_description }}" --homepage "https://{{ repository_namespace }}.github.io/{{ repository_name }}/" --source=. --remote=origin
+          gh repo create "$repo" $visibility --description "{{ project_description }}" --homepage "https://{{ repository_namespace }}.github.io/{{ repository_name }}/" --source=. --remote=origin || exit 1
+          repo_created=true
         fi
-        git push -u origin main
+        git push -u origin main || exit 1
+        if [ "$repo_created" = true ] || [ "{{ gh_main_protection_configure | default(false) }}" = "True" ]; then
+          sh .github/configure-main-protection.sh "$repo" || \
+            echo "Warning: main protection setup incomplete. Retry with make protect-main." >&2
+        fi
+        sh .github/configure-dependabot.sh "$repo" || \
+          echo "Warning: Dependabot setup incomplete. Retry with make dependabot." >&2
         gh repo edit "$repo" --enable-wiki=false --enable-projects=false >/dev/null 2>&1 || true
         if gh api \
           --method PUT \
@@ -75,6 +84,14 @@ _tasks:
         fi
         gh workflow run cd.yml --ref main || true
       fi
+  - when: "{{ ((_copier_operation | default('copy')) == 'update') and gh_dependabot_configure }}"
+    command:
+      - sh
+      - .github/configure-dependabot.sh
+  - when: "{{ ((_copier_operation | default('copy')) == 'update') and gh_main_protection_configure }}"
+    command:
+      - sh
+      - .github/configure-main-protection.sh
 
 # PROMPT --------------------------------
 project_name:
@@ -111,6 +128,20 @@ gh_repo_create:
     Public repo: public
     Private repo: private
     Skip: skip
+
+gh_dependabot_configure:
+  type: bool
+  help: Enable Dependabot alerts and security updates on GitHub (requires gh and repository admin access)
+  default: false
+  when: "{{ (_copier_operation | default('copy')) == 'update' }}"
+  secret: true
+
+gh_main_protection_configure:
+  type: bool
+  help: Configure main protection on an existing GitHub repository (requires gh and repository admin access)
+  default: false
+  when: "{{ (_copier_operation | default('copy')) == 'update' or (('gh' | command_available) and gh_repo_create != 'skip') }}"
+  secret: true
 
 python_package_distribution_name:
   type: str

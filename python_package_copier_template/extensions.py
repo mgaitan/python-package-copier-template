@@ -8,7 +8,7 @@ import sys
 import unicodedata
 import urllib.error
 import urllib.request
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
 from datetime import UTC, datetime
@@ -34,7 +34,7 @@ class UnsupportedPythonError(RuntimeError):
 
 
 @contextmanager
-def update_mode() -> Iterator[None]:
+def update_mode() -> Generator[None, None, None]:
     """Mark the current execution context as an update operation."""
     token = _UPDATE_MODE.set(True)
     try:
