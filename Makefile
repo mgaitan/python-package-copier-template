@@ -1,4 +1,4 @@
-.PHONY: install lint format type test qa bump release docs docs-open smoke dependabot protect-main help
+.PHONY: install lint format type test qa bump docs docs-open smoke dependabot protect-main help
 
 export UV_MALWARE_CHECK := 1
 
@@ -40,7 +40,7 @@ BUMP ?= minor
 bump: ## Bump the project version
 	@uv version --bump $(BUMP)
 
-.PHONY: release-pr release
+.PHONY: release-pr
 release-pr: ## Open a version and release-notes PR; merging publishes it
 	@set -eu; \
 	bump="$(BUMP)"; \
@@ -62,8 +62,6 @@ release-pr: ## Open a version and release-notes PR; merging publishes it
 	trap 'rm -f "$$notes_file"' EXIT; \
 	gh api repos/{owner}/{repo}/releases/generate-notes -f tag_name="$$version" -f target_commitish="$$(git rev-parse HEAD)" --jq .body > "$$notes_file"; \
 	gh pr create --base main --head "$$branch" --title "chore: bump version to $$version" --body-file "$$notes_file"
-
-release: release-pr ## Prepare a version bump PR (alias for release-pr)
 
 smoke: ## Generate a project from template defaults and run generated QA
 	@tmp_dir=$$(mktemp -d); \

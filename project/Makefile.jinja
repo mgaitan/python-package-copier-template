@@ -38,7 +38,7 @@ BUMP ?= minor
 bump: ## Bump the project version
 	@uv version --bump $(BUMP)
 
-.PHONY: release-pr release
+.PHONY: release-pr
 release-pr: ## Open a version and release-notes PR; merging publishes it
 	@set -eu; \
 	bump="$(BUMP)"; \
@@ -60,8 +60,6 @@ release-pr: ## Open a version and release-notes PR; merging publishes it
 	trap 'rm -f "$$notes_file"' EXIT; \
 	gh api repos/{owner}/{repo}/releases/generate-notes -f tag_name="$$version" -f target_commitish="$$(git rev-parse HEAD)" --jq .body > "$$notes_file"; \
 	gh pr create --base main --head "$$branch" --title "chore: bump version to $$version" --body-file "$$notes_file"
-
-release: release-pr ## Prepare a version bump PR (alias for release-pr)
 
 .PHONY: docs docs-html docs-epub docs-open html epub open
 
