@@ -1,4 +1,4 @@
-.PHONY: install lint format type test qa bump release docs docs-open smoke dependabot protect-main help
+.PHONY: install lint format type test qa bump docs docs-open smoke dependabot protect-main help
 
 export UV_MALWARE_CHECK := 1
 
@@ -40,8 +40,8 @@ BUMP ?= minor
 bump: ## Bump the project version
 	@uv version --bump $(BUMP)
 
-.PHONY: release-pr release
-release-pr: ## Prepare a version bump PR; merging it creates a draft release
+.PHONY: release-pr
+release-pr: ## Open a version and release-notes PR; merging publishes it
 	@set -eu; \
 	bump="$(BUMP)"; \
 	case "$$bump" in patch|minor|major) ;; *) echo "BUMP must be patch, minor, or major" >&2; exit 2 ;; esac; \
@@ -58,9 +58,10 @@ release-pr: ## Prepare a version bump PR; merging it creates a draft release
 	git add pyproject.toml uv.lock; \
 	git commit -m "chore: bump version to $$version"; \
 	git push --set-upstream origin "$$branch"; \
-	gh pr create --base main --head "$$branch" --title "chore: bump version to $$version" --body "This PR bumps the version to $$version. Merging it creates a draft GitHub release at the integrated commit. Review and publish the draft when the version and release notes are ready."
-
-release: release-pr ## Prepare a version bump PR (alias for release-pr)
+	notes_file=$$(mktemp); \
+	trap 'rm -f "$$notes_file"' EXIT; \
+	gh api repos/{owner}/{repo}/releases/generate-notes -f tag_name="$$version" -f target_commitish="$$(git rev-parse HEAD)" --jq .body > "$$notes_file"; \
+	gh pr create --base main --head "$$branch" --title "chore: bump version to $$version" --body-file "$$notes_file"
 
 smoke: ## Generate a project from template defaults and run generated QA
 	@tmp_dir=$$(mktemp -d); \

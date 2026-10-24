@@ -262,7 +262,13 @@ After that, prepare a version-bump PR from a clean, up-to-date `main`:
 make release-pr BUMP=minor
 ```
 
-The target accepts `patch`, `minor`, or `major` (default: `minor`), creates a `release/<version>` branch, and opens a PR. Merging that PR creates a draft release at the integrated commit. Review the generated notes and publish the draft to start package and documentation publishing.
+The target accepts `patch`, `minor`, or `major` (default: `minor`) and opens a
+`release/<version>` PR with generated release notes as its body. Edit and review
+the version and notes there. Merging is the publishing approval: `cd.yml` checks
+out the integrated commit, builds and attests the package, publishes to PyPI,
+then creates the GitHub release and tag using the reviewed PR body. There are no
+draft releases or chained workflows. Existing tags are never reused or moved;
+normal manual workflow dispatches remain documentation-only.
 
 ## Release attestations
 

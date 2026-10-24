@@ -99,7 +99,8 @@ than saved template metadata. Alternatively, pass an explicit repository to
 The command idempotently manages a single branch ruleset, preserving other
 protections. See [Configuration](configuration.md) for the policy.
 All changes to `main`, including releases, go through a PR: continue using
-`make release-pr`, merge the version PR, then review and publish the draft release.
+`make release-pr`, review the version and release notes in the PR, then merge it
+to publish to PyPI and create the GitHub release.
 
 Authenticate `gh` with repository admin access; fine-grained tokens need
 **Administration: write**. GitHub supports rulesets on public repositories with
